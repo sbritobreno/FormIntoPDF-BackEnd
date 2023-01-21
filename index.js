@@ -8,6 +8,7 @@ const app = express();
 app.use(express.json());
 
 // Config URLenconded
+app.use(express.urlencoded({ extended: true }));
 
 // Solve CORS
 app.use(cors({ credentials: true, origin: process.env.CLIENT_ORIGIN }));
@@ -16,6 +17,5 @@ app.use(cors({ credentials: true, origin: process.env.CLIENT_ORIGIN }));
 app.use(express.static("public"));
 
 // Routes
-
 
 app.listen(5000);
