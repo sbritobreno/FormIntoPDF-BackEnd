@@ -147,4 +147,37 @@ module.exports = class UserController {
 
     await createUserToken(user, req, res);
   }
+
+  // Check User
+  static async checkUser(req, res) {
+    let currentUser;
+    let decoded;
+
+    if (req.headers.authorization) {
+      const token = getToken(req);
+      if (token != "null") {
+        decoded = jwt.verify(token, "f2psecret");
+
+        currentUser = await User.findByPk(decoded.id);
+        currentUser.password = undefined;
+      }
+    } else {
+      currentUser = null;
+    }
+
+    res.status(200).send(currentUser);
+  }
+
+  // Get user by id
+  static async getUserById(req, res) {
+    const id = req.params.id;
+    const user = await User.findByPk(id);
+
+    if (!user) {
+      res.status(422).json({ message: "User not found!" });
+      return;
+    }
+
+    res.status(200).json({ user });
+  }
 };
