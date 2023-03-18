@@ -1,5 +1,5 @@
 const { DataTypes } = require("sequelize");
-const db = require("../db/conn");
+const db = require("../../db/conn");
 
 const TrafficManagementComplianceChecksheet = db.define(
   "traffic_management_compliance_checksheet",

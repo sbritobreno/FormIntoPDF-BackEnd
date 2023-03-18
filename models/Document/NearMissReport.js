@@ -1,24 +1,28 @@
 const { DataTypes } = require("sequelize");
-const db = require("../db/conn");
+const db = require("../../db/conn");
 
-const Document = db.define("Document", {
+const NearMissReport = db.define("near_miss_report", {
   id: {
     type: DataTypes.INTEGER,
     primaryKey: true,
     autoIncrement: true,
   },
-  file_attached: {
+  details_comments: {
     type: DataTypes.STRING,
     required: true,
   },
-  last_updated_by: {
+  actions_taken_comments: {
     type: DataTypes.STRING,
     required: true,
   },
-  permit_to_dig_sketch_image: {
+  suggestion_to_prevent_reoccurance_comments: {
+    type: DataTypes.STRING,
+    required: true,
+  },
+  report_signature: {
     type: DataTypes.STRING,
     required: true,
   },
 });
 
-module.exports = Document;
+module.exports = NearMissReport;

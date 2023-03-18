@@ -1,28 +1,28 @@
 const { DataTypes } = require("sequelize");
-const db = require("../db/conn");
+const db = require("../../db/conn");
 
-const NearMissReport = db.define("near_miss_report", {
+const Emergencies = db.define("Emergencies", {
   id: {
     type: DataTypes.INTEGER,
     primaryKey: true,
     autoIncrement: true,
   },
-  details_comments: {
+  emergencies_question_one: {
+    type: DataTypes.BOOLEAN,
+    required: true,
+  },
+  emergency_location_of_assembly_point: {
     type: DataTypes.STRING,
     required: true,
   },
-  actions_taken_comments: {
+  emergency_name_of_first_aider: {
     type: DataTypes.STRING,
     required: true,
   },
-  suggestion_to_prevent_reoccurance_comments: {
-    type: DataTypes.STRING,
-    required: true,
-  },
-  report_signature: {
+  emergency_slg_operative: {
     type: DataTypes.STRING,
     required: true,
   },
 });
 
-module.exports = NearMissReport;
+module.exports = Emergencies;

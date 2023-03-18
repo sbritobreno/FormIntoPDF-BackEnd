@@ -1,5 +1,5 @@
 const { DataTypes } = require("sequelize");
-const db = require("../db/conn");
+const db = require("../../db/conn");
 
 const DailyMethodStatementAndTrafficManagementChecks = db.define(
   "daily_method_statement_and_traffic_management_checks",
@@ -28,4 +28,4 @@ const DailyMethodStatementAndTrafficManagementChecks = db.define(
   }
 );
 
-module.exports = Hazards;
+module.exports = DailyMethodStatementAndTrafficManagementChecks;

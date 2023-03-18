@@ -1,5 +1,5 @@
 const { DataTypes } = require("sequelize");
-const db = require("../db/conn");
+const db = require("../../db/conn");
 
 const MethodStatementsJobInfo = db.define("method_statements_job_information", {
   id: {

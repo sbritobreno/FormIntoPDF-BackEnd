@@ -1,5 +1,5 @@
 const { DataTypes } = require("sequelize");
-const db = require("../db/conn");
+const db = require("../../db/conn");
 
 const FutherHazarsAndControls = db.define(
   "futher_hazards_and_controls_required",

@@ -18,7 +18,9 @@ app.use(express.static("public"));
 
 // Routes
 const UserRoutes = require("./routes/UserRoutes");
+const DocumentRoutes = require("./routes/DocumentRoutes");
 
 app.use("/user", UserRoutes);
+app.use("/document", DocumentRoutes);
 
 app.listen(5000);

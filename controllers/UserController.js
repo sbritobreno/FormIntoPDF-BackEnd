@@ -1,6 +1,6 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const User = require("../models/User");
+const User = require("../models/User/User");
 const default_user_img = "profile_img_default.png";
 
 // helpers

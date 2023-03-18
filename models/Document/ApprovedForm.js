@@ -1,32 +1,28 @@
 const { DataTypes } = require("sequelize");
-const db = require("../db/conn");
+const db = require("../../db/conn");
 
-const SiteAttendance = db.define("site_attendance", {
+const ApprovedForm = db.define("approved_form", {
   id: {
     type: DataTypes.INTEGER,
     primaryKey: true,
     autoIncrement: true,
   },
-  name: {
+  description_location: {
     type: DataTypes.STRING,
     required: true,
   },
-  signature: {
-    type: DataTypes.STRING,
-    required: true,
-  },
-  date: {
+  date_examination: {
     type: DataTypes.DATE,
     required: true,
   },
-  time_in: {
-    type: DataTypes.TIME,
+  examination_result_state: {
+    type: DataTypes.STRING,
     required: true,
   },
-  time_out: {
-    type: DataTypes.TIME,
+  inspector_signature: {
+    type: DataTypes.STRING,
     required: true,
   },
 });
 
-module.exports = SiteAttendance;
+module.exports = ApprovedForm;
