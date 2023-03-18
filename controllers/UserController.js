@@ -268,4 +268,51 @@ module.exports = class UserController {
       res.status(500).json({ message: error });
     }
   }
+
+  static async deleteUserAccount(req, res) {
+    const token = getToken(req);
+    const user = await getUserByToken(token);
+
+    try {
+      // Delete the user
+      await User.destroy({ where: { id: user.id } });
+
+      res.json({
+        message: "Account deleted!",
+      });
+    } catch (error) {
+      res.status(500).json({ message: error });
+    }
+  }
+
+  static async deleteUserAccountByAdmin(req, res) {
+    const token = getToken(req);
+    const user = await getUserByToken(token);
+    const id = req.params.id;
+    const userToBeDeleted = await User.findByPk(id);
+    const userToBeDeletedName = userToBeDeleted?.name.split(" ")[0];
+
+    if (!user.admin) {
+      res
+        .status(422)
+        .json({ message: "Only an Admin can delete someone else account!" });
+      return;
+    }
+
+    if (!userToBeDeleted) {
+      res.status(422).json({ message: "User account not found!" });
+      return;
+    }
+
+    try {
+      // Delete the some user's account
+      await User.destroy({ where: { id: userToBeDeleted.id } });
+
+      res.json({
+        message: `${userToBeDeletedName}'s Account deleted!`,
+      });
+    } catch (error) {
+      res.status(500).json({ message: error });
+    }
+  }
 };
