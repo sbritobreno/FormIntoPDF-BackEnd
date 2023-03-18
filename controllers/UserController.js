@@ -10,8 +10,30 @@ const createUserToken = require("../helpers/create-user-token");
 const { imageUpload } = require("../helpers/image-upload");
 
 module.exports = class UserController {
+  // Get all users
+  static async getAllUsers(req, res) {
+    const token = getToken(req);
+    const user = await getUserByToken(token);
+    const allUsers = await User.findAll();
+
+    if (!user.admin) {
+      res
+        .status(422)
+        .json({ message: "Only an Admin has access to the list of users!" });
+      return;
+    }
+
+    allUsers.forEach((user) => (user.password = undefined));
+
+    res.status(200).json({
+      users: allUsers,
+    });
+  }
+
   // Register
   static async register(req, res) {
+    const token = getToken(req);
+    const user = await getUserByToken(token);
     const name = req.body.name?.trim();
     const email = req.body.email?.toLowerCase().trim();
     const roleFirstLetter = req.body.role?.trim().charAt(0).toUpperCase();
@@ -21,6 +43,13 @@ module.exports = class UserController {
     const admin = req.body.admin;
     const password = req.body.password;
     const confirmpassword = req.body.confirmpassword;
+
+    if (!user.admin) {
+      res
+        .status(422)
+        .json({ message: "Only an Admin can register a new user!" });
+      return;
+    }
 
     // validations
     if (!name) {
@@ -98,7 +127,7 @@ module.exports = class UserController {
     const passwordHash = await bcrypt.hash(password, salt);
 
     // create user
-    const user = new User({
+    const newUser = new User({
       name: name,
       email: email,
       role: role,
@@ -109,7 +138,7 @@ module.exports = class UserController {
     });
 
     try {
-      await user.save();
+      await newUser.save();
       res.status(200).json({ message: `User ${name} created successfully!` });
     } catch (error) {
       res.status(500).json({ message: error });
@@ -269,6 +298,7 @@ module.exports = class UserController {
     }
   }
 
+  // Delete user account
   static async deleteUserAccount(req, res) {
     const token = getToken(req);
     const user = await getUserByToken(token);
@@ -285,6 +315,7 @@ module.exports = class UserController {
     }
   }
 
+  // Delete some user's account by admin
   static async deleteUserAccountByAdmin(req, res) {
     const token = getToken(req);
     const user = await getUserByToken(token);
@@ -316,6 +347,7 @@ module.exports = class UserController {
     }
   }
 
+  // Toggle user is admin
   static async toggleUserIsAdmin(req, res) {
     const token = getToken(req);
     const user = await getUserByToken(token);
@@ -350,6 +382,7 @@ module.exports = class UserController {
     }
   }
 
+  // Reset user password
   static async resetUserPassword(req, res) {
     const email = req.body.email?.toLowerCase().trim();
 
