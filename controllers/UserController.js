@@ -10,6 +10,7 @@ const createUserToken = require("../helpers/create-user-token");
 const { imageUpload } = require("../helpers/image-upload");
 
 module.exports = class UserController {
+  // Register
   static async register(req, res) {
     const name = req.body.name?.trim();
     const email = req.body.email?.toLowerCase().trim();
@@ -113,5 +114,37 @@ module.exports = class UserController {
     } catch (error) {
       res.status(500).json({ message: error });
     }
+  }
+
+  // Login
+  static async login(req, res) {
+    const email = req.body.email?.toLowerCase().trim();
+    const password = req.body.password;
+
+    if (!email) {
+      res.status(422).json({ message: "You need to type your email!" });
+      return;
+    }
+
+    if (!password) {
+      res.status(422).json({ message: "You need to type your password!" });
+      return;
+    }
+
+    // check if user exists
+    const user = await User.findOne({ where: { email: email } });
+
+    if (!user) {
+      return res.status(422).json({ message: "Account not found!" });
+    }
+
+    // check if password match
+    const checkPassword = await bcrypt.compare(password, user.password);
+
+    if (!checkPassword) {
+      return res.status(422).json({ message: "Email or Password invalid!" });
+    }
+
+    await createUserToken(user, req, res);
   }
 };
