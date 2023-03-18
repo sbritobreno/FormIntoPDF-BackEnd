@@ -17,5 +17,8 @@ app.use(cors({ credentials: true, origin: process.env.CLIENT_ORIGIN }));
 app.use(express.static("public"));
 
 // Routes
+const UserRoutes = require("./routes/UserRoutes");
+
+app.use("/user", UserRoutes);
 
 app.listen(5000);
