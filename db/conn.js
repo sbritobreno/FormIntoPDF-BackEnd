@@ -1,15 +1,10 @@
 require("dotenv").config();
 const { Sequelize } = require("sequelize");
 
-const sequelize = new Sequelize(
-  "formintopdf",
-  "root",
-  process.env.DB_PASSWORD,
-  {
-    host: "localhost",
-    dialect: "mysql",
-  }
-);
+const sequelize = new Sequelize("form2pdf", "root", process.env.DB_PASSWORD, {
+  host: "localhost",
+  dialect: "mysql",
+});
 
 try {
   sequelize.authenticate();
