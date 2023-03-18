@@ -349,4 +349,47 @@ module.exports = class UserController {
       res.status(500).json({ message: error });
     }
   }
+
+  static async resetUserPassword(req, res) {
+    const email = req.body.email?.toLowerCase().trim();
+
+    // validations
+    if (!email) {
+      res
+        .status(422)
+        .json({ message: "Email is needed in order to reset password!" });
+      return;
+    }
+
+    // check if user exists
+    const user = await User.findOne({ where: { email: email } });
+
+    if (!user) {
+      return res
+        .status(422)
+        .json({ message: "There is no user with this email!" });
+    }
+
+    // Create provisional password and send it to user's email
+    function getRandom() {
+      return Math.floor(
+        Math.pow(10, 8 - 1) + Math.random() * 9 * Math.pow(10, 8 - 1)
+      );
+    }
+    const salt = await bcrypt.genSalt(12);
+    const newPassword = getRandom().toString();
+    const passwordHash = await bcrypt.hash(newPassword, salt);
+    user.password = passwordHash;
+
+    try {
+      // returns updated data
+      user.save();
+      //sendEmail(email, templates.resetPassword(newPassword));
+      res.json({
+        message: `A new passord was sent to ${email}!`,
+      });
+    } catch (error) {
+      res.status(500).json({ message: error });
+    }
+  }
 };
