@@ -180,4 +180,92 @@ module.exports = class UserController {
 
     res.status(200).json({ user });
   }
+
+  // Edit user
+  static async editUser(req, res) {
+    const token = getToken(req);
+    const user = await getUserByToken(token);
+
+    const name = req.body.name?.trim();
+    const phone = req.body.phone?.replaceAll(" ", "");
+    const roleFirstLetter = req.body.role?.trim().charAt(0).toUpperCase();
+    const roleRemainingLetters = req.body.role?.toLowerCase().trim().slice(1);
+    const role = roleFirstLetter + roleRemainingLetters;
+    const password = req.body.password;
+    const confirmpassword = req.body.confirmpassword;
+
+    if (req.file) {
+      user.image = req.file.filename;
+    }
+
+    // validations
+    if (!name) {
+      res.status(422).json({ message: "Name is needed" });
+      return;
+    } else if (name.length > 25) {
+      res
+        .status(422)
+        .json({ message: "Name has to be less than 25 characters" });
+      return;
+    }
+    user.name = name;
+
+    if (!phone) {
+      res.status(422).json({ message: "Phone is needed" });
+      return;
+    } else if (phone.length > 20) {
+      res.status(422).json({
+        message: "Phone number seems to be invalid (Number too long)",
+      });
+      return;
+    }
+    user.phone = phone;
+
+    if (!role) {
+      res.status(422).json({ message: "Role is needed" });
+      return;
+    } else if (role.length > 20) {
+      res
+        .status(422)
+        .json({ message: "Role has to be less than 20 characters" });
+      return;
+    }
+    user.role = role;
+
+    // Email is set to not be changed on the front-end
+
+    // check if password match
+    if (password != confirmpassword) {
+      res.status(422).json({
+        message: "Password and password confirmation have to be the same!",
+      });
+      return;
+    } else if (
+      password != null &&
+      password.length < 8 &&
+      password.length > 40
+    ) {
+      res.status(422).json({
+        message: "Password must be min 8, max 40 characters long!",
+      });
+      return;
+    } else if (password == confirmpassword && password != null) {
+      // creating new password
+      const salt = await bcrypt.genSalt(12);
+      const reqPassword = req.body.password;
+      const passwordHash = await bcrypt.hash(reqPassword, salt);
+      user.password = passwordHash;
+    }
+
+    try {
+      // returns updated data
+      user.save();
+      res.json({
+        message: "User details updated!",
+        data: user,
+      });
+    } catch (error) {
+      res.status(500).json({ message: error });
+    }
+  }
 };
