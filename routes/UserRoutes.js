@@ -12,5 +12,6 @@ router.get("/:id", UserController.getUserById);
 router.patch("/edit", UserController.editUser);
 router.delete("/deleteaccount", UserController.deleteUserAccount);
 router.delete("/deleteaccount/:id", UserController.deleteUserAccountByAdmin);
+router.patch("/toggleuseradmin/:id", UserController.toggleUserIsAdmin);
 
 module.exports = router;

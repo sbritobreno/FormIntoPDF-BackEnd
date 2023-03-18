@@ -315,4 +315,38 @@ module.exports = class UserController {
       res.status(500).json({ message: error });
     }
   }
+
+  static async toggleUserIsAdmin(req, res) {
+    const token = getToken(req);
+    const user = await getUserByToken(token);
+    const id = req.params.id;
+    const targetUser = await User.findByPk(id);
+    const targetUserName = targetUser?.name.split(" ")[0];
+
+    if (!user.admin) {
+      res
+        .status(422)
+        .json({ message: "Only an Admin can set or unset someone as Admin!" });
+      return;
+    }
+
+    if (!targetUser) {
+      res.status(422).json({ message: "User account not found!" });
+      return;
+    }
+    targetUser.admin = !targetUser.admin;
+
+    try {
+      // Delete the some user's account
+      await targetUser.save();
+
+      res.json({
+        message: `${targetUserName} was ${
+          targetUser.admin ? "set" : "unset"
+        } as Admin!`,
+      });
+    } catch (error) {
+      res.status(500).json({ message: error });
+    }
+  }
 };
