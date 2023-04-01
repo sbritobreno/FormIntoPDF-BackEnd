@@ -12,7 +12,7 @@ const HotWorkPermit = db.define("hot_work_permit", {
     required: true,
   },
   floor_level: {
-    type: DataTypes.DATE,
+    type: DataTypes.STRING,
     required: true,
   },
   nature_of_work: {

@@ -5,6 +5,11 @@ const DocumentController = require("../controllers/DocumentController");
 const verifyToken = require("../helpers/verify-token");
 const { imageUpload } = require("../helpers/image-upload");
 
-router.post("/newdocument", DocumentController.newDocument);
+router.post(
+  "/new",
+  verifyToken,
+  imageUpload.array("images"),
+  DocumentController.newDocument
+);
 
 module.exports = router;
