@@ -55,6 +55,47 @@ module.exports = class UserController {
     });
   }
 
+  // Get single document by its ID
+  static async getDocumentById(req, res) {
+    const id = req.params.id;
+
+    const document = await Document.findOne({
+      where: { id: id },
+      include: [
+        { model: SiteAttendance },
+        { model: Hazards },
+        { model: DMSandTMC },
+        { model: Emergencies },
+        { model: TrafficManagementComplianceChecksheet },
+        { model: TrafficManagementSlgChecklist },
+        { model: ApprovedForm },
+        { model: HotWorkPermit },
+        { model: DailyPlantInspection },
+        { model: NearMissReport },
+        { model: FutherHazarsAndControls },
+        { model: MethodStatementsJobInfo },
+        {
+          model: ReinstatementSheet,
+          include: [
+            { model: ReinstatementSheetHoleSequence },
+            { model: ReinstatementSheetImages },
+          ],
+        },
+      ],
+    });
+
+    if (!document) {
+      res.status(404).json({ message: "Document not found!" });
+      return;
+    }
+
+    res.status(200).json({
+      document: document,
+    });
+  }
+
+
+
   // Create new document
   static async newDocument(req, res) {
     const document = req.body.document;

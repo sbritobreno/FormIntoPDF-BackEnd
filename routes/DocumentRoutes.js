@@ -6,6 +6,7 @@ const verifyToken = require("../helpers/verify-token");
 const { imageUpload } = require("../helpers/image-upload");
 
 router.get("/all_documents", verifyToken, DocumentController.getAllDocuments);
+router.get("/:id", verifyToken, DocumentController.getDocumentById);
 router.post(
   "/new",
   verifyToken,
