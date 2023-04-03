@@ -20,18 +20,13 @@ router.patch(
   imageUpload.array("images"),
   DocumentController.updateDocument
 );
-// router.patch("/add_file/:id", verifyToken, DocumentController.addFileToDocument);
 router.get("/all_reinstatementsheets", verifyToken, DocumentController.getAllReinstatementSheets);
 router.get("/reinstatementsheet/:id", verifyToken, DocumentController.getReinstatementSheetById);
 router.delete("/remove_reinstatementsheet/:id", verifyToken, DocumentController.removeReinstatementSheetById);
-router.get("/new_reinstatement", verifyToken, DocumentController.newReinstatement);
+router.post("/new_reinstatement", verifyToken, DocumentController.newReinstatement);
+router.patch("/update_reinstatement/:id", verifyToken, imageUpload.array("images"), DocumentController.updateReinstatement);
 router.delete("/remove_reinstatement/:id", verifyToken, DocumentController.removeReinstatementById);
-router.patch(
-  "/update_reinstatement/:id",
-  verifyToken,
-  imageUpload.array("images"),
-  DocumentController.updateReinstatement
-);
+// router.patch("/add_file/:id", verifyToken, DocumentController.addFileToDocument);
 // router.get("/download_reinstatement/:id", verifyToken, DocumentController.downloadReinstatementSheet);
 // router.get("/download_pdf/:id", verifyToken, DocumentController.downloadPdf);
 

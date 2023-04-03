@@ -883,6 +883,26 @@ module.exports = class UserController {
     }
   }
 
-
   // Remove reinstatement
+  static async removeReinstatementById(req, res) {
+    const id = req.params.id;
+    const reinstatement = await ReinstatementSheetHoleSequence.findOne({
+      where: { id: id },
+    });
+
+    if (!reinstatement) {
+      res.status(404).json({
+        message: "Reinstatement not found!",
+      });
+      return;
+    }
+
+    try {
+      await ReinstatementSheetHoleSequence.destroy({
+        where: { id: reinstatement.id },
+      });
+    } catch (error) {
+      res.status(500).json({ message: error });
+    }
+  }
 };
