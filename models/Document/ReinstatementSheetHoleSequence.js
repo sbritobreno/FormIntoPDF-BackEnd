@@ -1,5 +1,6 @@
 const { DataTypes } = require("sequelize");
 const db = require("../../db/conn");
+const ReinstatementImages = require("./ReinstatementImages");
 
 const ReinstatementSheetHoleSequence = db.define("hole_sequence", {
   id: {
@@ -40,5 +41,11 @@ const ReinstatementSheetHoleSequence = db.define("hole_sequence", {
     required: true,
   },
 });
+
+ReinstatementSheetHoleSequence.hasMany(ReinstatementImages, {
+  onDelete: "CASCADE",
+});
+
+ReinstatementImages.belongsTo(ReinstatementSheetHoleSequence);
 
 module.exports = ReinstatementSheetHoleSequence;

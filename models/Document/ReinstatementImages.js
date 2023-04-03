@@ -1,7 +1,7 @@
 const { DataTypes } = require("sequelize");
 const db = require("../../db/conn");
 
-const ReinstatementSheetImages = db.define("reinstatement_sheet_images", {
+const ReinstatementImages = db.define("reinstatement_images", {
   id: {
     type: DataTypes.INTEGER,
     primaryKey: true,
@@ -13,4 +13,4 @@ const ReinstatementSheetImages = db.define("reinstatement_sheet_images", {
   },
 });
 
-module.exports = ReinstatementSheetImages;
+module.exports = ReinstatementImages;
