@@ -23,6 +23,38 @@ const { imageUpload } = require("../helpers/image-upload");
 const DailyMethodStatementAndTrafficManagementChecks = require("../models/Document/DailyMethodStatementAndTrafficManagementChecks");
 
 module.exports = class UserController {
+  // Get all documents
+  static async getAllDocuments(req, res) {
+    const documents = await Document.findAll({
+      include: [
+        { model: SiteAttendance },
+        { model: Hazards },
+        { model: DMSandTMC },
+        { model: Emergencies },
+        { model: TrafficManagementComplianceChecksheet },
+        { model: TrafficManagementSlgChecklist },
+        { model: ApprovedForm },
+        { model: HotWorkPermit },
+        { model: DailyPlantInspection },
+        { model: NearMissReport },
+        { model: FutherHazarsAndControls },
+        { model: MethodStatementsJobInfo },
+        {
+          model: ReinstatementSheet,
+          include: [
+            { model: ReinstatementSheetHoleSequence },
+            { model: ReinstatementSheetImages },
+          ],
+        },
+      ],
+      order: [["createdAt", "DESC"]],
+    });
+
+    res.status(200).json({
+      documents: documents,
+    });
+  }
+
   // Create new document
   static async newDocument(req, res) {
     const document = req.body.document;
