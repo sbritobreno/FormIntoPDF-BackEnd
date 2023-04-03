@@ -815,4 +815,28 @@ module.exports = class UserController {
       reinstatements: reinstatements,
     });
   }
+
+  // Get single Reinstatement
+  static async getReinstatementSheetById(req, res) {
+    const id = req.params.id;
+    const reinstatement = await ReinstatementSheet.findOne({
+      where: { id: id },
+      include: [
+        { model: ReinstatementSheetHoleSequence },
+        { model: ReinstatementSheetImages },
+      ],
+      order: [["createdAt", "DESC"]],
+    });
+
+    if (!reinstatement) {
+      res.status(404).json({
+        message: "Reinstatement not found!",
+      });
+      return;
+    }
+
+    res.status(200).json({
+      reinstatement: reinstatement,
+    });
+  }
 };
