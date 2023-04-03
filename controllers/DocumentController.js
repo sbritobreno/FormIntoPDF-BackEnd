@@ -424,8 +424,7 @@ module.exports = class UserController {
           holeSequence.reinstatement_images.forEach(async (img) => {
             await ReinstatementImages.create({
               image: img.image,
-              reinstatementSheetHoleSequenceId:
-                newReinstatementSheetHoleSequence.id,
+              holeSequenceId: newReinstatementSheetHoleSequence.id,
             });
           });
         }
@@ -471,218 +470,223 @@ module.exports = class UserController {
   static async updateDocument(req, res) {
     const id = req.params.id;
 
-    // check if document exists
-    const document = await Document.findOne({
-      where: { id: id },
-      include: [
-        { model: SiteAttendance },
-        { model: Hazards },
-        { model: DMSandTMC },
-        { model: Emergencies },
-        { model: TrafficManagementComplianceChecksheet },
-        { model: TrafficManagementSlgChecklist },
-        { model: ApprovedForm },
-        { model: HotWorkPermit },
-        { model: DailyPlantInspection },
-        { model: NearMissReport },
-        { model: FutherHazarsAndControls },
-        { model: MethodStatementsJobInfo },
-        {
-          model: ReinstatementSheet,
-          include: [
-            {
-              model: ReinstatementSheetHoleSequence,
-              include: [{ model: ReinstatementImages }],
-            },
-          ],
-        },
-      ],
-    });
-
-    if (!document) {
-      res.status(404).json({ message: "Document not found!" });
-      return;
-    }
-
     // get user
     const token = getToken(req);
     const user = await getUserByToken(token);
 
     const documentUpdated = req.body.document;
 
+    // check if document exists
+    const document = await Document.findOne({ where: { id: id } });
+    if (!document) {
+      res.status(404).json({ message: "Document not found!" });
+      return;
+    }
+
+    const dmsAndTmc =
+      await DailyMethodStatementAndTrafficManagementChecks.findOne({
+        where: { DocumentId: id },
+      });
+    const emergencies = await Emergencies.findOne({
+      where: { DocumentId: id },
+    });
+    const tmcc = await TrafficManagementComplianceChecksheet.findOne({
+      where: { DocumentId: id },
+    });
+    const tmsc = await TrafficManagementSlgChecklist.findOne({
+      where: { DocumentId: id },
+    });
+    const hotWorkPermit = await HotWorkPermit.findOne({
+      where: { DocumentId: id },
+    });
+    const nearMissReport = await NearMissReport.findOne({
+      where: { DocumentId: id },
+    });
+    const methodStatementsJobInfo = await MethodStatementsJobInfo.findOne({
+      where: { DocumentId: id },
+    });
+    const reinstatementSheet = await ReinstatementSheet.findOne({
+      where: { DocumentId: id },
+    });
+
     document.file_attached = documentUpdated.file_attached;
     document.last_updated_by = user.name;
     document.permit_to_dig_sketch_image =
       documentUpdated.permit_to_dig_sketch_image;
 
-    document.daily_method_statement_and_traffic_management_checks.method_statement_for_the_day =
+    dmsAndTmc.method_statement_for_the_day =
       documentUpdated.daily_method_statement_and_traffic_management_checks.method_statement_for_the_day;
-    document.daily_method_statement_and_traffic_management_checks.daily_method_statement_question_one =
+    dmsAndTmc.daily_method_statement_question_one =
       documentUpdated.daily_method_statement_and_traffic_management_checks.daily_method_statement_question_one;
-    document.daily_method_statement_and_traffic_management_checks.daily_method_statement_question_two =
+    dmsAndTmc.daily_method_statement_question_two =
       documentUpdated.daily_method_statement_and_traffic_management_checks.daily_method_statement_question_two;
-    document.daily_method_statement_and_traffic_management_checks.daily_method_statement_question_three =
+    dmsAndTmc.daily_method_statement_question_three =
       documentUpdated.daily_method_statement_and_traffic_management_checks.daily_method_statement_question_three;
 
-    document.emergencies.emergencies_question_one =
+    emergencies.emergencies_question_one =
       documentUpdated.emergencies.emergencies_question_one;
-    document.emergencies.emergency_location_of_assembly_point =
+    emergencies.emergency_location_of_assembly_point =
       documentUpdated.emergencies.emergency_location_of_assembly_point;
-    document.emergencies.emergency_name_of_first_aider =
+    emergencies.emergency_name_of_first_aider =
       documentUpdated.emergencies.emergency_name_of_first_aider;
-    document.emergencies.emergency_slg_operative =
+    emergencies.emergency_slg_operative =
       documentUpdated.emergencies.emergency_slg_operative;
 
-    document.traffic_management_compliance_checksheet.traffic_management_compliance_checksheet_tmp_number =
+    tmcc.traffic_management_compliance_checksheet_tmp_number =
       documentUpdated.traffic_management_compliance_checksheet.traffic_management_compliance_checksheet_tmp_number;
-    document.traffic_management_compliance_checksheet.traffic_management_compliance_checksheet_question_one =
+    tmcc.traffic_management_compliance_checksheet_question_one =
       documentUpdated.traffic_management_compliance_checksheet.traffic_management_compliance_checksheet_question_one;
-    document.traffic_management_compliance_checksheet.traffic_management_compliance_checksheet_question_two =
+    tmcc.traffic_management_compliance_checksheet_question_two =
       documentUpdated.traffic_management_compliance_checksheet.traffic_management_compliance_checksheet_question_two;
-    document.traffic_management_compliance_checksheet.traffic_management_compliance_checksheet_question_three =
+    tmcc.traffic_management_compliance_checksheet_question_three =
       documentUpdated.traffic_management_compliance_checksheet.traffic_management_compliance_checksheet_question_three;
-    document.traffic_management_compliance_checksheet.traffic_management_compliance_checksheet_question_sub_one =
+    tmcc.traffic_management_compliance_checksheet_question_sub_one =
       documentUpdated.traffic_management_compliance_checksheet.traffic_management_compliance_checksheet_question_sub_one;
-    document.traffic_management_compliance_checksheet.traffic_management_compliance_checksheet_question_sub_two =
+    tmcc.traffic_management_compliance_checksheet_question_sub_two =
       documentUpdated.traffic_management_compliance_checksheet.traffic_management_compliance_checksheet_question_sub_two;
-    document.traffic_management_compliance_checksheet.traffic_management_compliance_checksheet_question_sub_three =
+    tmcc.traffic_management_compliance_checksheet_question_sub_three =
       documentUpdated.traffic_management_compliance_checksheet.traffic_management_compliance_checksheet_question_sub_three;
-    document.traffic_management_compliance_checksheet.traffic_management_compliance_checksheet_question_sub_four =
+    tmcc.traffic_management_compliance_checksheet_question_sub_four =
       documentUpdated.traffic_management_compliance_checksheet.traffic_management_compliance_checksheet_question_sub_four;
 
-    document.traffic_management_slg_checklist.installation_checks_one =
+    tmsc.installation_checks_one =
       documentUpdated.traffic_management_slg_checklist.installation_checks_one;
-    document.traffic_management_slg_checklist.installation_checks_two =
+    tmsc.installation_checks_two =
       documentUpdated.traffic_management_slg_checklist.installation_checks_two;
-    document.traffic_management_slg_checklist.installation_checks_three =
+    tmsc.installation_checks_three =
       documentUpdated.traffic_management_slg_checklist.installation_checks_three;
-    document.traffic_management_slg_checklist.installation_checks_four =
+    tmsc.installation_checks_four =
       documentUpdated.traffic_management_slg_checklist.installation_checks_four;
-    document.traffic_management_slg_checklist.installation_checks_five =
+    tmsc.installation_checks_five =
       documentUpdated.traffic_management_slg_checklist.installation_checks_five;
-    document.traffic_management_slg_checklist.installation_checks_six =
+    tmsc.installation_checks_six =
       documentUpdated.traffic_management_slg_checklist.installation_checks_six;
-    document.traffic_management_slg_checklist.operation_checks_one =
+    tmsc.operation_checks_one =
       documentUpdated.traffic_management_slg_checklist.operation_checks_one;
-    document.traffic_management_slg_checklist.operation_checks_two =
+    tmsc.operation_checks_two =
       documentUpdated.traffic_management_slg_checklist.operation_checks_two;
-    document.traffic_management_slg_checklist.operation_checks_three =
+    tmsc.operation_checks_three =
       documentUpdated.traffic_management_slg_checklist.operation_checks_three;
-    document.traffic_management_slg_checklist.operation_checks_four =
+    tmsc.operation_checks_four =
       documentUpdated.traffic_management_slg_checklist.operation_checks_four;
-    document.traffic_management_slg_checklist.operation_checks_five =
+    tmsc.operation_checks_five =
       documentUpdated.traffic_management_slg_checklist.operation_checks_five;
-    document.traffic_management_slg_checklist.operation_checks_six =
+    tmsc.operation_checks_six =
       documentUpdated.traffic_management_slg_checklist.operation_checks_six;
-    document.traffic_management_slg_checklist.operation_checks_seven =
+    tmsc.operation_checks_seven =
       documentUpdated.traffic_management_slg_checklist.operation_checks_seven;
-    document.traffic_management_slg_checklist.traffic_checks_one =
+    tmsc.traffic_checks_one =
       documentUpdated.traffic_management_slg_checklist.traffic_checks_one;
-    document.traffic_management_slg_checklist.traffic_checks_two =
+    tmsc.traffic_checks_two =
       documentUpdated.traffic_management_slg_checklist.traffic_checks_two;
-    document.traffic_management_slg_checklist.traffic_checks_three =
+    tmsc.traffic_checks_three =
       documentUpdated.traffic_management_slg_checklist.traffic_checks_three;
-    document.traffic_management_slg_checklist.traffic_checks_four =
+    tmsc.traffic_checks_four =
       documentUpdated.traffic_management_slg_checklist.traffic_checks_four;
-    document.traffic_management_slg_checklist.vulnerable_user_checks_one =
+    tmsc.vulnerable_user_checks_one =
       documentUpdated.traffic_management_slg_checklist.vulnerable_user_checks_one;
-    document.traffic_management_slg_checklist.vulnerable_user_checks_two =
+    tmsc.vulnerable_user_checks_two =
       documentUpdated.traffic_management_slg_checklist.vulnerable_user_checks_two;
-    document.traffic_management_slg_checklist.vulnerable_user_checks_three =
+    tmsc.vulnerable_user_checks_three =
       documentUpdated.traffic_management_slg_checklist.vulnerable_user_checks_three;
-    document.traffic_management_slg_checklist.vulnerable_user_checks_four =
+    tmsc.vulnerable_user_checks_four =
       documentUpdated.traffic_management_slg_checklist.vulnerable_user_checks_four;
-    document.traffic_management_slg_checklist.vulnerable_user_checks_five =
+    tmsc.vulnerable_user_checks_five =
       documentUpdated.traffic_management_slg_checklist.vulnerable_user_checks_five;
-    document.traffic_management_slg_checklist.work_complete_checks_one =
+    tmsc.work_complete_checks_one =
       documentUpdated.traffic_management_slg_checklist.work_complete_checks_one;
-    document.traffic_management_slg_checklist.work_complete_checks_two =
+    tmsc.work_complete_checks_two =
       documentUpdated.traffic_management_slg_checklist.work_complete_checks_two;
-    document.traffic_management_slg_checklist.work_complete_checks_three =
+    tmsc.work_complete_checks_three =
       documentUpdated.traffic_management_slg_checklist.work_complete_checks_three;
 
-    document.hot_work_permit.site = documentUpdated.hot_work_permit.site;
-    document.hot_work_permit.floor_level =
-      documentUpdated.hot_work_permit.floor_level;
-    document.hot_work_permit.nature_of_work =
+    hotWorkPermit.site = documentUpdated.hot_work_permit.site;
+    hotWorkPermit.floor_level = documentUpdated.hot_work_permit.floor_level;
+    hotWorkPermit.nature_of_work =
       documentUpdated.hot_work_permit.nature_of_work;
-    document.hot_work_permit.date = documentUpdated.hot_work_permit.date;
-    document.hot_work_permit.permit_precautions_one =
+    hotWorkPermit.date = documentUpdated.hot_work_permit.date;
+    hotWorkPermit.permit_precautions_one =
       documentUpdated.hot_work_permit.permit_precautions_one;
-    document.hot_work_permit.permit_precautions_two =
+    hotWorkPermit.permit_precautions_two =
       documentUpdated.hot_work_permit.permit_precautions_two;
-    document.hot_work_permit.permit_precautions_three =
+    hotWorkPermit.permit_precautions_three =
       documentUpdated.hot_work_permit.permit_precautions_three;
-    document.hot_work_permit.permit_precautions_four =
+    hotWorkPermit.permit_precautions_four =
       documentUpdated.hot_work_permit.permit_precautions_four;
-    document.hot_work_permit.permit_precautions_five =
+    hotWorkPermit.permit_precautions_five =
       documentUpdated.hot_work_permit.permit_precautions_five;
-    document.hot_work_permit.permit_precautions_six =
+    hotWorkPermit.permit_precautions_six =
       documentUpdated.hot_work_permit.permit_precautions_six;
-    document.hot_work_permit.permit_precautions_seven =
+    hotWorkPermit.permit_precautions_seven =
       documentUpdated.hot_work_permit.permit_precautions_seven;
-    document.hot_work_permit.permit_precautions_eight =
+    hotWorkPermit.permit_precautions_eight =
       documentUpdated.hot_work_permit.permit_precautions_eight;
-    document.hot_work_permit.permit_precautions_nine =
+    hotWorkPermit.permit_precautions_nine =
       documentUpdated.hot_work_permit.permit_precautions_nine;
-    document.hot_work_permit.permit_precautions_ten =
+    hotWorkPermit.permit_precautions_ten =
       documentUpdated.hot_work_permit.permit_precautions_ten;
-    document.hot_work_permit.permit_precautions_eleven =
+    hotWorkPermit.permit_precautions_eleven =
       documentUpdated.hot_work_permit.permit_precautions_eleven;
-    document.hot_work_permit.permit_issued_by_company =
+    hotWorkPermit.permit_issued_by_company =
       documentUpdated.hot_work_permit.permit_issued_by_company;
-    document.hot_work_permit.permit_issued_by_person =
+    hotWorkPermit.permit_issued_by_person =
       documentUpdated.hot_work_permit.permit_issued_by_person;
-    document.hot_work_permit.permit_issued_by_person_signature =
+    hotWorkPermit.permit_issued_by_person_signature =
       documentUpdated.hot_work_permit.permit_issued_by_person_signature;
-    document.hot_work_permit.permit_received_by_company =
+    hotWorkPermit.permit_received_by_company =
       documentUpdated.hot_work_permit.permit_received_by_company;
-    document.hot_work_permit.permit_received_by_person =
+    hotWorkPermit.permit_received_by_person =
       documentUpdated.hot_work_permit.permit_received_by_person;
-    document.hot_work_permit.permit_received_by_person_signature =
+    hotWorkPermit.permit_received_by_person_signature =
       documentUpdated.hot_work_permit.permit_received_by_person_signature;
-    document.hot_work_permit.final_check_time =
+    hotWorkPermit.final_check_time =
       documentUpdated.hot_work_permit.final_check_time;
-    document.hot_work_permit.final_check_name =
+    hotWorkPermit.final_check_name =
       documentUpdated.hot_work_permit.final_check_name;
-    document.hot_work_permit.final_check_signature =
+    hotWorkPermit.final_check_signature =
       documentUpdated.hot_work_permit.final_check_signature;
 
-    document.near_miss_report.details_comments =
+    nearMissReport.details_comments =
       documentUpdated.near_miss_report.details_comments;
-    document.near_miss_report.actions_taken_comments =
+    nearMissReport.actions_taken_comments =
       documentUpdated.near_miss_report.actions_taken_comments;
-    document.near_miss_report.suggestion_to_prevent_reoccurance_comments =
+    nearMissReport.suggestion_to_prevent_reoccurance_comments =
       documentUpdated.near_miss_report.suggestion_to_prevent_reoccurance_comments;
-    document.near_miss_report.report_signature =
+    nearMissReport.report_signature =
       documentUpdated.near_miss_report.report_signature;
 
-    document.method_statements_job_information.ms_id =
+    methodStatementsJobInfo.ms_id =
       documentUpdated.method_statements_job_information.ms_id;
-    document.method_statements_job_information.ms_revision =
+    methodStatementsJobInfo.ms_revision =
       documentUpdated.method_statements_job_information.ms_revision;
-    document.method_statements_job_information.ms_project =
+    methodStatementsJobInfo.ms_project =
       documentUpdated.method_statements_job_information.ms_project;
-    document.method_statements_job_information.ms_site =
+    methodStatementsJobInfo.ms_site =
       documentUpdated.method_statements_job_information.ms_site;
-    document.method_statements_job_information.ms_client =
+    methodStatementsJobInfo.ms_client =
       documentUpdated.method_statements_job_information.ms_client;
-    document.method_statements_job_information.loc_photograph_image =
+    methodStatementsJobInfo.loc_photograph_image =
       documentUpdated.method_statements_job_information.loc_photograph_image;
 
-    document.reinstatement_sheet.esbn_hole_number =
+    reinstatementSheet.esbn_hole_number =
       documentUpdated.reinstatement_sheet.esbn_hole_number;
-    document.reinstatement_sheet.location =
-      documentUpdated.reinstatement_sheet.location;
-    document.reinstatement_sheet.local_authority_licence_number =
+    reinstatementSheet.location = documentUpdated.reinstatement_sheet.location;
+    reinstatementSheet.local_authority_licence_number =
       documentUpdated.reinstatement_sheet.local_authority_licence_number;
-    document.reinstatement_sheet.traffic_impact_number =
+    reinstatementSheet.traffic_impact_number =
       documentUpdated.reinstatement_sheet.traffic_impact_number;
-    document.reinstatement_sheet.comments =
-      documentUpdated.reinstatement_sheet.comments;
+    reinstatementSheet.comments = documentUpdated.reinstatement_sheet.comments;
 
     try {
       await document.save();
+      await dmsAndTmc.save();
+      await emergencies.save();
+      await tmcc.save();
+      await tmsc.save();
+      await hotWorkPermit.save();
+      await nearMissReport.save();
+      await methodStatementsJobInfo.save();
+      await reinstatementSheet.save();
 
       // Recreate SiteAttendance
       await SiteAttendance.destroy({ where: { DocumentId: id } });
@@ -805,6 +809,16 @@ module.exports = class UserController {
   // Remove the whole reinstatement sheet by its Id
   static async removeReinstatementSheetById(req, res) {
     const id = req.params.id;
+    const reinstatementSheet = await ReinstatementSheet.findOne({
+      where: { id: id },
+    });
+
+    if (!reinstatementSheet) {
+      res.status(404).json({
+        message: "ReinstatementSheet not found!",
+      });
+      return;
+    }
 
     await ReinstatementSheet.destroy({ where: { id: id } });
 
@@ -813,32 +827,46 @@ module.exports = class UserController {
     });
   }
 
-  // New reinstatement
-  static async newReinstatement(req, res) {
-    const reinstatement = req.body.reinstatement;
+  // Create HoleSequence
+  static async newHoleSequence(req, res) {
+    const id = req.params.id;
+    const hole_sequence = req.body.hole_sequence;
 
-    const createReinstatement = {
-      coordinates: reinstatement.coordinates,
-      length: reinstatement.length,
-      width: reinstatement.width,
-      area: reinstatement.area,
-      surface_category: reinstatement.surface_category,
-      reinstatement: reinstatement.reinstatement,
-      status: reinstatement.status,
-      date_complete: reinstatement.date_complete,
-      reinstatement_images: reinstatement.reinstatement_images,
+    const reinstatementSheet = await ReinstatementSheet.findOne({
+      where: { id: id },
+    });
+
+    if (!reinstatementSheet) {
+      res.status(404).json({
+        message: "ReinstatementSheet not found!",
+      });
+      return;
+    }
+
+    const holeSequence = {
+      coordinates: hole_sequence.coordinates,
+      length: hole_sequence.length,
+      width: hole_sequence.width,
+      area: hole_sequence.area,
+      surface_category: hole_sequence.surface_category,
+      reinstatement: hole_sequence.reinstatement,
+      status: hole_sequence.status,
+      date_complete: hole_sequence.date_complete,
+      reinstatementSheetId: reinstatementSheet.id,
     };
 
     try {
-      const r = await ReinstatementSheet.create(createReinstatement);
-      await ReinstatementImages.create({
-        image: reinstatement.reinstatement_images,
-        reinstatementSheetId: r.id,
+      const rshs = await ReinstatementSheetHoleSequence.create(holeSequence);
+      hole_sequence.reinstatement_images.forEach(async (img) => {
+        await ReinstatementImages.create({
+          image: img.image,
+          holeSequenceId: rshs.id,
+        });
       });
 
-      res.status(201).json({
-        message: "New Activity created successfully!",
-        newActivity: activity,
+      res.status(200).json({
+        message: "Hole Sequence created successfully!",
+        holeSequence: rshs,
       });
     } catch (error) {
       res.status(500).json({ message: error });
@@ -846,60 +874,64 @@ module.exports = class UserController {
   }
 
   // Update reinstatement
-  static async updateReinstatement(req, res) {
+  static async updateHoleSequence(req, res) {
     const id = req.params.id;
-    const reinstatementUpdated = req.body.reinstatement;
-    const reinstatement = await ReinstatementSheet.findOne({
+    const holeSequenceNew = req.body.hole_sequence;
+    const holeSequenceOld = await ReinstatementSheetHoleSequence.findOne({
       where: { id: id },
-      include: [
-        {
-          model: ReinstatementSheetHoleSequence,
-          include: [{ model: ReinstatementImages }],
-        },
-      ],
+      include: ReinstatementImages,
     });
 
-    if (!reinstatement) {
+    if (!holeSequenceOld) {
       res.status(404).json({
-        message: "Reinstatement not found!",
+        message: "Hole Sequence not found!",
       });
       return;
     }
 
-    reinstatement.coordinates = reinstatementUpdated.coordinates;
-    reinstatement.length = reinstatementUpdated.length;
-    reinstatement.width = reinstatementUpdated.width;
-    reinstatement.area = reinstatementUpdated.area;
-    reinstatement.surface_category = reinstatementUpdated.surface_category;
-    reinstatement.reinstatement = reinstatementUpdated.reinstatement;
-    reinstatement.status = reinstatementUpdated.status;
-    reinstatement.date_complete = reinstatementUpdated.date_complete;
+    holeSequenceOld.coordinates = holeSequenceNew.coordinates;
+    holeSequenceOld.length = holeSequenceNew.length;
+    holeSequenceOld.width = holeSequenceNew.width;
+    holeSequenceOld.area = holeSequenceNew.area;
+    holeSequenceOld.surface_category = holeSequenceNew.surface_category;
+    holeSequenceOld.reinstatement = holeSequenceNew.reinstatement;
+    holeSequenceOld.status = holeSequenceNew.status;
+    holeSequenceOld.date_complete = holeSequenceNew.date_complete;
     //reinstatement.reinstatement_images = reinstatementUpdated.reinstatement_images;
 
     try {
-      await reinstatement.save();
+      await holeSequenceOld.save();
+
+      res.status(200).json({
+        message: "Hole Sequence updated successfully!",
+        holeSequence: holeSequenceOld,
+      });
     } catch (error) {
       res.status(500).json({ message: error });
     }
   }
 
   // Remove reinstatement
-  static async removeReinstatementById(req, res) {
+  static async removeHoleSequenceById(req, res) {
     const id = req.params.id;
-    const reinstatement = await ReinstatementSheetHoleSequence.findOne({
+    const holeSequence = await ReinstatementSheetHoleSequence.findOne({
       where: { id: id },
     });
 
-    if (!reinstatement) {
+    if (!holeSequence) {
       res.status(404).json({
-        message: "Reinstatement not found!",
+        message: "Hole Sequence not found!",
       });
       return;
     }
 
     try {
       await ReinstatementSheetHoleSequence.destroy({
-        where: { id: reinstatement.id },
+        where: { id: holeSequence.id },
+      });
+
+      res.status(200).json({
+        message: "Hole Sequence removed successfully!",
       });
     } catch (error) {
       res.status(500).json({ message: error });

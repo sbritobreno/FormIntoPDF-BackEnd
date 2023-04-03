@@ -23,11 +23,11 @@ router.patch(
 router.get("/all_reinstatementsheets", verifyToken, DocumentController.getAllReinstatementSheets);
 router.get("/reinstatementsheet/:id", verifyToken, DocumentController.getReinstatementSheetById);
 router.delete("/remove_reinstatementsheet/:id", verifyToken, DocumentController.removeReinstatementSheetById);
-router.post("/new_reinstatement", verifyToken, DocumentController.newReinstatement);
-router.patch("/update_reinstatement/:id", verifyToken, imageUpload.array("images"), DocumentController.updateReinstatement);
-router.delete("/remove_reinstatement/:id", verifyToken, DocumentController.removeReinstatementById);
+router.post("/new_holesequence/:id", verifyToken, DocumentController.newHoleSequence);
+router.patch("/update_holesequence/:id", verifyToken, imageUpload.array("images"), DocumentController.updateHoleSequence);
+router.delete("/remove_holesequence/:id", verifyToken, DocumentController.removeHoleSequenceById);
 // router.patch("/add_file/:id", verifyToken, DocumentController.addFileToDocument);
-// router.get("/download_reinstatement/:id", verifyToken, DocumentController.downloadReinstatementSheet);
+// router.get("/download_reinstatementsheet/:id", verifyToken, DocumentController.downloadReinstatementSheet);
 // router.get("/download_pdf/:id", verifyToken, DocumentController.downloadPdf);
 
 
