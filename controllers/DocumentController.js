@@ -800,4 +800,19 @@ module.exports = class UserController {
       res.status(500).json({ message: error });
     }
   }
+
+  // Get All Reinstatement
+  static async getAllReinstatements(req, res) {
+    const reinstatements = await ReinstatementSheet.findAll({
+      include: [
+        { model: ReinstatementSheetHoleSequence },
+        { model: ReinstatementSheetImages },
+      ],
+      order: [["createdAt", "DESC"]],
+    });
+
+    res.status(200).json({
+      reinstatements: reinstatements,
+    });
+  }
 };
