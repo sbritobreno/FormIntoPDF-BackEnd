@@ -839,4 +839,15 @@ module.exports = class UserController {
       reinstatement: reinstatement,
     });
   }
+
+  // Remove reinstatement by its Id
+  static async removeReinstatementSheetById(req, res) {
+    const id = req.params.id;
+
+    await ReinstatementSheet.destroy({ where: { id: id } });
+
+    res.status(200).json({
+      message: "Reinstatement removed successfully!",
+    });
+  }
 };

@@ -23,7 +23,7 @@ router.patch(
 // router.patch("/add_file/:id", verifyToken, DocumentController.addFileToDocument);
 router.get("/all_reinstatements", verifyToken, DocumentController.getAllReinstatements);
 router.get("/reinstatement/:id", verifyToken, DocumentController.getReinstatementSheetById);
-// router.delete("/remove_reinstatement/:id", verifyToken, DocumentController.removeReinstatementSheetById);
+router.delete("/remove_reinstatement/:id", verifyToken, DocumentController.removeReinstatementSheetById);
 // router.patch(
 //   "/update_reinstatement/:id",
 //   verifyToken,
