@@ -7,6 +7,7 @@ const { imageUpload } = require("../helpers/image-upload");
 
 router.get("/all_documents", verifyToken, DocumentController.getAllDocuments);
 router.get("/:id", verifyToken, DocumentController.getDocumentById);
+router.delete("/remove/:id", verifyToken, DocumentController.removeDocumentById);
 router.post(
   "/new",
   verifyToken,

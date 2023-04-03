@@ -31,8 +31,12 @@ const ReinstatementSheet = db.define("reinstatement_sheet", {
   },
 });
 
-ReinstatementSheet.hasMany(ReinstatementSheetHoleSequence);
-ReinstatementSheet.hasMany(ReinstatementSheetImages);
+ReinstatementSheet.hasMany(ReinstatementSheetHoleSequence, {
+  onDelete: "CASCADE",
+});
+ReinstatementSheet.hasMany(ReinstatementSheetImages, {
+  onDelete: "CASCADE",
+});
 
 ReinstatementSheetHoleSequence.belongsTo(ReinstatementSheet);
 ReinstatementSheetImages.belongsTo(ReinstatementSheet);

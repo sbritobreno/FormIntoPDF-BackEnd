@@ -94,7 +94,47 @@ module.exports = class UserController {
     });
   }
 
+  // Remove document by its ID
+  static async removeDocumentById(req, res) {
+    const id = req.params.id;
 
+    const document = await Document.findOne({
+      where: { id: id },
+      include: [
+        { model: SiteAttendance },
+        { model: Hazards },
+        { model: DMSandTMC },
+        { model: Emergencies },
+        { model: TrafficManagementComplianceChecksheet },
+        { model: TrafficManagementSlgChecklist },
+        { model: ApprovedForm },
+        { model: HotWorkPermit },
+        { model: DailyPlantInspection },
+        { model: NearMissReport },
+        { model: FutherHazarsAndControls },
+        { model: MethodStatementsJobInfo },
+        {
+          model: ReinstatementSheet,
+          include: [
+            { model: ReinstatementSheetHoleSequence },
+            { model: ReinstatementSheetImages },
+          ],
+        },
+      ],
+    });
+
+    if (!document) {
+      res.status(404).json({ message: "Document not found!" });
+      return;
+    }
+
+    await Document.destroy({ where: { id: id } });
+
+    res.status(200).json({
+      message: "Document removed successfully!",
+      document: document,
+    });
+  }
 
   // Create new document
   static async newDocument(req, res) {

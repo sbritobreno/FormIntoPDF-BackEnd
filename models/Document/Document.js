@@ -34,19 +34,49 @@ const Document = db.define("Document", {
   },
 });
 
-Document.hasMany(ApprovedForm, { foreignKey: "DocumentId" });
-Document.hasMany(SiteAttendance, { foreignKey: "DocumentId" });
-Document.hasMany(Hazards, { foreignKey: "DocumentId" });
-Document.hasMany(DailyPlantInspection, { foreignKey: "DocumentId" });
-Document.hasMany(FutherHazarsAndControls, { foreignKey: "DocumentId" });
-Document.hasOne(DMSAndTMC, { foreignKey: "DocumentId" });
-Document.hasOne(Emergencies, { foreignKey: "DocumentId" });
-Document.hasOne(HotWorkPermit, { foreignKey: "DocumentId" });
-Document.hasOne(MethodStatementsJobInfo, { foreignKey: "DocumentId" });
-Document.hasOne(NearMissReport, { foreignKey: "DocumentId" });
-Document.hasOne(ReinstatementSheet, { foreignKey: "DocumentId" });
-Document.hasOne(TrafficManagementComplianceChecksheet, { foreignKey: "DocumentId" });
-Document.hasOne(TrafficManagementSlgChecklist, { foreignKey: "DocumentId" });
+Document.hasMany(ApprovedForm, {
+  onDelete: "CASCADE",
+  foreignKey: "DocumentId",
+});
+Document.hasMany(SiteAttendance, {
+  onDelete: "CASCADE",
+  foreignKey: "DocumentId",
+});
+Document.hasMany(Hazards, { onDelete: "CASCADE", foreignKey: "DocumentId" });
+Document.hasMany(DailyPlantInspection, {
+  onDelete: "CASCADE",
+  foreignKey: "DocumentId",
+});
+Document.hasMany(FutherHazarsAndControls, {
+  onDelete: "CASCADE",
+  foreignKey: "DocumentId",
+});
+Document.hasOne(DMSAndTMC, { onDelete: "CASCADE", foreignKey: "DocumentId" });
+Document.hasOne(Emergencies, { onDelete: "CASCADE", foreignKey: "DocumentId" });
+Document.hasOne(HotWorkPermit, {
+  onDelete: "CASCADE",
+  foreignKey: "DocumentId",
+});
+Document.hasOne(MethodStatementsJobInfo, {
+  onDelete: "CASCADE",
+  foreignKey: "DocumentId",
+});
+Document.hasOne(NearMissReport, {
+  onDelete: "CASCADE",
+  foreignKey: "DocumentId",
+});
+Document.hasOne(ReinstatementSheet, {
+  onDelete: "CASCADE",
+  foreignKey: "DocumentId",
+});
+Document.hasOne(TrafficManagementComplianceChecksheet, {
+  onDelete: "CASCADE",
+  foreignKey: "DocumentId",
+});
+Document.hasOne(TrafficManagementSlgChecklist, {
+  onDelete: "CASCADE",
+  foreignKey: "DocumentId",
+});
 
 ApprovedForm.belongsTo(Document);
 SiteAttendance.belongsTo(Document);
