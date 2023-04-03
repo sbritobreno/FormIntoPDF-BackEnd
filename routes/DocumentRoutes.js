@@ -11,5 +11,11 @@ router.post(
   imageUpload.array("images"),
   DocumentController.newDocument
 );
+router.patch(
+  "/update/:id",
+  verifyToken,
+  imageUpload.array("images"),
+  DocumentController.updateDocument
+);
 
 module.exports = router;
