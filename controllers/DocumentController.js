@@ -18,9 +18,6 @@ const ReinstatementImages = require("../models/Document/ReinstatementImages");
 // helpers
 const getUserByToken = require("../helpers/get-user-by-token");
 const getToken = require("../helpers/get-token");
-const createUserToken = require("../helpers/create-user-token");
-const { imageUpload } = require("../helpers/upload");
-const DailyMethodStatementAndTrafficManagementChecks = require("../models/Document/DailyMethodStatementAndTrafficManagementChecks");
 
 module.exports = class UserController {
   // Get all documents
@@ -142,9 +139,10 @@ module.exports = class UserController {
     });
   }
 
-  // Create new document
+  // Init new document with documents info and siteAttendance
   static async newDocument(req, res) {
     const document = req.body.document;
+    const images = req.files;
 
     // get user
     const token = getToken(req);
@@ -153,313 +151,28 @@ module.exports = class UserController {
     try {
       // New Document
       const doc = await Document.create({
-        file_attached: document.file_attached,
         created_by: user.name,
         last_updated_by: user.name,
-        permit_to_dig_sketch_image: document.permit_to_dig_sketch_image,
+        sections_completed: 1,
       });
 
       // Set SiteAttendance
-      document.site_attendance.forEach(async (attendance) => {
+      document.site_attendance.forEach(async (attendance, index) => {
         await SiteAttendance.create({
           name: attendance.name,
-          signature: attendance.signature,
           date: attendance.date,
           time_in: attendance.time_in,
           time_out: attendance.time_out,
+          signature: images[`signature${index}`].filename,
           DocumentId: doc.id,
         });
       });
 
-      // Set Hazards
-      document.hazards.forEach(async (hazard) => {
-        await Hazards.create({
-          name: hazard.name,
-          control: hazard.control,
-          value: hazard.value,
-          DocumentId: doc.id,
-        });
-      });
-
-      // Set DailyMethodStatementAndTrafficManagementChecks
-      await DMSandTMC.create({
-        method_statement_for_the_day:
-          document.daily_method_statement_and_traffic_management_checks
-            .method_statement_for_the_day,
-        daily_method_statement_question_one:
-          document.daily_method_statement_and_traffic_management_checks
-            .daily_method_statement_question_one,
-        daily_method_statement_question_two:
-          document.daily_method_statement_and_traffic_management_checks
-            .daily_method_statement_question_two,
-        daily_method_statement_question_three:
-          document.daily_method_statement_and_traffic_management_checks
-            .daily_method_statement_question_three,
-        DocumentId: doc.id,
-      });
-
-      // Set Emergencies
-      await Emergencies.create({
-        emergencies_question_one: document.emergencies.emergencies_question_one,
-        emergency_location_of_assembly_point:
-          document.emergencies.emergency_location_of_assembly_point,
-        emergency_name_of_first_aider:
-          document.emergencies.emergency_name_of_first_aider,
-        emergency_slg_operative: document.emergencies.emergency_slg_operative,
-        DocumentId: doc.id,
-      });
-
-      // Set TrafficManagementComplianceChecksheet
-      await TrafficManagementComplianceChecksheet.create({
-        traffic_management_compliance_checksheet_tmp_number:
-          document.traffic_management_compliance_checksheet
-            .traffic_management_compliance_checksheet_tmp_number,
-        traffic_management_compliance_checksheet_question_one:
-          document.traffic_management_compliance_checksheet
-            .traffic_management_compliance_checksheet_question_one,
-        traffic_management_compliance_checksheet_question_two:
-          document.traffic_management_compliance_checksheet
-            .traffic_management_compliance_checksheet_question_two,
-        traffic_management_compliance_checksheet_question_three:
-          document.traffic_management_compliance_checksheet
-            .traffic_management_compliance_checksheet_question_three,
-        traffic_management_compliance_checksheet_question_sub_one:
-          document.traffic_management_compliance_checksheet
-            .traffic_management_compliance_checksheet_question_sub_one,
-        traffic_management_compliance_checksheet_question_sub_two:
-          document.traffic_management_compliance_checksheet
-            .traffic_management_compliance_checksheet_question_sub_two,
-        traffic_management_compliance_checksheet_question_sub_three:
-          document.traffic_management_compliance_checksheet
-            .traffic_management_compliance_checksheet_question_sub_three,
-        traffic_management_compliance_checksheet_question_sub_four:
-          document.traffic_management_compliance_checksheet
-            .traffic_management_compliance_checksheet_question_sub_four,
-        DocumentId: doc.id,
-      });
-
-      // Set TrafficManagementSlgChecklist
-      await TrafficManagementSlgChecklist.create({
-        installation_checks_one:
-          document.traffic_management_slg_checklist.installation_checks_one,
-        installation_checks_two:
-          document.traffic_management_slg_checklist.installation_checks_two,
-        installation_checks_three:
-          document.traffic_management_slg_checklist.installation_checks_three,
-        installation_checks_four:
-          document.traffic_management_slg_checklist.installation_checks_four,
-        installation_checks_five:
-          document.traffic_management_slg_checklist.installation_checks_five,
-        installation_checks_six:
-          document.traffic_management_slg_checklist.installation_checks_six,
-        operation_checks_one:
-          document.traffic_management_slg_checklist.operation_checks_one,
-        operation_checks_two:
-          document.traffic_management_slg_checklist.operation_checks_two,
-        operation_checks_three:
-          document.traffic_management_slg_checklist.operation_checks_three,
-        operation_checks_four:
-          document.traffic_management_slg_checklist.operation_checks_four,
-        operation_checks_five:
-          document.traffic_management_slg_checklist.operation_checks_five,
-        operation_checks_six:
-          document.traffic_management_slg_checklist.operation_checks_six,
-        operation_checks_seven:
-          document.traffic_management_slg_checklist.operation_checks_seven,
-        traffic_checks_one:
-          document.traffic_management_slg_checklist.traffic_checks_one,
-        traffic_checks_two:
-          document.traffic_management_slg_checklist.traffic_checks_two,
-        traffic_checks_three:
-          document.traffic_management_slg_checklist.traffic_checks_three,
-        traffic_checks_four:
-          document.traffic_management_slg_checklist.traffic_checks_four,
-        vulnerable_user_checks_one:
-          document.traffic_management_slg_checklist.vulnerable_user_checks_one,
-        vulnerable_user_checks_two:
-          document.traffic_management_slg_checklist.vulnerable_user_checks_two,
-        vulnerable_user_checks_three:
-          document.traffic_management_slg_checklist
-            .vulnerable_user_checks_three,
-        vulnerable_user_checks_four:
-          document.traffic_management_slg_checklist.vulnerable_user_checks_four,
-        vulnerable_user_checks_five:
-          document.traffic_management_slg_checklist.vulnerable_user_checks_five,
-        work_complete_checks_one:
-          document.traffic_management_slg_checklist.work_complete_checks_one,
-        work_complete_checks_two:
-          document.traffic_management_slg_checklist.work_complete_checks_two,
-        work_complete_checks_three:
-          document.traffic_management_slg_checklist.work_complete_checks_three,
-        DocumentId: doc.id,
-      });
-
-      // Set ApprovedForm
-      document.approved_form.forEach(async (element) => {
-        await ApprovedForm.create({
-          description_location: element.description_location,
-          date_examination: element.date_examination,
-          examination_result_state: element.examination_result_state,
-          inspector_signature: element.inspector_signature,
-          DocumentId: doc.id,
-        });
-      });
-
-      // Set HotWorkPermit
-      await HotWorkPermit.create({
-        site: document.hot_work_permit.site,
-        floor_level: document.hot_work_permit.floor_level,
-        nature_of_work: document.hot_work_permit.nature_of_work,
-        date: document.hot_work_permit.date,
-        permit_precautions_one: document.hot_work_permit.permit_precautions_one,
-        permit_precautions_two: document.hot_work_permit.permit_precautions_two,
-        permit_precautions_three:
-          document.hot_work_permit.permit_precautions_three,
-        permit_precautions_four:
-          document.hot_work_permit.permit_precautions_four,
-        permit_precautions_five:
-          document.hot_work_permit.permit_precautions_five,
-        permit_precautions_six: document.hot_work_permit.permit_precautions_six,
-        permit_precautions_seven:
-          document.hot_work_permit.permit_precautions_seven,
-        permit_precautions_eight:
-          document.hot_work_permit.permit_precautions_eight,
-        permit_precautions_nine:
-          document.hot_work_permit.permit_precautions_nine,
-        permit_precautions_ten: document.hot_work_permit.permit_precautions_ten,
-        permit_precautions_eleven:
-          document.hot_work_permit.permit_precautions_eleven,
-        permit_issued_by_company:
-          document.hot_work_permit.permit_issued_by_company,
-        permit_issued_by_person:
-          document.hot_work_permit.permit_issued_by_person,
-        permit_issued_by_person_signature:
-          document.hot_work_permit.permit_issued_by_person_signature,
-        permit_received_by_company:
-          document.hot_work_permit.permit_received_by_company,
-        permit_received_by_person:
-          document.hot_work_permit.permit_received_by_person,
-        permit_received_by_person_signature:
-          document.hot_work_permit.permit_received_by_person_signature,
-        final_check_time: document.hot_work_permit.final_check_time,
-        final_check_name: document.hot_work_permit.final_check_name,
-        final_check_signature: document.hot_work_permit.final_check_signature,
-        DocumentId: doc.id,
-      });
-
-      // Set DailyPlantInspection
-      document.daily_plant_inspection.forEach(async (element) => {
-        await DailyPlantInspection.create({
-          tool_name: element.tool_name,
-          monday: element.monday,
-          tuesday: element.tuesday,
-          wednesday: element.wednesday,
-          thrusday: element.thrusday,
-          friday: element.friday,
-          saturday: element.saturday,
-          sunday: element.sunday,
-          DocumentId: doc.id,
-        });
-      });
-
-      // Set NearMissReport
-      await NearMissReport.create({
-        details_comments: document.near_miss_report.details_comments,
-        actions_taken_comments:
-          document.near_miss_report.actions_taken_comments,
-        suggestion_to_prevent_reoccurance_comments:
-          document.near_miss_report.suggestion_to_prevent_reoccurance_comments,
-        report_signature: document.near_miss_report.report_signature,
-        DocumentId: doc.id,
-      });
-
-      // Set FutherHazarsAndControls
-      document.futher_hazards_and_controls_required.forEach(async (element) => {
-        await FutherHazarsAndControls.create({
-          name: element.name,
-          control_required: element.control_required,
-          DocumentId: doc.id,
-        });
-      });
-
-      // Set MethodStatementsJobInfo
-      await MethodStatementsJobInfo.create({
-        ms_id: document.method_statements_job_information.ms_id,
-        ms_revision: document.method_statements_job_information.ms_revision,
-        ms_project: document.method_statements_job_information.ms_project,
-        ms_site: document.method_statements_job_information.ms_site,
-        ms_client: document.method_statements_job_information.ms_client,
-        loc_photograph_image:
-          document.method_statements_job_information.loc_photograph_image,
-        DocumentId: doc.id,
-      });
-
-      // Set ReinstatementSheet
-      const reinstatementSheet = await ReinstatementSheet.create({
-        esbn_hole_number: document.reinstatement_sheet.esbn_hole_number,
-        location: document.reinstatement_sheet.location,
-        local_authority_licence_number:
-          document.reinstatement_sheet.local_authority_licence_number,
-        traffic_impact_number:
-          document.reinstatement_sheet.traffic_impact_number,
-        comments: document.reinstatement_sheet.comments,
-        DocumentId: doc.id,
-      });
-
-      // Set ReinstatementSheetHoleSequence
-      document.reinstatement_sheet.hole_sequence.forEach(
-        async (holeSequence) => {
-          const newReinstatementSheetHoleSequence =
-            await ReinstatementSheetHoleSequence.create({
-              coordinates: holeSequence.coordinates,
-              length: holeSequence.length,
-              width: holeSequence.width,
-              area: holeSequence.area,
-              surface_category: holeSequence.surface_category,
-              reinstatement: holeSequence.reinstatement,
-              status: holeSequence.status,
-              date_complete: holeSequence.date_complete,
-              reinstatementSheetId: reinstatementSheet.id,
-            });
-          holeSequence.reinstatement_images.forEach(async (img) => {
-            await ReinstatementImages.create({
-              image: img.image,
-              holeSequenceId: newReinstatementSheetHoleSequence.id,
-            });
-          });
-        }
-      );
-
-      const newDocument = await Document.findOne({
-        where: { id: doc.id },
-        include: [
-          { model: SiteAttendance },
-          { model: Hazards },
-          { model: DMSandTMC },
-          { model: Emergencies },
-          { model: TrafficManagementComplianceChecksheet },
-          { model: TrafficManagementSlgChecklist },
-          { model: ApprovedForm },
-          { model: HotWorkPermit },
-          { model: DailyPlantInspection },
-          { model: NearMissReport },
-          { model: FutherHazarsAndControls },
-          { model: MethodStatementsJobInfo },
-          {
-            model: ReinstatementSheet,
-            include: [
-              {
-                model: ReinstatementSheetHoleSequence,
-                include: [{ model: ReinstatementImages }],
-              },
-            ],
-          },
-        ],
-      });
+      // Init other tables and update it later on
+      await Hazards.create({ DocumentId: doc.id });
 
       res.status(200).json({
         message: "New document created successfully!",
-        document: newDocument,
       });
     } catch (error) {
       res.status(500).json({ message: error });
@@ -469,6 +182,7 @@ module.exports = class UserController {
   // Update Document
   static async updateDocument(req, res) {
     const id = req.params.id;
+    const files = req.files;
 
     // get user
     const token = getToken(req);
@@ -483,10 +197,9 @@ module.exports = class UserController {
       return;
     }
 
-    const dmsAndTmc =
-      await DailyMethodStatementAndTrafficManagementChecks.findOne({
-        where: { DocumentId: id },
-      });
+    const dmsAndTmc = await DMSandTMC.findOne({
+      where: { DocumentId: id },
+    });
     const emergencies = await Emergencies.findOne({
       where: { DocumentId: id },
     });
@@ -509,10 +222,11 @@ module.exports = class UserController {
       where: { DocumentId: id },
     });
 
-    document.file_attached = documentUpdated.file_attached;
+    document.sections_complete = documentUpdated.sections_complete;
     document.last_updated_by = user.name;
-    document.permit_to_dig_sketch_image =
-      documentUpdated.permit_to_dig_sketch_image;
+    if (files["permit_to_dig_sketch_image"])
+      document.permit_to_dig_sketch_image =
+        files["permit_to_dig_sketch_image"].filename;
 
     dmsAndTmc.method_statement_for_the_day =
       documentUpdated.daily_method_statement_and_traffic_management_checks.method_statement_for_the_day;
@@ -631,20 +345,23 @@ module.exports = class UserController {
       documentUpdated.hot_work_permit.permit_issued_by_company;
     hotWorkPermit.permit_issued_by_person =
       documentUpdated.hot_work_permit.permit_issued_by_person;
-    hotWorkPermit.permit_issued_by_person_signature =
-      documentUpdated.hot_work_permit.permit_issued_by_person_signature;
+    if (files["permit_issued_by_person_signature"])
+      hotWorkPermit.permit_issued_by_person_signature =
+        files["permit_issued_by_person_signature"].filename;
     hotWorkPermit.permit_received_by_company =
       documentUpdated.hot_work_permit.permit_received_by_company;
     hotWorkPermit.permit_received_by_person =
       documentUpdated.hot_work_permit.permit_received_by_person;
-    hotWorkPermit.permit_received_by_person_signature =
-      documentUpdated.hot_work_permit.permit_received_by_person_signature;
+    if (files["permit_received_by_person_signature"])
+      hotWorkPermit.permit_received_by_person_signature =
+        files["permit_received_by_person_signature"].filename;
     hotWorkPermit.final_check_time =
       documentUpdated.hot_work_permit.final_check_time;
     hotWorkPermit.final_check_name =
       documentUpdated.hot_work_permit.final_check_name;
-    hotWorkPermit.final_check_signature =
-      documentUpdated.hot_work_permit.final_check_signature;
+    if (files["final_check_signature"])
+      hotWorkPermit.final_check_signature =
+        files["final_check_signature"].filename;
 
     nearMissReport.details_comments =
       documentUpdated.near_miss_report.details_comments;
@@ -652,8 +369,8 @@ module.exports = class UserController {
       documentUpdated.near_miss_report.actions_taken_comments;
     nearMissReport.suggestion_to_prevent_reoccurance_comments =
       documentUpdated.near_miss_report.suggestion_to_prevent_reoccurance_comments;
-    nearMissReport.report_signature =
-      documentUpdated.near_miss_report.report_signature;
+    if (files["report_signature"])
+      nearMissReport.report_signature = files["report_signature"].filename;
 
     methodStatementsJobInfo.ms_id =
       documentUpdated.method_statements_job_information.ms_id;
@@ -665,17 +382,9 @@ module.exports = class UserController {
       documentUpdated.method_statements_job_information.ms_site;
     methodStatementsJobInfo.ms_client =
       documentUpdated.method_statements_job_information.ms_client;
-    methodStatementsJobInfo.loc_photograph_image =
-      documentUpdated.method_statements_job_information.loc_photograph_image;
-
-    reinstatementSheet.esbn_hole_number =
-      documentUpdated.reinstatement_sheet.esbn_hole_number;
-    reinstatementSheet.location = documentUpdated.reinstatement_sheet.location;
-    reinstatementSheet.local_authority_licence_number =
-      documentUpdated.reinstatement_sheet.local_authority_licence_number;
-    reinstatementSheet.traffic_impact_number =
-      documentUpdated.reinstatement_sheet.traffic_impact_number;
-    reinstatementSheet.comments = documentUpdated.reinstatement_sheet.comments;
+    if (files["loc_photograph_image"])
+      methodStatementsJobInfo.loc_photograph_image =
+        files["loc_photograph_image"].filename;
 
     try {
       await document.save();
@@ -690,25 +399,27 @@ module.exports = class UserController {
 
       // Recreate SiteAttendance
       await SiteAttendance.destroy({ where: { DocumentId: id } });
-      documentUpdated.site_attendance.forEach(async (attendance) => {
+      documentUpdated.site_attendance.forEach(async (attendance, index) => {
         await SiteAttendance.create({
           name: attendance.name,
-          signature: attendance.signature,
           date: attendance.date,
           time_in: attendance.time_in,
           time_out: attendance.time_out,
+          signature: files[`signature${index}`].filename,
           DocumentId: id,
         });
       });
 
-      // Recreate Hazards
-      await Hazards.destroy({ where: { DocumentId: id } });
-      documentUpdated.hazards.forEach(async (hazard) => {
-        await Hazards.create({
-          name: hazard.name,
-          control: hazard.control,
-          value: hazard.value,
-          DocumentId: id,
+      // Update Hazards
+      const hazards = await Hazards.findAll({ where: { DocumentId: id } });
+      hazards.forEach((hazard) => {
+        documentUpdated.hazards.forEach(async (element) => {
+          if (hazard.name === element.name) {
+            hazard.control = element.control;
+            hazard.value = element.value;
+            await hazard.save();
+            return;
+          }
         });
       });
 
@@ -719,24 +430,28 @@ module.exports = class UserController {
           description_location: element.description_location,
           date_examination: element.date_examination,
           examination_result_state: element.examination_result_state,
-          inspector_signature: element.inspector_signature,
+          inspector_signature: files[`inspector_signature${index}`].filename,
           DocumentId: id,
         });
       });
 
-      // Recreate DailyPlantInspection
-      await DailyPlantInspection.destroy({ where: { DocumentId: id } });
-      documentUpdated.daily_plant_inspection.forEach(async (element) => {
-        await DailyPlantInspection.create({
-          tool_name: element.tool_name,
-          monday: element.monday,
-          tuesday: element.tuesday,
-          wednesday: element.wednesday,
-          thrusday: element.thrusday,
-          friday: element.friday,
-          saturday: element.saturday,
-          sunday: element.sunday,
-          DocumentId: id,
+      // Update DailyPlantInspection
+      const dailyPlantInspection = await DailyPlantInspection.findAll({
+        where: { DocumentId: id },
+      });
+      dailyPlantInspection.forEach((dpi) => {
+        documentUpdated.hazards.forEach(async (element) => {
+          if (dpi.tool_name === element.tool_name) {
+            dpi.monday = element.monday;
+            dpi.tuesday = element.tuesday;
+            dpi.wednesday = element.wednesday;
+            dpi.thrusday = element.thrusday;
+            dpi.friday = element.friday;
+            dpi.saturday = element.saturday;
+            dpi.sunday = element.sunday;
+            await dpi.save();
+            return;
+          }
         });
       });
 
@@ -752,7 +467,7 @@ module.exports = class UserController {
         }
       );
 
-      // ReinstatementSheetHoleSequence and ReinstatementImages have their own method to update their values
+      // ReinstatementSheet, ReinstatementSheetHoleSequence and ReinstatementImages have their own method to update their values
 
       res.status(200).json({
         message: "Document updated successfully!",
@@ -827,39 +542,48 @@ module.exports = class UserController {
     });
   }
 
-  // Create HoleSequence
+  // Create HoleSequence with Reinstatement info if any
   static async newHoleSequence(req, res) {
+    // ReinstatementSheet and Document have equal Ids
     const id = req.params.id;
-    const hole_sequence = req.body.hole_sequence;
+    const data = req.body.reinstatement_sheet;
+    const files = req.files;
 
-    const reinstatementSheet = await ReinstatementSheet.findOne({
-      where: { id: id },
+    let reinstatementSheet = await ReinstatementSheet.findOne({
+      where: { DocumentId: id },
     });
 
     if (!reinstatementSheet) {
-      res.status(404).json({
-        message: "ReinstatementSheet not found!",
-      });
-      return;
+      // creates a new one in case the previous is deleted
+      reinstatementSheet = await ReinstatementSheet.create({ DocumentId: id });
     }
 
+    reinstatementSheet.esbn_hole_number = data.esbn_hole_number;
+    reinstatementSheet.location = data.location;
+    reinstatementSheet.local_authority_licence_number =
+      data.local_authority_licence_number;
+    reinstatementSheet.traffic_impact_number = data.traffic_impact_number;
+
+    await reinstatementSheet.save();
+
     const holeSequence = {
-      coordinates: hole_sequence.coordinates,
-      length: hole_sequence.length,
-      width: hole_sequence.width,
-      area: hole_sequence.area,
-      surface_category: hole_sequence.surface_category,
-      reinstatement: hole_sequence.reinstatement,
-      status: hole_sequence.status,
-      date_complete: hole_sequence.date_complete,
-      reinstatementSheetId: reinstatementSheet.id,
+      coordinates: data.hole_sequence.coordinates,
+      length: data.hole_sequence.length,
+      width: data.hole_sequence.width,
+      area: data.hole_sequence.area,
+      surface_category: data.hole_sequence.surface_category,
+      reinstatement: data.hole_sequence.reinstatement,
+      status: data.hole_sequence.status,
+      date_complete: data.hole_sequence.date_complete,
+      comments: data.hole_sequence.comments,
+      reinstatementSheetId: id,
     };
 
     try {
       const rshs = await ReinstatementSheetHoleSequence.create(holeSequence);
-      hole_sequence.reinstatement_images.forEach(async (img) => {
+      data.hole_sequence.reinstatement_images.forEach(async (img, index) => {
         await ReinstatementImages.create({
-          image: img.image,
+          image: files[`hole_sequence_image${index}`].filename,
           holeSequenceId: rshs.id,
         });
       });
@@ -873,10 +597,11 @@ module.exports = class UserController {
     }
   }
 
-  // Update reinstatement
+  // Update hole sequence
   static async updateHoleSequence(req, res) {
+    // ReinstatementSheet and Document have equal Ids
     const id = req.params.id;
-    const holeSequenceNew = req.body.hole_sequence;
+    const data = req.body.reinstatement_sheet;
     const holeSequenceOld = await ReinstatementSheetHoleSequence.findOne({
       where: { id: id },
       include: ReinstatementImages,
@@ -889,15 +614,15 @@ module.exports = class UserController {
       return;
     }
 
-    holeSequenceOld.coordinates = holeSequenceNew.coordinates;
-    holeSequenceOld.length = holeSequenceNew.length;
-    holeSequenceOld.width = holeSequenceNew.width;
-    holeSequenceOld.area = holeSequenceNew.area;
-    holeSequenceOld.surface_category = holeSequenceNew.surface_category;
-    holeSequenceOld.reinstatement = holeSequenceNew.reinstatement;
-    holeSequenceOld.status = holeSequenceNew.status;
-    holeSequenceOld.date_complete = holeSequenceNew.date_complete;
-    //reinstatement.reinstatement_images = reinstatementUpdated.reinstatement_images;
+    holeSequenceOld.coordinates = data.hole_sequence.coordinates;
+    holeSequenceOld.length = data.hole_sequence.length;
+    holeSequenceOld.width = data.hole_sequence.width;
+    holeSequenceOld.area = data.hole_sequence.area;
+    holeSequenceOld.surface_category = data.hole_sequence.surface_category;
+    holeSequenceOld.reinstatement = data.hole_sequence.reinstatement;
+    holeSequenceOld.status = data.hole_sequence.status;
+    holeSequenceOld.date_complete = data.hole_sequence.date_complete;
+    holeSequenceOld.comments = data.hole_sequence.comments;
 
     try {
       await holeSequenceOld.save();
@@ -911,7 +636,7 @@ module.exports = class UserController {
     }
   }
 
-  // Remove reinstatement
+  // Remove hole sequence
   static async removeHoleSequenceById(req, res) {
     const id = req.params.id;
     const holeSequence = await ReinstatementSheetHoleSequence.findOne({

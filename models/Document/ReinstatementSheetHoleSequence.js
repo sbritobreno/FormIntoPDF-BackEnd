@@ -40,6 +40,10 @@ const ReinstatementSheetHoleSequence = db.define("hole_sequence", {
     type: DataTypes.DATE,
     required: true,
   },
+  comments: {
+    type: DataTypes.STRING,
+    required: true,
+  },
 });
 
 ReinstatementSheetHoleSequence.hasMany(ReinstatementImages, {

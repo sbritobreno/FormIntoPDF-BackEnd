@@ -7,7 +7,6 @@ const default_user_img = "profile_img_default.png";
 const getUserByToken = require("../helpers/get-user-by-token");
 const getToken = require("../helpers/get-token");
 const createUserToken = require("../helpers/create-user-token");
-const { imageUpload } = require("../helpers/image-upload");
 
 module.exports = class UserController {
   // Get all users

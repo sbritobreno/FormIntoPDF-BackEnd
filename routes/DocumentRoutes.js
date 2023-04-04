@@ -43,12 +43,12 @@ router.delete(
 router.post(
   "/new_holesequence/:id",
   verifyToken,
+  imageUpload.array("images"),
   DocumentController.newHoleSequence
 );
 router.patch(
   "/update_holesequence/:id",
   verifyToken,
-  imageUpload.array("images"),
   DocumentController.updateHoleSequence
 );
 router.delete(
@@ -56,8 +56,11 @@ router.delete(
   verifyToken,
   DocumentController.removeHoleSequenceById
 );
+
 // router.patch("/add_file/:id", verifyToken, fileUpload.single("file"), DocumentController.addFileToDocument);
 // router.get("/download_reinstatementsheet/:id", verifyToken, DocumentController.downloadReinstatementSheet);
 // router.get("/download_pdf/:id", verifyToken, DocumentController.downloadPdf);
+
+//https://www.ultimateakash.com/blog-details/IixTQGAKYAo=/How-to-Generate-PDF-in-Node.js-2022
 
 module.exports = router;

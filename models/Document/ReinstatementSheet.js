@@ -24,10 +24,6 @@ const ReinstatementSheet = db.define("reinstatement_sheet", {
     type: DataTypes.STRING,
     required: true,
   },
-  comments: {
-    type: DataTypes.STRING,
-    required: true,
-  },
 });
 
 ReinstatementSheet.hasMany(ReinstatementSheetHoleSequence, {

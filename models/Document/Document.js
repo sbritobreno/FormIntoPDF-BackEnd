@@ -32,6 +32,10 @@ const Document = db.define("Document", {
     type: DataTypes.STRING,
     required: true,
   },
+  sections_completed: {
+    type: DataTypes.SMALLINT,
+    required: true,
+  },
 });
 
 Document.hasMany(ApprovedForm, {
