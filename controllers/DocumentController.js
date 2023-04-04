@@ -19,7 +19,7 @@ const ReinstatementImages = require("../models/Document/ReinstatementImages");
 const getUserByToken = require("../helpers/get-user-by-token");
 const getToken = require("../helpers/get-token");
 const createUserToken = require("../helpers/create-user-token");
-const { imageUpload } = require("../helpers/image-upload");
+const { imageUpload } = require("../helpers/upload");
 const DailyMethodStatementAndTrafficManagementChecks = require("../models/Document/DailyMethodStatementAndTrafficManagementChecks");
 
 module.exports = class UserController {

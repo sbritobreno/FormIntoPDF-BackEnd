@@ -3,7 +3,7 @@ const UserController = require("../controllers/UserController");
 
 // middleware
 const verifyToken = require("../helpers/verify-token");
-const { imageUpload } = require("../helpers/image-upload");
+const { imageUpload } = require("../helpers/upload");
 
 router.get("/allusers", UserController.getAllUsers);
 router.post("/register", UserController.register);
