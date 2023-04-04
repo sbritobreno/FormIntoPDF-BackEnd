@@ -1,27 +1,41 @@
 const multer = require("multer");
 const path = require("path");
 
+// Destination to store file
+const fileStorage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "public/files/");
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + path.extname(file.originalname));
+  },
+});
+
 // Destination to store image
-const storage = multer.diskStorage({
+const imageStorage = multer.diskStorage({
   destination: function (req, file, cb) {
     let folder = "";
 
-    if (req.baseUrl.includes("add_file")) {
-      folder = "files";
+    if (req.baseUrl.includes("user")) {
+      folder = "users";
     } else if (req.baseUrl.includes("document")) {
-      folder = "images/documents";
-    } else if (req.baseUrl.includes("user")) {
-      folder = "images/users";
+      folder = "documents";
     }
-    cb(null, `public/${folder}/`);
+    cb(null, `public/images/${folder}/`);
   },
   filename: (req, file, cb) => {
-    cb(null, Date.now() + '-' + Math.round(Math.random() * 1E9) + path.extname(file.originalname));
+    cb(
+      null,
+      Date.now() +
+        "-" +
+        Math.round(Math.random() * 1e9) +
+        path.extname(file.originalname)
+    );
   },
 });
 
 const imageUpload = multer({
-  storage: storage,
+  storage: imageStorage,
   fileFilter(req, file, cb) {
     if (!file.originalname.match(/\.(png|jpg)$/)) {
       // upload only png and jpg format
@@ -32,7 +46,7 @@ const imageUpload = multer({
 });
 
 const fileUpload = multer({
-  storage: storage,
+  storage: fileStorage,
   fileFilter(req, file, cb) {
     if (!file.originalname.match(/\.(pdf)$/)) {
       // upload only pdf format

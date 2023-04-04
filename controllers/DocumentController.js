@@ -161,18 +161,33 @@ module.exports = class UserController {
 
       // Set SiteAttendance
       document.site_attendance.forEach(async (attendance, index) => {
-        await SiteAttendance.create({
+        const newAttendance = {
           name: attendance.name,
           date: attendance.date,
           time_in: attendance.time_in,
           time_out: attendance.time_out,
-          signature: images[`signature${index}`].filename,
           DocumentId: doc.id,
-        });
+        };
+        if (images)
+          newAttendance.signature = images[`signature${index}`].filename;
+        await SiteAttendance.create(newAttendance);
       });
 
       // Init other tables and update it later on
       await Hazards.create({ DocumentId: doc.id });
+      await DMSandTMC.create({ DocumentId: doc.id });
+      await Emergencies.create({ DocumentId: doc.id });
+      await TrafficManagementComplianceChecksheet.create({
+        DocumentId: doc.id,
+      });
+      await TrafficManagementSlgChecklist.create({ DocumentId: doc.id });
+      await ApprovedForm.create({ DocumentId: doc.id });
+      await HotWorkPermit.create({ DocumentId: doc.id });
+      await DailyPlantInspection.create({ DocumentId: doc.id });
+      await NearMissReport.create({ DocumentId: doc.id });
+      await FutherHazarsAndControls.create({ DocumentId: doc.id });
+      await MethodStatementsJobInfo.create({ DocumentId: doc.id });
+      await ReinstatementSheet.create({ DocumentId: doc.id });
 
       res.status(200).json({
         message: "New document created successfully!",
@@ -225,9 +240,9 @@ module.exports = class UserController {
       where: { DocumentId: id },
     });
 
-    document.sections_complete = documentUpdated.sections_complete;
+    document.sections_completed = documentUpdated.sections_completed;
     document.last_updated_by = user.name;
-    if (files["permit_to_dig_sketch_image"])
+    if (files && files["permit_to_dig_sketch_image"])
       document.permit_to_dig_sketch_image =
         files["permit_to_dig_sketch_image"].filename;
 
@@ -348,21 +363,21 @@ module.exports = class UserController {
       documentUpdated.hot_work_permit.permit_issued_by_company;
     hotWorkPermit.permit_issued_by_person =
       documentUpdated.hot_work_permit.permit_issued_by_person;
-    if (files["permit_issued_by_person_signature"])
+    if (files && files["permit_issued_by_person_signature"])
       hotWorkPermit.permit_issued_by_person_signature =
         files["permit_issued_by_person_signature"].filename;
     hotWorkPermit.permit_received_by_company =
       documentUpdated.hot_work_permit.permit_received_by_company;
     hotWorkPermit.permit_received_by_person =
       documentUpdated.hot_work_permit.permit_received_by_person;
-    if (files["permit_received_by_person_signature"])
+    if (files && files["permit_received_by_person_signature"])
       hotWorkPermit.permit_received_by_person_signature =
         files["permit_received_by_person_signature"].filename;
     hotWorkPermit.final_check_time =
       documentUpdated.hot_work_permit.final_check_time;
     hotWorkPermit.final_check_name =
       documentUpdated.hot_work_permit.final_check_name;
-    if (files["final_check_signature"])
+    if (files && files["final_check_signature"])
       hotWorkPermit.final_check_signature =
         files["final_check_signature"].filename;
 
@@ -372,7 +387,7 @@ module.exports = class UserController {
       documentUpdated.near_miss_report.actions_taken_comments;
     nearMissReport.suggestion_to_prevent_reoccurance_comments =
       documentUpdated.near_miss_report.suggestion_to_prevent_reoccurance_comments;
-    if (files["report_signature"])
+    if (files && files["report_signature"])
       nearMissReport.report_signature = files["report_signature"].filename;
 
     methodStatementsJobInfo.ms_id =
@@ -385,7 +400,7 @@ module.exports = class UserController {
       documentUpdated.method_statements_job_information.ms_site;
     methodStatementsJobInfo.ms_client =
       documentUpdated.method_statements_job_information.ms_client;
-    if (files["loc_photograph_image"])
+    if (files && files["loc_photograph_image"])
       methodStatementsJobInfo.loc_photograph_image =
         files["loc_photograph_image"].filename;
 
@@ -398,63 +413,60 @@ module.exports = class UserController {
       await hotWorkPermit.save();
       await nearMissReport.save();
       await methodStatementsJobInfo.save();
-      await reinstatementSheet.save();
 
       // Recreate SiteAttendance
       await SiteAttendance.destroy({ where: { DocumentId: id } });
       documentUpdated.site_attendance.forEach(async (attendance, index) => {
-        await SiteAttendance.create({
+        const newData = {
           name: attendance.name,
           date: attendance.date,
           time_in: attendance.time_in,
           time_out: attendance.time_out,
-          signature: files[`signature${index}`].filename,
           DocumentId: id,
-        });
+        };
+        if (files) newData.signature = files[`signature${index}`].filename;
+        await SiteAttendance.create(newData);
       });
 
-      // Update Hazards
-      const hazards = await Hazards.findAll({ where: { DocumentId: id } });
-      hazards.forEach((hazard) => {
-        documentUpdated.hazards.forEach(async (element) => {
-          if (hazard.name === element.name) {
-            hazard.control = element.control;
-            hazard.value = element.value;
-            await hazard.save();
-            return;
-          }
+      // Recreate Hazards
+      await Hazards.destroy({ where: { DocumentId: id } });
+      documentUpdated.hazards.forEach(async (element) => {
+        await Hazards.create({
+          name: element.name,
+          control: element.control,
+          value: element.value,
+          DocumentId: id,
         });
       });
 
       // Recreate ApprovedForm
       await ApprovedForm.destroy({ where: { DocumentId: id } });
-      documentUpdated.approved_form.forEach(async (element) => {
-        await ApprovedForm.create({
+      documentUpdated.approved_form.forEach(async (element, index) => {
+        const newData = {
           description_location: element.description_location,
           date_examination: element.date_examination,
           examination_result_state: element.examination_result_state,
-          inspector_signature: files[`inspector_signature${index}`].filename,
           DocumentId: id,
-        });
+        };
+        if (files)
+          newData.inspector_signature =
+            files[`inspector_signature${index}`].filename;
+        await ApprovedForm.create(newData);
       });
 
-      // Update DailyPlantInspection
-      const dailyPlantInspection = await DailyPlantInspection.findAll({
-        where: { DocumentId: id },
-      });
-      dailyPlantInspection.forEach((dpi) => {
-        documentUpdated.hazards.forEach(async (element) => {
-          if (dpi.tool_name === element.tool_name) {
-            dpi.monday = element.monday;
-            dpi.tuesday = element.tuesday;
-            dpi.wednesday = element.wednesday;
-            dpi.thrusday = element.thrusday;
-            dpi.friday = element.friday;
-            dpi.saturday = element.saturday;
-            dpi.sunday = element.sunday;
-            await dpi.save();
-            return;
-          }
+      // Recreate DailyPlantInspection
+      await DailyPlantInspection.destroy({ where: { DocumentId: id } });
+      documentUpdated.daily_plant_inspection.forEach(async (element) => {
+        await DailyPlantInspection.create({
+          tool_name: element.tool_name,
+          monday: element.monday,
+          tuesday: element.tuesday,
+          wednesday: element.wednesday,
+          thrusday: element.thrusday,
+          friday: element.friday,
+          saturday: element.saturday,
+          sunday: element.sunday,
+          DocumentId: id,
         });
       });
 
@@ -547,10 +559,19 @@ module.exports = class UserController {
 
   // Create HoleSequence with Reinstatement info if any
   static async newHoleSequence(req, res) {
-    // ReinstatementSheet and Document have equal Ids
     const id = req.params.id;
     const data = req.body.reinstatement_sheet;
     const files = req.files;
+
+    const document = await Document.findOne({
+      where: { id: id },
+    });
+    if (!document) {
+      res.status(404).json({
+        message: "Document not found!",
+      });
+      return;
+    }
 
     let reinstatementSheet = await ReinstatementSheet.findOne({
       where: { DocumentId: id },
@@ -579,21 +600,23 @@ module.exports = class UserController {
       status: data.hole_sequence.status,
       date_complete: data.hole_sequence.date_complete,
       comments: data.hole_sequence.comments,
-      reinstatementSheetId: id,
+      reinstatementSheetId: reinstatementSheet.id,
     };
 
     try {
       const rshs = await ReinstatementSheetHoleSequence.create(holeSequence);
       data.hole_sequence.reinstatement_images.forEach(async (img, index) => {
-        await ReinstatementImages.create({
-          image: files[`hole_sequence_image${index}`].filename,
-          holeSequenceId: rshs.id,
-        });
+        if (files && files[`hole_sequence_image${index}`]) {
+          const newData = {
+            image: files[`hole_sequence_image${index}`].filename,
+            holeSequenceId: rshs.id,
+          };
+          await ReinstatementImages.create(newData);
+        }
       });
 
       res.status(200).json({
         message: "Hole Sequence created successfully!",
-        holeSequence: rshs,
       });
     } catch (error) {
       res.status(500).json({ message: error });
@@ -602,9 +625,8 @@ module.exports = class UserController {
 
   // Update hole sequence
   static async updateHoleSequence(req, res) {
-    // ReinstatementSheet and Document have equal Ids
     const id = req.params.id;
-    const data = req.body.reinstatement_sheet;
+    const data = req.body.hole_sequence;
     const holeSequenceOld = await ReinstatementSheetHoleSequence.findOne({
       where: { id: id },
       include: ReinstatementImages,
@@ -617,15 +639,15 @@ module.exports = class UserController {
       return;
     }
 
-    holeSequenceOld.coordinates = data.hole_sequence.coordinates;
-    holeSequenceOld.length = data.hole_sequence.length;
-    holeSequenceOld.width = data.hole_sequence.width;
-    holeSequenceOld.area = data.hole_sequence.area;
-    holeSequenceOld.surface_category = data.hole_sequence.surface_category;
-    holeSequenceOld.reinstatement = data.hole_sequence.reinstatement;
-    holeSequenceOld.status = data.hole_sequence.status;
-    holeSequenceOld.date_complete = data.hole_sequence.date_complete;
-    holeSequenceOld.comments = data.hole_sequence.comments;
+    holeSequenceOld.coordinates = data.coordinates;
+    holeSequenceOld.length = data.length;
+    holeSequenceOld.width = data.width;
+    holeSequenceOld.area = data.area;
+    holeSequenceOld.surface_category = data.surface_category;
+    holeSequenceOld.reinstatement = data.reinstatement;
+    holeSequenceOld.status = data.status;
+    holeSequenceOld.date_complete = data.date_complete;
+    holeSequenceOld.comments = data.comments;
 
     try {
       await holeSequenceOld.save();
@@ -713,20 +735,21 @@ module.exports = class UserController {
       return;
     }
 
-    try {
-      holeSequence.reinstatement_images.forEach(async (img) => {
-        if (img.id === imageId) {
-          // file path and name of the image to be deleted from the file system
-          const filePath = `../public/images/documents/${img.image}`;
-          // delete the file from the file system
-          fs.unlink(filePath, (err) => {
-            if (err) throw err;
-          });
+    const img = await ReinstatementImages.findOne({ where: { id: imageId } });
+    if (!img) {
+      res.status(404).json({ message: "Image not found!" });
+      return;
+    }
 
-          await ReinstatementImages.destroy({ where: { id: imageId } });
-          return;
-        }
+    try {
+      // file path and name of the image to be deleted from the file system
+      const filePath = `./public/images/documents/${img.image}`;
+      // delete the file from the file system
+      fs.unlink(filePath, (err) => {
+        if (err) console.log(err);
       });
+
+      await ReinstatementImages.destroy({ where: { id: imageId } });
 
       res.status(200).json({ message: "Image deleted!" });
     } catch (error) {
@@ -751,10 +774,10 @@ module.exports = class UserController {
       if (file) {
         if (document.file_attached) {
           // file path and name of the file to be deleted from the file system
-          const filePath = `../public/files/${document.file_attached}`;
+          const filePath = `./public/files/${document.file_attached}`;
           // delete the file from the file system
           fs.unlink(filePath, (err) => {
-            if (err) throw err;
+            if (err) console.log("Error while deleting previous file: ", err);
           });
         }
         document.file_attached = file.filename;

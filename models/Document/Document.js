@@ -24,6 +24,10 @@ const Document = db.define("Document", {
     type: DataTypes.STRING,
     required: true,
   },
+  created_by: {
+    type: DataTypes.STRING,
+    required: true,
+  },
   last_updated_by: {
     type: DataTypes.STRING,
     required: true,
