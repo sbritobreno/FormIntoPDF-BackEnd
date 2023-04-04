@@ -1,3 +1,5 @@
+const fs = require("fs");
+
 const Document = require("../models/Document/Document");
 const SiteAttendance = require("../models/Document/SiteAttendance");
 const Hazards = require("../models/Document/Hazards");
@@ -18,6 +20,7 @@ const ReinstatementImages = require("../models/Document/ReinstatementImages");
 // helpers
 const getUserByToken = require("../helpers/get-user-by-token");
 const getToken = require("../helpers/get-token");
+const { imageUpload } = require("../helpers/upload");
 
 module.exports = class UserController {
   // Get all documents
@@ -658,6 +661,74 @@ module.exports = class UserController {
       res.status(200).json({
         message: "Hole Sequence removed successfully!",
       });
+    } catch (error) {
+      res.status(500).json({ message: error });
+    }
+  }
+
+  // Add image to the hole sequence
+  static async addImageHoleSequence(req, res) {
+    const id = req.params.id;
+    const images = req.files;
+    const holeSequence = await ReinstatementSheetHoleSequence.findOne({
+      where: { id: id },
+    });
+
+    if (!holeSequence) {
+      res.status(404).json({
+        message: "Hole Sequence not found!",
+      });
+      return;
+    }
+
+    try {
+      if (images) {
+        images.forEach(async (img) => {
+          const newImage = {
+            image: img.filename,
+            holeSequenceId: id,
+          };
+          await ReinstatementImages.create(newImage);
+        });
+      }
+
+      res.status(200).json({ message: "Images Uploaded!" });
+    } catch (error) {
+      res.status(500).json({ message: error });
+    }
+  }
+
+  // Remove image from the hole sequence
+  static async removeImageHoleSequence(req, res) {
+    const id = req.params.id;
+    const imageId = req.params.imageid;
+    const holeSequence = await ReinstatementSheetHoleSequence.findOne({
+      where: { id: id },
+    });
+
+    if (!holeSequence) {
+      res.status(404).json({
+        message: "Hole Sequence not found!",
+      });
+      return;
+    }
+
+    try {
+      holeSequence.reinstatement_images.forEach(async (img) => {
+        if (img.id === imageId) {
+          // file path and name of the image to be deleted from the file system
+          const filePath = `../public/images/documents/${img.image}`;
+          // delete the file from the file system
+          fs.unlink(filePath, (err) => {
+            if (err) throw err;
+          });
+
+          await ReinstatementImages.destroy({ where: { id: imageId } });
+          return;
+        }
+      });
+
+      res.status(200).json({ message: "Image deleted!" });
     } catch (error) {
       res.status(500).json({ message: error });
     }

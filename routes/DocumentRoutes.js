@@ -56,7 +56,17 @@ router.delete(
   verifyToken,
   DocumentController.removeHoleSequenceById
 );
-
+router.post(
+  "/update_holesequence/:id/add_image",
+  verifyToken,
+  imageUpload.array("images"),
+  DocumentController.addImageHoleSequence
+);
+router.delete(
+  "/update_holesequence/:id/remove_image/:imageid",
+  verifyToken,
+  DocumentController.removeImageHoleSequence
+);
 // router.patch("/add_file/:id", verifyToken, fileUpload.single("file"), DocumentController.addFileToDocument);
 // router.get("/download_reinstatementsheet/:id", verifyToken, DocumentController.downloadReinstatementSheet);
 // router.get("/download_pdf/:id", verifyToken, DocumentController.downloadPdf);
