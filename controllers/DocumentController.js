@@ -733,4 +733,37 @@ module.exports = class UserController {
       res.status(500).json({ message: error });
     }
   }
+
+  // Attach file to the document
+  static async addFileToDocument(req, res) {
+    const id = req.params.id;
+    const file = req.file;
+    const document = await Document.findOne({ where: { id: id } });
+
+    if (!document) {
+      res.status(404).json({
+        message: "Document not found!",
+      });
+      return;
+    }
+
+    try {
+      if (file) {
+        if (document.file_attached) {
+          // file path and name of the file to be deleted from the file system
+          const filePath = `../public/files/${document.file_attached}`;
+          // delete the file from the file system
+          fs.unlink(filePath, (err) => {
+            if (err) throw err;
+          });
+        }
+        document.file_attached = file.filename;
+        await document.save();
+      }
+
+      res.status(200).json({ message: "File attached successfully!" });
+    } catch (error) {
+      res.status(500).json({ message: error });
+    }
+  }
 };

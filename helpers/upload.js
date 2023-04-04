@@ -6,12 +6,12 @@ const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     let folder = "";
 
-    if (req.baseUrl.includes("user")) {
-      folder = "images/users";
+    if (req.baseUrl.includes("add_file")) {
+      folder = "files";
     } else if (req.baseUrl.includes("document")) {
       folder = "images/documents";
-    } else if (req.baseUrl.includes("file")) {
-      folder = "files";
+    } else if (req.baseUrl.includes("user")) {
+      folder = "images/users";
     }
     cb(null, `public/${folder}/`);
   },
