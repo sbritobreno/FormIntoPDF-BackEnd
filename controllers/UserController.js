@@ -32,7 +32,7 @@ module.exports = class UserController {
   // Register
   static async register(req, res) {
     const token = getToken(req);
-    const user = await getUserByToken(token);
+    const user = await getUserByToken(token, req, res);
     const name = req.body.name?.trim();
     const email = req.body.email?.toLowerCase().trim();
     const roleFirstLetter = req.body.role?.trim().charAt(0).toUpperCase();
@@ -71,16 +71,6 @@ module.exports = class UserController {
       return;
     }
 
-    if (!role) {
-      res.status(422).json({ message: "Role is needed" });
-      return;
-    } else if (role.length > 20) {
-      res
-        .status(422)
-        .json({ message: "Role has to be less than 20 characters" });
-      return;
-    }
-
     if (!phone) {
       res.status(422).json({ message: "Phone is needed" });
       return;
@@ -91,12 +81,22 @@ module.exports = class UserController {
       return;
     }
 
+    if (!role) {
+      res.status(422).json({ message: "Role is needed" });
+      return;
+    } else if (role.length > 20) {
+      res
+        .status(422)
+        .json({ message: "Role has to be less than 20 characters" });
+      return;
+    }
+
     if (!password) {
       res.status(422).json({ message: "Password is needed" });
       return;
     } else if (password.length < 8 || password.length > 40) {
       res.status(422).json({
-        error: "Password must be min 8, max 40 characters long!",
+        message: "Password must be min 8, max 40 characters long!",
       });
       return;
     }
@@ -163,7 +163,7 @@ module.exports = class UserController {
     const user = await User.findOne({ where: { email: email } });
 
     if (!user) {
-      return res.status(422).json({ message: "Account not found!" });
+      return res.status(422).json({ message: "Email or Password invalid!" });
     }
 
     // check if password match
@@ -196,18 +196,18 @@ module.exports = class UserController {
     res.status(200).send(currentUser);
   }
 
-  // Get user by id
-  static async getUserById(req, res) {
-    const id = req.params.id;
-    const user = await User.findByPk(id);
+  // // Get user by id
+  // static async getUserById(req, res) {
+  //   const id = req.params.id;
+  //   const user = await User.findByPk(id);
 
-    if (!user) {
-      res.status(422).json({ message: "User not found!" });
-      return;
-    }
+  //   if (!user) {
+  //     res.status(422).json({ message: "User not found!" });
+  //     return;
+  //   }
 
-    res.status(200).json({ user });
-  }
+  //   res.status(200).json({ user });
+  // }
 
   // Edit user
   static async editUser(req, res) {
@@ -262,19 +262,15 @@ module.exports = class UserController {
 
     // Email is set to not be changed on the front-end
 
-    // check if password match
-    if (password != confirmpassword) {
-      res.status(422).json({
-        message: "Password and password confirmation have to be the same!",
-      });
-      return;
-    } else if (
-      password != null &&
-      password.length < 8 &&
-      password.length > 40
-    ) {
+    // check password
+    if ((password && password?.length < 8) || password?.length > 40) {
       res.status(422).json({
         message: "Password must be min 8, max 40 characters long!",
+      });
+      return;
+    } else if (password != confirmpassword) {
+      res.status(422).json({
+        message: "Password and password confirmation have to be the same!",
       });
       return;
     } else if (password == confirmpassword && password != null) {
@@ -335,7 +331,7 @@ module.exports = class UserController {
     }
 
     try {
-      // Delete the some user's account
+      // Delete user's account
       await User.destroy({ where: { id: userToBeDeleted.id } });
 
       res.json({
@@ -411,7 +407,7 @@ module.exports = class UserController {
     const salt = await bcrypt.genSalt(12);
     const newPassword = getRandom().toString();
     const passwordHash = await bcrypt.hash(newPassword, salt);
-    user.password = passwordHash;
+    //user.password = passwordHash;
 
     try {
       // returns updated data

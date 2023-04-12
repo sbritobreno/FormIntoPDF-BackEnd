@@ -789,4 +789,44 @@ module.exports = class UserController {
       res.status(500).json({ message: error });
     }
   }
+
+  // Download PDF
+  static async downloadPDF(req, res) {
+    const id = req.params.id;
+    const document = await Document.findOne({ where: { id: id } });
+
+    if (!document) {
+      res.status(404).json({
+        message: "Document not found!",
+      });
+      return;
+    }
+
+    try {
+      res.status(200).json({ message: "PDF downloaded successfully!" });
+    } catch (error) {
+      res.status(500).json({ message: error });
+    }
+  }
+
+  // Download ReinstatementSheet
+  static async downloadReinstatementSheet(req, res) {
+    const id = req.params.id;
+    const reinstatementSheet = await ReinstatementSheet.findOne({
+      where: { id: id },
+    });
+
+    if (!reinstatementSheet) {
+      res.status(404).json({
+        message: "Reinstatement Sheet not found!",
+      });
+      return;
+    }
+
+    try {
+      res.status(200).json({ message: "Reinstatement Sheet downloaded successfully!" });
+    } catch (error) {
+      res.status(500).json({ message: error });
+    }
+  }
 };
