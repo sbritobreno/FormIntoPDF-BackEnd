@@ -493,40 +493,22 @@ module.exports = class UserController {
     }
   }
 
-  // Get All ReinstatementSheets
-  static async getAllReinstatementSheets(req, res) {
-    const reinstatementSheets = await ReinstatementSheet.findAll({
-      include: [
-        {
-          model: ReinstatementSheetHoleSequence,
-          include: [{ model: ReinstatementImages }],
-        },
-      ],
-      order: [["createdAt", "DESC"]],
-    });
-
-    res.status(200).json({
-      reinstatementSheets: reinstatementSheets,
-    });
-  }
-
   // Get single ReinstatementSheet
-  static async getReinstatementSheetById(req, res) {
+  static async getReinstatementSheetByDocumentId(req, res) {
     const id = req.params.id;
     const reinstatementSheet = await ReinstatementSheet.findOne({
-      where: { id: id },
+      where: { DocumentId: id },
       include: [
         {
           model: ReinstatementSheetHoleSequence,
           include: [{ model: ReinstatementImages }],
         },
       ],
-      order: [["createdAt", "DESC"]],
     });
 
     if (!reinstatementSheet) {
       res.status(404).json({
-        message: "ReinstatementSheet not found!",
+        message: "Reinstatement Sheet not found!",
       });
       return;
     }
@@ -536,32 +518,10 @@ module.exports = class UserController {
     });
   }
 
-  // Remove the whole reinstatement sheet by its Id
-  static async removeReinstatementSheetById(req, res) {
+  // Edit Reinstatement Sheet info
+  static async editReinstatementSheetInfo(req, res) {
     const id = req.params.id;
-    const reinstatementSheet = await ReinstatementSheet.findOne({
-      where: { id: id },
-    });
-
-    if (!reinstatementSheet) {
-      res.status(404).json({
-        message: "ReinstatementSheet not found!",
-      });
-      return;
-    }
-
-    await ReinstatementSheet.destroy({ where: { id: id } });
-
-    res.status(200).json({
-      message: "ReinstatementSheet removed successfully!",
-    });
-  }
-
-  // Create HoleSequence with Reinstatement info if any
-  static async newHoleSequence(req, res) {
-    const id = req.params.id;
-    const data = req.body.reinstatement_sheet;
-    const files = req.files;
+    const reinstatementSheetInfoUpdated = req.body;
 
     const document = await Document.findOne({
       where: { id: id },
@@ -582,37 +542,88 @@ module.exports = class UserController {
       reinstatementSheet = await ReinstatementSheet.create({ DocumentId: id });
     }
 
-    reinstatementSheet.esbn_hole_number = data.esbn_hole_number;
-    reinstatementSheet.location = data.location;
-    reinstatementSheet.local_authority_licence_number =
-      data.local_authority_licence_number;
-    reinstatementSheet.traffic_impact_number = data.traffic_impact_number;
+    try {
+      reinstatementSheet.esbn_hole_number =
+        reinstatementSheetInfoUpdated.esbn_hole_number;
+      reinstatementSheet.location = reinstatementSheetInfoUpdated.location;
+      reinstatementSheet.local_authority_licence_number =
+        reinstatementSheetInfoUpdated.local_authority_licence_number;
+      reinstatementSheet.traffic_impact_number =
+        reinstatementSheetInfoUpdated.traffic_impact_number;
 
-    await reinstatementSheet.save();
+      await reinstatementSheet.save();
+
+      res.status(200).json({
+        message: "Reinstatement Sheet updated successfully!",
+      });
+    } catch (error) {
+      res.status(403).json({
+        message: error,
+      });
+    }
+  }
+
+  // Create HoleSequence
+  static async newHoleSequence(req, res) {
+    const id = req.params.id;
+    const data = req.body;
+    const images = req.files;
+
+    const document = await Document.findOne({
+      where: { id: id },
+    });
+    if (!document) {
+      res.status(404).json({
+        message: "Document not found!",
+      });
+      return;
+    }
+
+    let reinstatementSheet = await ReinstatementSheet.findOne({
+      where: { DocumentId: id },
+    });
+
+    if (!reinstatementSheet) {
+      // creates a new one in case the previous is deleted
+      reinstatementSheet = await ReinstatementSheet.create({ DocumentId: id });
+    }
+
+    if (
+      !data.coordinates ||
+      !data.length ||
+      !data.width ||
+      !data.surface_category ||
+      !data.reinstatement ||
+      !data.status
+    ) {
+      res
+        .status(422)
+        .json({ message: "You have to enter value to all inputs!" });
+      return;
+    }
 
     const holeSequence = {
-      coordinates: data.hole_sequence.coordinates,
-      length: data.hole_sequence.length,
-      width: data.hole_sequence.width,
-      area: data.hole_sequence.area,
-      surface_category: data.hole_sequence.surface_category,
-      reinstatement: data.hole_sequence.reinstatement,
-      status: data.hole_sequence.status,
-      date_complete: data.hole_sequence.date_complete,
-      comments: data.hole_sequence.comments,
+      coordinates: data.coordinates,
+      length: data.length,
+      width: data.width,
+      area: data.length * data.width,
+      surface_category: data.surface_category,
+      reinstatement: data.reinstatement,
+      status: data.status,
+      date_complete: data.date_complete,
+      comments: data.comments,
       reinstatementSheetId: reinstatementSheet.id,
     };
 
     try {
       const rshs = await ReinstatementSheetHoleSequence.create(holeSequence);
-      data.hole_sequence.reinstatement_images.forEach(async (img, index) => {
-        if (files && files[`hole_sequence_image${index}`]) {
-          const newData = {
-            image: files[`hole_sequence_image${index}`].filename,
-            holeSequenceId: rshs.id,
-          };
-          await ReinstatementImages.create(newData);
-        }
+
+      images?.forEach(async (img) => {
+        const newData = {
+          image: img.filename,
+          holeSequenceId: rshs.id,
+        };
+        await ReinstatementImages.create(newData);
       });
 
       res.status(200).json({
@@ -688,77 +699,8 @@ module.exports = class UserController {
     }
   }
 
-  // Add image to the hole sequence
-  static async addImageHoleSequence(req, res) {
-    const id = req.params.id;
-    const images = req.files;
-    const holeSequence = await ReinstatementSheetHoleSequence.findOne({
-      where: { id: id },
-    });
-
-    if (!holeSequence) {
-      res.status(404).json({
-        message: "Hole Sequence not found!",
-      });
-      return;
-    }
-
-    try {
-      if (images) {
-        images.forEach(async (img) => {
-          const newImage = {
-            image: img.filename,
-            holeSequenceId: id,
-          };
-          await ReinstatementImages.create(newImage);
-        });
-      }
-
-      res.status(200).json({ message: "Images Uploaded!" });
-    } catch (error) {
-      res.status(500).json({ message: error });
-    }
-  }
-
-  // Remove image from the hole sequence
-  static async removeImageHoleSequence(req, res) {
-    const id = req.params.id;
-    const imageId = req.params.imageid;
-    const holeSequence = await ReinstatementSheetHoleSequence.findOne({
-      where: { id: id },
-    });
-
-    if (!holeSequence) {
-      res.status(404).json({
-        message: "Hole Sequence not found!",
-      });
-      return;
-    }
-
-    const img = await ReinstatementImages.findOne({ where: { id: imageId } });
-    if (!img) {
-      res.status(404).json({ message: "Image not found!" });
-      return;
-    }
-
-    try {
-      // file path and name of the image to be deleted from the file system
-      const filePath = `./public/images/documents/${img.image}`;
-      // delete the file from the file system
-      fs.unlink(filePath, (err) => {
-        if (err) console.log(err);
-      });
-
-      await ReinstatementImages.destroy({ where: { id: imageId } });
-
-      res.status(200).json({ message: "Image deleted!" });
-    } catch (error) {
-      res.status(500).json({ message: error });
-    }
-  }
-
   // Attach file to the document
-  static async addFileToDocument(req, res) {
+  static async attachFileToDocument(req, res) {
     const id = req.params.id;
     const file = req.file;
     const document = await Document.findOne({ where: { id: id } });
@@ -824,7 +766,9 @@ module.exports = class UserController {
     }
 
     try {
-      res.status(200).json({ message: "Reinstatement Sheet downloaded successfully!" });
+      res
+        .status(200)
+        .json({ message: "Reinstatement Sheet downloaded successfully!" });
     } catch (error) {
       res.status(500).json({ message: error });
     }
