@@ -20,7 +20,6 @@ const ReinstatementImages = require("../models/Document/ReinstatementImages");
 // helpers
 const getUserByToken = require("../helpers/get-user-by-token");
 const getToken = require("../helpers/get-token");
-const { imageUpload } = require("../helpers/upload");
 
 module.exports = class UserController {
   // Get all documents
@@ -634,10 +633,32 @@ module.exports = class UserController {
     }
   }
 
+  // Get hole sequence
+  static async getHoleSequence(req, res) {
+    const id = req.params.id;
+    const holeSequence = await ReinstatementSheetHoleSequence.findOne({
+      where: { id: id },
+      include: ReinstatementImages,
+    });
+
+    if (!holeSequence) {
+      res.status(404).json({
+        message: "Hole sequence not found!",
+      });
+      return;
+    }
+
+    res.status(200).json({
+      holeSequence: holeSequence,
+    });
+  }
+
   // Update hole sequence
   static async updateHoleSequence(req, res) {
     const id = req.params.id;
-    const data = req.body.hole_sequence;
+    const data = req.body;
+    const images = req.files;
+
     const holeSequenceOld = await ReinstatementSheetHoleSequence.findOne({
       where: { id: id },
       include: ReinstatementImages,
@@ -653,7 +674,7 @@ module.exports = class UserController {
     holeSequenceOld.coordinates = data.coordinates;
     holeSequenceOld.length = data.length;
     holeSequenceOld.width = data.width;
-    holeSequenceOld.area = data.area;
+    holeSequenceOld.area = data.length * data.width;
     holeSequenceOld.surface_category = data.surface_category;
     holeSequenceOld.reinstatement = data.reinstatement;
     holeSequenceOld.status = data.status;
@@ -663,12 +684,31 @@ module.exports = class UserController {
     try {
       await holeSequenceOld.save();
 
+      // Save new images if any
+      images?.forEach(async (img) => {
+        const newData = {
+          image: img.filename,
+          holeSequenceId: holeSequenceOld.id,
+        };
+        await ReinstatementImages.create(newData);
+      });
+
       res.status(200).json({
         message: "Hole Sequence updated successfully!",
         holeSequence: holeSequenceOld,
       });
     } catch (error) {
       res.status(500).json({ message: error });
+    }
+  }
+
+  // Remove hole sequence image
+  static async removeHoleSequenceImage(req, res) {
+    const id = req.params.id;
+    try {
+      await ReinstatementImages.destroy({ where: { id: id } });
+    } catch (error) {
+      return error;
     }
   }
 
@@ -755,7 +795,7 @@ module.exports = class UserController {
   static async downloadReinstatementSheet(req, res) {
     const id = req.params.id;
     const reinstatementSheet = await ReinstatementSheet.findOne({
-      where: { id: id },
+      where: { DocumentId: id },
     });
 
     if (!reinstatementSheet) {
