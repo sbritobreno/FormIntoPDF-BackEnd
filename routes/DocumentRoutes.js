@@ -9,8 +9,11 @@ const { fileUpload } = require("../helpers/upload");
 router.get("/all_documents", verifyToken, DocumentController.getAllDocuments);
 router.get("/get/:id", verifyToken, DocumentController.getDocumentById);
 router.delete("/remove/:id",verifyToken,DocumentController.removeDocumentById);
-// router.post("/new", verifyToken, imageUpload.array("images"), DocumentController.newDocument);
-// router.patch("/update/:id", verifyToken, imageUpload.array("images"), DocumentController.updateDocument);
+router.post("/new", verifyToken, DocumentController.newDocument);
+router.post("/:id/add/attendance", verifyToken, DocumentController.addAttendance);
+router.delete("/remove/attendance/:id", verifyToken, DocumentController.removeAttendance);
+// router
+// updateDocument);
 router.get("/:id/reinstatementsheet", verifyToken, DocumentController.getReinstatementSheetByDocumentId);
 router.patch("/:id/update/reinstatementsheetinfo", verifyToken, DocumentController.editReinstatementSheetInfo);
 router.post("/:id/new_holesequence", verifyToken, imageUpload.array("images"), DocumentController.newHoleSequence);

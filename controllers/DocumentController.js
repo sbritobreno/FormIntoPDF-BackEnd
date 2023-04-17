@@ -141,58 +141,94 @@ module.exports = class UserController {
     });
   }
 
-  // Init new document with documents info and siteAttendance
+  // Init new document
   static async newDocument(req, res) {
-    const document = req.body.document;
-    const images = req.files;
-
     // get user
     const token = getToken(req);
     const user = await getUserByToken(token);
 
     try {
       // New Document
-      const doc = await Document.create({
+      const document = await Document.create({
         created_by: user.name,
         last_updated_by: user.name,
-        sections_completed: 1,
+        sections_completed: 0,
       });
-
-      // Set SiteAttendance
-      document.site_attendance.forEach(async (attendance, index) => {
-        const newAttendance = {
-          name: attendance.name,
-          date: attendance.date,
-          time_in: attendance.time_in,
-          time_out: attendance.time_out,
-          DocumentId: doc.id,
-        };
-        if (images)
-          newAttendance.signature = images[`signature${index}`].filename;
-        await SiteAttendance.create(newAttendance);
-      });
-
-      // Init other tables and update it later on
-      await Hazards.create({ DocumentId: doc.id });
-      await DMSandTMC.create({ DocumentId: doc.id });
-      await Emergencies.create({ DocumentId: doc.id });
-      await TrafficManagementComplianceChecksheet.create({
-        DocumentId: doc.id,
-      });
-      await TrafficManagementSlgChecklist.create({ DocumentId: doc.id });
-      await ApprovedForm.create({ DocumentId: doc.id });
-      await HotWorkPermit.create({ DocumentId: doc.id });
-      await DailyPlantInspection.create({ DocumentId: doc.id });
-      await NearMissReport.create({ DocumentId: doc.id });
-      await FutherHazarsAndControls.create({ DocumentId: doc.id });
-      await MethodStatementsJobInfo.create({ DocumentId: doc.id });
-      await ReinstatementSheet.create({ DocumentId: doc.id });
 
       res.status(200).json({
         message: "New document created successfully!",
+        document: document,
       });
     } catch (error) {
       res.status(500).json({ message: error });
+    }
+  }
+
+  // Add to Site Attendance  Section1 on document
+  static async addAttendance(req, res) {
+    const id = req.params.id;
+    const data = req.body;
+
+    // get user
+    const token = getToken(req);
+    const user = await getUserByToken(token);
+
+    if (
+      !data.name ||
+      !data.date ||
+      !data.time_in ||
+      !data.time_out ||
+      !data.staff_signature
+    ) {
+      res.status(403).json({ message: "You need to enter all the inputs!" });
+      return;
+    }
+
+    const base64String = data.staff_signature;
+    const base64Image = base64String.replace(/^data:image\/\w+;base64,/, "");
+    const binaryData = Buffer.from(base64Image, "base64");
+    const path = `public/images/documents`;
+    const fileName = `${Date.now()}.png`;
+
+    fs.writeFileSync(`${path}/${fileName}`, binaryData, (err) => {
+      if (err) throw err;
+    });
+
+    try {
+      const newAttendance = {
+        name: data.name,
+        date: data.date,
+        time_in: data.time_in,
+        time_out: data.time_out,
+        signature: fileName,
+        DocumentId: id,
+      };
+      await SiteAttendance.create(newAttendance);
+
+      const document = await Document.findOne({ where: { id: id } });
+      if (document.sections_completed < 1) {
+        document.sections_completed = 1; // SiteAttendance is now the first section to be completed
+        await document.save();
+      }
+
+      res.status(200).json({ message: `${data.name} added to the list!` });
+    } catch (err) {
+      res.status(500).json({ message: "Something went wrong!" });
+    }
+  }
+
+  // Remove from Site Attendance  Section1 on document
+  static async removeAttendance(req, res) {
+    const id = req.params.id;
+
+    try {
+      const attendance = await SiteAttendance.findOne({ where: { id: id } });
+      await SiteAttendance.destroy({ where: { id: id } });
+      res
+        .status(200)
+        .json({ message: `${attendance.name} removed from the list!` });
+    } catch (err) {
+      res.status(500).json({ message: "Something went wrong!" });
     }
   }
 
