@@ -20,6 +20,7 @@ const ReinstatementImages = require("../models/Document/ReinstatementImages");
 // helpers
 const getUserByToken = require("../helpers/get-user-by-token");
 const getToken = require("../helpers/get-token");
+const { all } = require("../routes/DocumentRoutes");
 
 module.exports = class UserController {
   // Get all documents
@@ -208,6 +209,7 @@ module.exports = class UserController {
       const document = await Document.findOne({ where: { id: id } });
       if (document.sections_completed < 1) {
         document.sections_completed = 1; // SiteAttendance is now the first section to be completed
+        document.last_updated_by = user.name;
         await document.save();
       }
 
@@ -217,7 +219,7 @@ module.exports = class UserController {
     }
   }
 
-  // Remove from Site Attendance  Section1 on document
+  // Remove from Site Attendance Section1 on document
   static async removeAttendance(req, res) {
     const id = req.params.id;
 
@@ -232,16 +234,22 @@ module.exports = class UserController {
     }
   }
 
-  // Update Document
-  static async updateDocument(req, res) {
+  // Update Site Setup Section2 on document
+  static async updateSiteSetup(req, res, next) {
     const id = req.params.id;
-    const files = req.files;
+    const data = req.body;
+
+    const hazards = JSON.parse(data.Hazards);
+    const dailyMethodStatement = JSON.parse(
+      data.daily_method_statement_and_traffic_management_check
+    );
+    const emergency = JSON.parse(data.Emergency);
+    const tmcc = JSON.parse(data.traffic_management_compliance_checksheet);
+    const tmsc = JSON.parse(data.traffic_management_slg_checklist);
 
     // get user
     const token = getToken(req);
     const user = await getUserByToken(token);
-
-    const documentUpdated = req.body.document;
 
     // check if document exists
     const document = await Document.findOne({ where: { id: id } });
@@ -250,122 +258,231 @@ module.exports = class UserController {
       return;
     }
 
-    const dmsAndTmc = await DMSandTMC.findOne({
-      where: { DocumentId: id },
-    });
-    const emergencies = await Emergencies.findOne({
-      where: { DocumentId: id },
-    });
-    const tmcc = await TrafficManagementComplianceChecksheet.findOne({
-      where: { DocumentId: id },
-    });
-    const tmsc = await TrafficManagementSlgChecklist.findOne({
-      where: { DocumentId: id },
-    });
-    const hotWorkPermit = await HotWorkPermit.findOne({
-      where: { DocumentId: id },
-    });
-    const nearMissReport = await NearMissReport.findOne({
-      where: { DocumentId: id },
-    });
-    const methodStatementsJobInfo = await MethodStatementsJobInfo.findOne({
-      where: { DocumentId: id },
-    });
-    const reinstatementSheet = await ReinstatementSheet.findOne({
-      where: { DocumentId: id },
-    });
+    try {
+      // Update Hazards
+      hazards.forEach(async (element) => {
+        const hz = await Hazards.findOne({
+          where: { name: element.name, DocumentId: id },
+        });
+        if (hz) {
+          hz.control = element.control;
+          hz.value = element.value;
+          await hz.save();
+        } else {
+          await Hazards.create({
+            name: element.name,
+            control: element.control,
+            value: element.value,
+            DocumentId: id,
+          });
+        }
+      });
 
+      // Update DailyMethodStatementAndTrafficManagementChecks
+      let dmsAndTmc = await DMSandTMC.findOne({
+        where: { DocumentId: id },
+      });
+      if (!dmsAndTmc) dmsAndTmc = await DMSandTMC.create({ DocumentId: id });
+
+      dmsAndTmc.method_statement_for_the_day =
+        dailyMethodStatement?.method_statement_for_the_day;
+      dmsAndTmc.daily_method_statement_question_one =
+        dailyMethodStatement?.daily_method_statement_question_one;
+      dmsAndTmc.daily_method_statement_question_two =
+        dailyMethodStatement?.daily_method_statement_question_two;
+      dmsAndTmc.daily_method_statement_question_three =
+        dailyMethodStatement?.daily_method_statement_question_three;
+      await dmsAndTmc.save();
+
+      // Update Emergencies
+      let emergencies = await Emergencies.findOne({
+        where: { DocumentId: id },
+      });
+      if (!emergencies)
+        emergencies = await Emergencies.create({ DocumentId: id });
+
+      emergencies.emergencies_question_one =
+        emergency?.emergencies_question_one;
+      emergencies.emergency_location_of_assembly_point =
+        emergency?.emergency_location_of_assembly_point;
+      emergencies.emergency_name_of_first_aider =
+        emergency?.emergency_name_of_first_aider;
+      emergencies.emergency_slg_operative = emergency?.emergency_slg_operative;
+      await emergencies.save();
+
+      // Update Traffic Management Compliance Checksheet
+      let tmccData = await TrafficManagementComplianceChecksheet.findOne({
+        where: { DocumentId: id },
+      });
+      if (!tmccData)
+        tmccData = await TrafficManagementComplianceChecksheet.create({
+          DocumentId: id,
+        });
+
+      tmccData.traffic_management_compliance_checksheet_tmp_number =
+        tmcc?.traffic_management_compliance_checksheet_tmp_number;
+      tmccData.traffic_management_compliance_checksheet_question_one =
+        tmcc?.traffic_management_compliance_checksheet_question_one;
+      tmccData.traffic_management_compliance_checksheet_question_two =
+        tmcc?.traffic_management_compliance_checksheet_question_two;
+      tmccData.traffic_management_compliance_checksheet_question_three =
+        tmcc?.traffic_management_compliance_checksheet_question_three;
+      tmccData.traffic_management_compliance_checksheet_question_sub_one =
+        tmcc?.traffic_management_compliance_checksheet_question_sub_one;
+      tmccData.traffic_management_compliance_checksheet_question_sub_two =
+        tmcc?.traffic_management_compliance_checksheet_question_sub_two;
+      tmccData.traffic_management_compliance_checksheet_question_sub_three =
+        tmcc?.traffic_management_compliance_checksheet_question_sub_three;
+      tmccData.traffic_management_compliance_checksheet_question_sub_four =
+        tmcc?.traffic_management_compliance_checksheet_question_sub_four;
+      await tmccData.save();
+
+      // Update Traffic Management Slg Checklist
+      let tmscData = await TrafficManagementSlgChecklist.findOne({
+        where: { DocumentId: id },
+      });
+      if (!tmscData)
+        tmscData = await TrafficManagementSlgChecklist.create({
+          DocumentId: id,
+        });
+
+      tmscData.installation_checks_one = tmsc?.installation_checks_one;
+      tmscData.installation_checks_two = tmsc?.installation_checks_two;
+      tmscData.installation_checks_three = tmsc?.installation_checks_three;
+      tmscData.installation_checks_four = tmsc?.installation_checks_four;
+      tmscData.installation_checks_five = tmsc?.installation_checks_five;
+      tmscData.installation_checks_six = tmsc?.installation_checks_six;
+      tmscData.operation_checks_one = tmsc?.operation_checks_one;
+      tmscData.operation_checks_two = tmsc?.operation_checks_two;
+      tmscData.operation_checks_three = tmsc?.operation_checks_three;
+      tmscData.operation_checks_four = tmsc?.operation_checks_four;
+      tmscData.operation_checks_five = tmsc?.operation_checks_five;
+      tmscData.operation_checks_six = tmsc?.operation_checks_six;
+      tmscData.operation_checks_seven = tmsc?.operation_checks_seven;
+      tmscData.traffic_checks_one = tmsc?.traffic_checks_one;
+      tmscData.traffic_checks_two = tmsc?.traffic_checks_two;
+      tmscData.traffic_checks_three = tmsc?.traffic_checks_three;
+      tmscData.traffic_checks_four = tmsc?.traffic_checks_four;
+      tmscData.vulnerable_user_checks_one = tmsc?.vulnerable_user_checks_one;
+      tmscData.vulnerable_user_checks_two = tmsc?.vulnerable_user_checks_two;
+      tmscData.vulnerable_user_checks_three =
+        tmsc?.vulnerable_user_checks_three;
+      tmscData.vulnerable_user_checks_four = tmsc?.vulnerable_user_checks_four;
+      tmscData.vulnerable_user_checks_five = tmsc?.vulnerable_user_checks_five;
+      tmscData.work_complete_checks_one = tmsc?.work_complete_checks_one;
+      tmscData.work_complete_checks_two = tmsc?.work_complete_checks_two;
+      tmscData.work_complete_checks_three = tmsc?.work_complete_checks_three;
+      await tmscData.save();
+
+      if (document.sections_completed < 2) document.sections_completed = 2; //SiteSetup section saved
+      document.last_updated_by = user.name;
+      await document.save();
+
+      res.status(200).json({ message: "Site Setup saved successfully!" });
+    } catch (err) {
+      res.status(500).json({ message: "Something went wrong!" });
+    }
+  }
+
+  // Add sketch image to sitesetup
+  static async updateSiteSetupAddImage(req, res) {
+    const id = req.params.id;
+    const document = await Document.findOne({ where: { id: id } });
+
+    if (req.file) {
+      document.permit_to_dig_sketch_image = req.file.filename;
+    }
+    await document.save();
+    res.status(200).json({ message: "Image uploaded!" });
+  }
+
+  // Update Approved Form Section3 on document
+  static async updateApprovedForm(req, res) {
+    const id = req.params.id;
+    const data = req.body;
+    const list = JSON.parse(data.approvedFormList);
+
+    // get user
+    const token = getToken(req);
+    const user = await getUserByToken(token);
+
+    // check if document exists
+    const document = await Document.findOne({ where: { id: id } });
+    if (!document) {
+      res.status(404).json({ message: "Document not found!" });
+      return;
+    }
+
+    function getImage(imageString) {
+      const base64String = imageString;
+      const base64Image = base64String.replace(/^data:image\/\w+;base64,/, "");
+      const binaryData = Buffer.from(base64Image, "base64");
+      const path = `public/images/documents`;
+      const fileName = `${Date.now()}.png`;
+
+      fs.writeFileSync(`${path}/${fileName}`, binaryData, (err) => {
+        if (err) throw err;
+      });
+
+      return fileName;
+    }
+
+    try {
+      list.forEach(async (element) => {
+        const approvedForm = await ApprovedForm.findOne({
+          where: {
+            id: element.id !== undefined ? element.id : 0,
+            DocumentId: id,
+          },
+        });
+
+        if (approvedForm) {
+          approvedForm.description_location = element.description_location;
+          approvedForm.date_examination = element.date_examination;
+          approvedForm.examination_result_state =
+            element.examination_result_state;
+          approvedForm.inspector_signature !== element.inspector_signature
+            ? getImage(element.inspector_signature)
+            : approvedForm.inspector_signature;
+          await approvedForm.save();
+        } else {
+          await ApprovedForm.create({
+            description_location: element.description_location,
+            date_examination: element.date_examination,
+            examination_result_state: element.examination_result_state,
+            inspector_signature: getImage(element.inspector_signature),
+            DocumentId: id,
+          });
+        }
+      });
+
+      // Delete in the database any item that is not on list
+      const allApprovedForm = await ApprovedForm.findAll({
+        where: { DocumentId: id },
+      });
+      allApprovedForm.forEach(async (element) => {
+        const isElementStillOnList = list.filter((el) => el.id === element.id);
+        if (isElementStillOnList.length === 0)
+          await ApprovedForm.destroy({ where: { id: element.id } });
+      });
+
+      if (document.sections_completed < 3) document.sections_completed = 3; //ApprovedForm section saved
+      document.last_updated_by = user.name;
+      await document.save();
+
+      res.status(200).json({ message: "Approved Form saved successfully!" });
+    } catch (err) {
+      res.status(500).json({ message: "Something went wrong!" });
+    }
+  }
+
+  // Update Document
+  static async updateDocument(req, res) {
     document.sections_completed = documentUpdated.sections_completed;
     document.last_updated_by = user.name;
     if (files && files["permit_to_dig_sketch_image"])
       document.permit_to_dig_sketch_image =
         files["permit_to_dig_sketch_image"].filename;
-
-    dmsAndTmc.method_statement_for_the_day =
-      documentUpdated.daily_method_statement_and_traffic_management_checks.method_statement_for_the_day;
-    dmsAndTmc.daily_method_statement_question_one =
-      documentUpdated.daily_method_statement_and_traffic_management_checks.daily_method_statement_question_one;
-    dmsAndTmc.daily_method_statement_question_two =
-      documentUpdated.daily_method_statement_and_traffic_management_checks.daily_method_statement_question_two;
-    dmsAndTmc.daily_method_statement_question_three =
-      documentUpdated.daily_method_statement_and_traffic_management_checks.daily_method_statement_question_three;
-
-    emergencies.emergencies_question_one =
-      documentUpdated.emergencies.emergencies_question_one;
-    emergencies.emergency_location_of_assembly_point =
-      documentUpdated.emergencies.emergency_location_of_assembly_point;
-    emergencies.emergency_name_of_first_aider =
-      documentUpdated.emergencies.emergency_name_of_first_aider;
-    emergencies.emergency_slg_operative =
-      documentUpdated.emergencies.emergency_slg_operative;
-
-    tmcc.traffic_management_compliance_checksheet_tmp_number =
-      documentUpdated.traffic_management_compliance_checksheet.traffic_management_compliance_checksheet_tmp_number;
-    tmcc.traffic_management_compliance_checksheet_question_one =
-      documentUpdated.traffic_management_compliance_checksheet.traffic_management_compliance_checksheet_question_one;
-    tmcc.traffic_management_compliance_checksheet_question_two =
-      documentUpdated.traffic_management_compliance_checksheet.traffic_management_compliance_checksheet_question_two;
-    tmcc.traffic_management_compliance_checksheet_question_three =
-      documentUpdated.traffic_management_compliance_checksheet.traffic_management_compliance_checksheet_question_three;
-    tmcc.traffic_management_compliance_checksheet_question_sub_one =
-      documentUpdated.traffic_management_compliance_checksheet.traffic_management_compliance_checksheet_question_sub_one;
-    tmcc.traffic_management_compliance_checksheet_question_sub_two =
-      documentUpdated.traffic_management_compliance_checksheet.traffic_management_compliance_checksheet_question_sub_two;
-    tmcc.traffic_management_compliance_checksheet_question_sub_three =
-      documentUpdated.traffic_management_compliance_checksheet.traffic_management_compliance_checksheet_question_sub_three;
-    tmcc.traffic_management_compliance_checksheet_question_sub_four =
-      documentUpdated.traffic_management_compliance_checksheet.traffic_management_compliance_checksheet_question_sub_four;
-
-    tmsc.installation_checks_one =
-      documentUpdated.traffic_management_slg_checklist.installation_checks_one;
-    tmsc.installation_checks_two =
-      documentUpdated.traffic_management_slg_checklist.installation_checks_two;
-    tmsc.installation_checks_three =
-      documentUpdated.traffic_management_slg_checklist.installation_checks_three;
-    tmsc.installation_checks_four =
-      documentUpdated.traffic_management_slg_checklist.installation_checks_four;
-    tmsc.installation_checks_five =
-      documentUpdated.traffic_management_slg_checklist.installation_checks_five;
-    tmsc.installation_checks_six =
-      documentUpdated.traffic_management_slg_checklist.installation_checks_six;
-    tmsc.operation_checks_one =
-      documentUpdated.traffic_management_slg_checklist.operation_checks_one;
-    tmsc.operation_checks_two =
-      documentUpdated.traffic_management_slg_checklist.operation_checks_two;
-    tmsc.operation_checks_three =
-      documentUpdated.traffic_management_slg_checklist.operation_checks_three;
-    tmsc.operation_checks_four =
-      documentUpdated.traffic_management_slg_checklist.operation_checks_four;
-    tmsc.operation_checks_five =
-      documentUpdated.traffic_management_slg_checklist.operation_checks_five;
-    tmsc.operation_checks_six =
-      documentUpdated.traffic_management_slg_checklist.operation_checks_six;
-    tmsc.operation_checks_seven =
-      documentUpdated.traffic_management_slg_checklist.operation_checks_seven;
-    tmsc.traffic_checks_one =
-      documentUpdated.traffic_management_slg_checklist.traffic_checks_one;
-    tmsc.traffic_checks_two =
-      documentUpdated.traffic_management_slg_checklist.traffic_checks_two;
-    tmsc.traffic_checks_three =
-      documentUpdated.traffic_management_slg_checklist.traffic_checks_three;
-    tmsc.traffic_checks_four =
-      documentUpdated.traffic_management_slg_checklist.traffic_checks_four;
-    tmsc.vulnerable_user_checks_one =
-      documentUpdated.traffic_management_slg_checklist.vulnerable_user_checks_one;
-    tmsc.vulnerable_user_checks_two =
-      documentUpdated.traffic_management_slg_checklist.vulnerable_user_checks_two;
-    tmsc.vulnerable_user_checks_three =
-      documentUpdated.traffic_management_slg_checklist.vulnerable_user_checks_three;
-    tmsc.vulnerable_user_checks_four =
-      documentUpdated.traffic_management_slg_checklist.vulnerable_user_checks_four;
-    tmsc.vulnerable_user_checks_five =
-      documentUpdated.traffic_management_slg_checklist.vulnerable_user_checks_five;
-    tmsc.work_complete_checks_one =
-      documentUpdated.traffic_management_slg_checklist.work_complete_checks_one;
-    tmsc.work_complete_checks_two =
-      documentUpdated.traffic_management_slg_checklist.work_complete_checks_two;
-    tmsc.work_complete_checks_three =
-      documentUpdated.traffic_management_slg_checklist.work_complete_checks_three;
 
     hotWorkPermit.site = documentUpdated.hot_work_permit.site;
     hotWorkPermit.floor_level = documentUpdated.hot_work_permit.floor_level;
@@ -461,17 +578,6 @@ module.exports = class UserController {
         };
         if (files) newData.signature = files[`signature${index}`].filename;
         await SiteAttendance.create(newData);
-      });
-
-      // Recreate Hazards
-      await Hazards.destroy({ where: { DocumentId: id } });
-      documentUpdated.hazards.forEach(async (element) => {
-        await Hazards.create({
-          name: element.name,
-          control: element.control,
-          value: element.value,
-          DocumentId: id,
-        });
       });
 
       // Recreate ApprovedForm

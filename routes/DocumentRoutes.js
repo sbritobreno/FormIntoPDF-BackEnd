@@ -1,10 +1,12 @@
 const router = require("express").Router();
 const DocumentController = require("../controllers/DocumentController");
+const multer  = require('multer');
 
 // middleware
 const verifyToken = require("../helpers/verify-token");
 const { imageUpload } = require("../helpers/upload");
 const { fileUpload } = require("../helpers/upload");
+const upload = multer()
 
 router.get("/all_documents", verifyToken, DocumentController.getAllDocuments);
 router.get("/get/:id", verifyToken, DocumentController.getDocumentById);
@@ -12,6 +14,9 @@ router.delete("/remove/:id",verifyToken,DocumentController.removeDocumentById);
 router.post("/new", verifyToken, DocumentController.newDocument);
 router.post("/:id/add/attendance", verifyToken, DocumentController.addAttendance);
 router.delete("/remove/attendance/:id", verifyToken, DocumentController.removeAttendance);
+router.patch("/:id/update/sitesetup", verifyToken, upload.any(), DocumentController.updateSiteSetup);
+router.patch("/:id/update/sitesetup/add_sketch_image", verifyToken, imageUpload.single("image"), DocumentController.updateSiteSetupAddImage)
+router.patch("/:id/update/approvedform", verifyToken, upload.any(), DocumentController.updateApprovedForm);
 // router
 // updateDocument);
 router.get("/:id/reinstatementsheet", verifyToken, DocumentController.getReinstatementSheetByDocumentId);
