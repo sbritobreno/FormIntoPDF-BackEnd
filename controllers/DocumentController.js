@@ -476,71 +476,164 @@ module.exports = class UserController {
     }
   }
 
+  // Update Forms Section4 on document
+  static async updateForms(req, res) {
+    const id = req.params.id;
+    const data = req.body;
+    const hotWorkPermit = JSON.parse(data.hot_work_permit);
+    const dailyPlantInspections = JSON.parse(data.daily_plant_inspections);
+    const nearMissReport = JSON.parse(data.near_miss_report);
+    const futherHazards = JSON.parse(
+      data.futher_hazards_and_controls_requireds
+    );
+
+    // get user
+    const token = getToken(req);
+    const user = await getUserByToken(token);
+
+    // check if document exists
+    const document = await Document.findOne({ where: { id: id } });
+    if (!document) {
+      res.status(404).json({ message: "Document not found!" });
+      return;
+    }
+
+    function getImage(imageString) {
+      const base64String = imageString;
+      const base64Image = base64String.replace(/^data:image\/\w+;base64,/, "");
+      const binaryData = Buffer.from(base64Image, "base64");
+      const path = `public/images/documents`;
+      const fileName = `${Date.now()}.png`;
+
+      fs.writeFileSync(`${path}/${fileName}`, binaryData, (err) => {
+        if (err) throw err;
+      });
+
+      return fileName;
+    }
+
+    try {
+      // Update HotWorkPermit
+      let hwp = await HotWorkPermit.findOne({
+        where: { DocumentId: id },
+      });
+      if (!hwp) hwp = await HotWorkPermit.create({ DocumentId: id });
+
+      hwp.site = hotWorkPermit?.site;
+      hwp.floor_level = hotWorkPermit?.floor_level;
+      hwp.nature_of_work = hotWorkPermit?.nature_of_work;
+      hwp.date = hotWorkPermit?.date;
+      hwp.permit_precautions_one = hotWorkPermit?.permit_precautions_one;
+      hwp.permit_precautions_two = hotWorkPermit?.permit_precautions_two;
+      hwp.permit_precautions_three = hotWorkPermit?.permit_precautions_three;
+      hwp.permit_precautions_four = hotWorkPermit?.permit_precautions_four;
+      hwp.permit_precautions_five = hotWorkPermit?.permit_precautions_five;
+      hwp.permit_precautions_six = hotWorkPermit?.permit_precautions_six;
+      hwp.permit_precautions_seven = hotWorkPermit?.permit_precautions_seven;
+      hwp.permit_precautions_eight = hotWorkPermit?.permit_precautions_eight;
+      hwp.permit_precautions_nine = hotWorkPermit?.permit_precautions_nine;
+      hwp.permit_precautions_ten = hotWorkPermit?.permit_precautions_ten;
+      hwp.permit_issued_by_company = hotWorkPermit?.permit_issued_by_company;
+      hwp.permit_issued_by_person = hotWorkPermit?.permit_issued_by_person;
+      hwp.permit_issued_by_person_signature =
+        hotWorkPermit?.permit_issued_by_person_signature.length > 100
+          ? getImage(hotWorkPermit?.permit_issued_by_person_signature)
+          : hwp.permit_issued_by_person_signature;
+      hwp.permit_received_by_company = hotWorkPermit.permit_received_by_company;
+      hwp.permit_received_by_person = hotWorkPermit.permit_received_by_person;
+      hwp.permit_received_by_person_signature =
+        hotWorkPermit?.permit_received_by_person_signature.length > 100
+          ? getImage(hotWorkPermit?.permit_received_by_person_signature)
+          : hwp.permit_received_by_person_signature;
+      hwp.final_check_time = hotWorkPermit.final_check_time;
+      hwp.final_check_name = hotWorkPermit.final_check_name;
+      hwp.final_check_signature =
+        hotWorkPermit?.final_check_signature.length > 100
+          ? getImage(hotWorkPermit?.final_check_signature)
+          : hwp.final_check_signature;
+      await hwp.save();
+
+      // Update Daily Plant Inspection
+      dailyPlantInspections.forEach(async (element) => {
+        const objName = Object.keys(element)[0]; // Get the name of the current object
+        const dpi = await DailyPlantInspection.findOne({
+          where: { tool_name: objName, DocumentId: id },
+        });
+
+        if (dpi) {
+          dpi.monday = element[objName].monday;
+          dpi.tuesday = element[objName].tuesday;
+          dpi.wednesday = element[objName].wednesday;
+          dpi.thrusday = element[objName].thrusday;
+          dpi.friday = element[objName].friday;
+          dpi.saturday = element[objName].saturday;
+          dpi.sunday = element[objName].sunday;
+          await dpi.save();
+        } else {
+          await DailyPlantInspection.create({
+            tool_name: objName,
+            monday: element.monday,
+            tuesday: element.tuesday,
+            wednesday: element.wednesday,
+            thrusday: element.thrusday,
+            friday: element.friday,
+            saturday: element.saturday,
+            sunday: element.sunday,
+            DocumentId: id,
+          });
+        }
+      });
+
+      // Update Near Miss Report
+      let nmr = await NearMissReport.findOne({
+        where: { DocumentId: id },
+      });
+      if (!nmr) nmr = await NearMissReport.create({ DocumentId: id });
+
+      nmr.details_comments = nearMissReport?.details_comments;
+      nmr.actions_taken_comments = nearMissReport?.actions_taken_comments;
+      nmr.suggestion_to_prevent_reoccurance_comments =
+        nearMissReport?.suggestion_to_prevent_reoccurance_comments;
+      nmr.report_signature =
+        nearMissReport?.report_signature.length > 100
+          ? getImage(nearMissReport?.report_signature)
+          : nmr.report_signature;
+      nmr.save();
+
+      // Update Futher Hazards
+      futherHazards.forEach(async (element) => {
+        if (element.id !== undefined) {
+          // Check if element has an 'id' property
+          const fhz = await FutherHazarsAndControls.findOne({
+            where: { id: element.id, DocumentId: id },
+          });
+
+          if (fhz) {
+            fhz.name = element.name;
+            fhz.control_required = element.control_required;
+            await fhz.save();
+          }
+        } else {
+          await FutherHazarsAndControls.create({
+            name: element.name,
+            control_required: element.control_required,
+            DocumentId: id,
+          });
+        }
+      });
+
+      if (document.sections_completed < 4) document.sections_completed = 4; //ApprovedForm section saved
+      document.last_updated_by = user.name;
+      await document.save();
+
+      res.status(200).json({ message: "Forms saved successfully!" });
+    } catch (err) {
+      res.status(500).json({ message: err });
+    }
+  }
+
   // Update Document
   static async updateDocument(req, res) {
-    document.sections_completed = documentUpdated.sections_completed;
-    document.last_updated_by = user.name;
-    if (files && files["permit_to_dig_sketch_image"])
-      document.permit_to_dig_sketch_image =
-        files["permit_to_dig_sketch_image"].filename;
-
-    hotWorkPermit.site = documentUpdated.hot_work_permit.site;
-    hotWorkPermit.floor_level = documentUpdated.hot_work_permit.floor_level;
-    hotWorkPermit.nature_of_work =
-      documentUpdated.hot_work_permit.nature_of_work;
-    hotWorkPermit.date = documentUpdated.hot_work_permit.date;
-    hotWorkPermit.permit_precautions_one =
-      documentUpdated.hot_work_permit.permit_precautions_one;
-    hotWorkPermit.permit_precautions_two =
-      documentUpdated.hot_work_permit.permit_precautions_two;
-    hotWorkPermit.permit_precautions_three =
-      documentUpdated.hot_work_permit.permit_precautions_three;
-    hotWorkPermit.permit_precautions_four =
-      documentUpdated.hot_work_permit.permit_precautions_four;
-    hotWorkPermit.permit_precautions_five =
-      documentUpdated.hot_work_permit.permit_precautions_five;
-    hotWorkPermit.permit_precautions_six =
-      documentUpdated.hot_work_permit.permit_precautions_six;
-    hotWorkPermit.permit_precautions_seven =
-      documentUpdated.hot_work_permit.permit_precautions_seven;
-    hotWorkPermit.permit_precautions_eight =
-      documentUpdated.hot_work_permit.permit_precautions_eight;
-    hotWorkPermit.permit_precautions_nine =
-      documentUpdated.hot_work_permit.permit_precautions_nine;
-    hotWorkPermit.permit_precautions_ten =
-      documentUpdated.hot_work_permit.permit_precautions_ten;
-    hotWorkPermit.permit_precautions_eleven =
-      documentUpdated.hot_work_permit.permit_precautions_eleven;
-    hotWorkPermit.permit_issued_by_company =
-      documentUpdated.hot_work_permit.permit_issued_by_company;
-    hotWorkPermit.permit_issued_by_person =
-      documentUpdated.hot_work_permit.permit_issued_by_person;
-    if (files && files["permit_issued_by_person_signature"])
-      hotWorkPermit.permit_issued_by_person_signature =
-        files["permit_issued_by_person_signature"].filename;
-    hotWorkPermit.permit_received_by_company =
-      documentUpdated.hot_work_permit.permit_received_by_company;
-    hotWorkPermit.permit_received_by_person =
-      documentUpdated.hot_work_permit.permit_received_by_person;
-    if (files && files["permit_received_by_person_signature"])
-      hotWorkPermit.permit_received_by_person_signature =
-        files["permit_received_by_person_signature"].filename;
-    hotWorkPermit.final_check_time =
-      documentUpdated.hot_work_permit.final_check_time;
-    hotWorkPermit.final_check_name =
-      documentUpdated.hot_work_permit.final_check_name;
-    if (files && files["final_check_signature"])
-      hotWorkPermit.final_check_signature =
-        files["final_check_signature"].filename;
-
-    nearMissReport.details_comments =
-      documentUpdated.near_miss_report.details_comments;
-    nearMissReport.actions_taken_comments =
-      documentUpdated.near_miss_report.actions_taken_comments;
-    nearMissReport.suggestion_to_prevent_reoccurance_comments =
-      documentUpdated.near_miss_report.suggestion_to_prevent_reoccurance_comments;
-    if (files && files["report_signature"])
-      nearMissReport.report_signature = files["report_signature"].filename;
 
     methodStatementsJobInfo.ms_id =
       documentUpdated.method_statements_job_information.ms_id;
@@ -556,82 +649,6 @@ module.exports = class UserController {
       methodStatementsJobInfo.loc_photograph_image =
         files["loc_photograph_image"].filename;
 
-    try {
-      await document.save();
-      await dmsAndTmc.save();
-      await emergencies.save();
-      await tmcc.save();
-      await tmsc.save();
-      await hotWorkPermit.save();
-      await nearMissReport.save();
-      await methodStatementsJobInfo.save();
-
-      // Recreate SiteAttendance
-      await SiteAttendance.destroy({ where: { DocumentId: id } });
-      documentUpdated.site_attendance.forEach(async (attendance, index) => {
-        const newData = {
-          name: attendance.name,
-          date: attendance.date,
-          time_in: attendance.time_in,
-          time_out: attendance.time_out,
-          DocumentId: id,
-        };
-        if (files) newData.signature = files[`signature${index}`].filename;
-        await SiteAttendance.create(newData);
-      });
-
-      // Recreate ApprovedForm
-      await ApprovedForm.destroy({ where: { DocumentId: id } });
-      documentUpdated.approved_form.forEach(async (element, index) => {
-        const newData = {
-          description_location: element.description_location,
-          date_examination: element.date_examination,
-          examination_result_state: element.examination_result_state,
-          DocumentId: id,
-        };
-        if (files)
-          newData.inspector_signature =
-            files[`inspector_signature${index}`].filename;
-        await ApprovedForm.create(newData);
-      });
-
-      // Recreate DailyPlantInspection
-      await DailyPlantInspection.destroy({ where: { DocumentId: id } });
-      documentUpdated.daily_plant_inspection.forEach(async (element) => {
-        await DailyPlantInspection.create({
-          tool_name: element.tool_name,
-          monday: element.monday,
-          tuesday: element.tuesday,
-          wednesday: element.wednesday,
-          thrusday: element.thrusday,
-          friday: element.friday,
-          saturday: element.saturday,
-          sunday: element.sunday,
-          DocumentId: id,
-        });
-      });
-
-      // Recreate FutherHazarsAndControls
-      await FutherHazarsAndControls.destroy({ where: { DocumentId: id } });
-      documentUpdated.futher_hazards_and_controls_required.forEach(
-        async (element) => {
-          await FutherHazarsAndControls.create({
-            name: element.name,
-            control_required: element.control_required,
-            DocumentId: id,
-          });
-        }
-      );
-
-      // ReinstatementSheet, ReinstatementSheetHoleSequence and ReinstatementImages have their own method to update their values
-
-      res.status(200).json({
-        message: "Document updated successfully!",
-        document: documentUpdated,
-      });
-    } catch (error) {
-      res.status(500).json({ message: error });
-    }
   }
 
   // Get single ReinstatementSheet

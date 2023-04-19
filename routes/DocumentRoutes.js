@@ -18,6 +18,7 @@ router.patch("/:id/update/sitesetup", verifyToken, upload.any(), DocumentControl
 router.patch("/:id/update/sitesetup/add_sketch_image", verifyToken, imageUpload.single("image"), DocumentController.updateSiteSetupAddImage)
 router.patch("/:id/update/approvedform", verifyToken, upload.any(), DocumentController.updateApprovedForm);
 // router
+router.patch("/:id/update/forms", verifyToken, upload.any(), DocumentController.updateForms);
 // updateDocument);
 router.get("/:id/reinstatementsheet", verifyToken, DocumentController.getReinstatementSheetByDocumentId);
 router.patch("/:id/update/reinstatementsheetinfo", verifyToken, DocumentController.editReinstatementSheetInfo);
