@@ -554,24 +554,24 @@ module.exports = class UserController {
       await hwp.save();
 
       // Update Daily Plant Inspection
+      console.log(dailyPlantInspections);
       dailyPlantInspections.forEach(async (element) => {
-        const objName = Object.keys(element)[0]; // Get the name of the current object
         const dpi = await DailyPlantInspection.findOne({
-          where: { tool_name: objName, DocumentId: id },
+          where: { tool_name: element.tool_name, DocumentId: id },
         });
 
         if (dpi) {
-          dpi.monday = element[objName].monday;
-          dpi.tuesday = element[objName].tuesday;
-          dpi.wednesday = element[objName].wednesday;
-          dpi.thrusday = element[objName].thrusday;
-          dpi.friday = element[objName].friday;
-          dpi.saturday = element[objName].saturday;
-          dpi.sunday = element[objName].sunday;
+          dpi.monday = element.monday;
+          dpi.tuesday = element.tuesday;
+          dpi.wednesday = element.wednesday;
+          dpi.thrusday = element.thrusday;
+          dpi.friday = element.friday;
+          dpi.saturday = element.saturday;
+          dpi.sunday = element.sunday;
           await dpi.save();
         } else {
           await DailyPlantInspection.create({
-            tool_name: objName,
+            tool_name: element.tool_name,
             monday: element.monday,
             tuesday: element.tuesday,
             wednesday: element.wednesday,
@@ -622,7 +622,7 @@ module.exports = class UserController {
         }
       });
 
-      if (document.sections_completed < 4) document.sections_completed = 4; //ApprovedForm section saved
+      if (document.sections_completed < 4) document.sections_completed = 4; //Forms section saved
       document.last_updated_by = user.name;
       await document.save();
 
@@ -632,23 +632,48 @@ module.exports = class UserController {
     }
   }
 
-  // Update Document
-  static async updateDocument(req, res) {
+  // Update Method Statements Section5 on document
+  static async updateMethodStatements(req, res) {
+    const id = req.params.id;
+    const data = req.body;
+    const image = req.file;
 
-    methodStatementsJobInfo.ms_id =
-      documentUpdated.method_statements_job_information.ms_id;
-    methodStatementsJobInfo.ms_revision =
-      documentUpdated.method_statements_job_information.ms_revision;
-    methodStatementsJobInfo.ms_project =
-      documentUpdated.method_statements_job_information.ms_project;
-    methodStatementsJobInfo.ms_site =
-      documentUpdated.method_statements_job_information.ms_site;
-    methodStatementsJobInfo.ms_client =
-      documentUpdated.method_statements_job_information.ms_client;
-    if (files && files["loc_photograph_image"])
-      methodStatementsJobInfo.loc_photograph_image =
-        files["loc_photograph_image"].filename;
+    // get user
+    const token = getToken(req);
+    const user = await getUserByToken(token);
 
+    // check if document exists
+    const document = await Document.findOne({ where: { id: id } });
+    if (!document) {
+      res.status(404).json({ message: "Document not found!" });
+      return;
+    }
+
+    try {
+      // Update Method Statements
+      let ms = await MethodStatementsJobInfo.findOne({
+        where: { DocumentId: id },
+      });
+      if (!ms) ms = await MethodStatementsJobInfo.create({ DocumentId: id });
+
+      ms.ms_id = data.ms_id;
+      ms.ms_revision = data.ms_revision;
+      ms.ms_project = data.ms_project;
+      ms.ms_site = data.ms_site;
+      ms.ms_client = data.ms_client;
+      if (image) ms.loc_photograph_image = image.filename;
+      await ms.save();
+
+      if (document.sections_completed < 5) document.sections_completed = 5; //MethodStatements section saved
+      document.last_updated_by = user.name;
+      await document.save();
+
+      res
+        .status(200)
+        .json({ message: "Method Statements saved successfully!" });
+    } catch (err) {
+      res.status(500).json({ message: err });
+    }
   }
 
   // Get single ReinstatementSheet
@@ -666,7 +691,8 @@ module.exports = class UserController {
 
     if (!reinstatementSheet) {
       res.status(404).json({
-        message: "Reinstatement Sheet not found!",
+        message:
+          "Reinstatement sheet not found. It might not have been initialized yet!",
       });
       return;
     }
@@ -959,7 +985,7 @@ module.exports = class UserController {
 
     if (!reinstatementSheet) {
       res.status(404).json({
-        message: "Reinstatement Sheet not found!",
+        message: "Reinstatement sheet not found. It might not have been initialized yet!",
       });
       return;
     }
