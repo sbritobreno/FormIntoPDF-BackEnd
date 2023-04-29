@@ -81,8 +81,17 @@ module.exports = class PdfController {
       const compiledPage2 = hbs.compile(templatePage2);
       const htmlPage2 = compiledPage2(data);
 
+      // Site Attendance 3
+      const templatePage3Path = path.join(
+        __dirname,
+        "../public/pdfTemplate/siteAttendance3.hbs"
+      );
+      const templatePage3 = fs.readFileSync(templatePage3Path, "utf8");
+      const compiledPage3 = hbs.compile(templatePage3);
+      const htmlPage3 = compiledPage3(data);
+
       // Concatenate all HTML pages
-      const html = htmlPage1 + htmlPage2;
+      const html = htmlPage1 + htmlPage2 + htmlPage3;
 
       pdf
         .generatePdf({ content: html }, options)

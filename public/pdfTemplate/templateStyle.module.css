@@ -1,11 +1,11 @@
 body {
   padding: 0;
-  margin: 5%;
+  margin: 0;
 }
 
 .logo {
   position: absolute;
-  top: 0;
+  top: -5;
   right: 0;
 }
 
