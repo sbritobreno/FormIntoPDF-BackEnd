@@ -6,32 +6,16 @@
     <section class="page-break" style="position: relative; margin: 5%">
       <img class="logo" src="http://localhost:5000/logo.png" alt="logo" />
       <div>
-        <h4>Richard Nolan Civil Engineering Ltd</h4>
-        <h4>Method Statement and Risk Assessment</h4>
-        <h4>Cable Fault Generic</h4>
-        <h4>Richard Nolan Civil Engineering Ltd</h4>
-        <p>
-          <span>Garda / Ambulance / Fire</span>
-          <span style="margin-left: 50px">999</span>
-        </p>
-        <p>RNCE Site Manager</p>
-        <p>
-          <span>RNCE Project Manager:</span>
-          <span style="margin-left: 50px">Andrew Flanagan</span>
-          <span style="margin-left: 50px">M: 086 0144 767</span>
-        </p>
-        <p>
-          <span>RNCE HSEQ Manager:</span>
-          <span style="margin-left: 50px">Raymond Shelly</span>
-          <span style="margin-left: 50px">M: 087 7474 419</span>
-        </p>
+        <h1>SITE ATTENDANCE REGISTER</h1>
       </div>
       <table>
         <thead>
           <tr>
             <th>PRINT NAME:</th>
             <th>SIGNATURE:</th>
-            <th>DATE:</th>
+            <th>LOCATION:</th>
+            <th>TIME IN:</th>
+            <th>TIME OUT:</th>
           </tr>
         </thead>
         <tbody>
@@ -44,7 +28,9 @@
                   alt="signature"
                 />
               </td>
-              <td>{{this.date}}</td>
+              <td>{{reinstatement_sheets.location}}</td>
+              <td>{{this.time_in}}</td>
+              <td>{{this.time_out}}</td>
             </tr>
           {{/each}}
         </tbody>

@@ -27,9 +27,5 @@ router.patch("/update_holesequence/:id", verifyToken, imageUpload.array("images"
 router.delete("/holesequence/remove_image/:id", verifyToken, DocumentController.removeHoleSequenceImage);
 router.delete("/remove_holesequence/:id", verifyToken, DocumentController.removeHoleSequenceById);
 router.patch("/attach_file/:id", verifyToken, fileUpload.single("file"), DocumentController.attachFileToDocument);
-router.get("/download_pdf/:id", verifyToken, DocumentController.downloadPDF);
-router.get("/download/:id/reinstatementsheet", verifyToken, DocumentController.downloadReinstatementSheet);
-
-//https://www.ultimateakash.com/blog-details/IixTQGAKYAo=/How-to-Generate-PDF-in-Node.js-2022
 
 module.exports = router;

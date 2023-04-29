@@ -19,8 +19,10 @@ app.use(express.static("public"));
 // Routes
 const UserRoutes = require("./routes/UserRoutes");
 const DocumentRoutes = require("./routes/DocumentRoutes");
+const PdfRoutes = require("./routes/PdfRoutes");
 
 app.use("/user", UserRoutes);
 app.use("/document", DocumentRoutes);
+app.use("/pdf", PdfRoutes);
 
 app.listen(5000);
