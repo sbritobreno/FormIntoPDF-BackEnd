@@ -1,4 +1,7 @@
 const fs = require("fs");
+const hbs = require("hbs");
+const pdf = require("html-pdf-node");
+const path = require("path");
 
 const Document = require("../models/Document/Document");
 const SiteAttendance = require("../models/Document/SiteAttendance");
@@ -960,7 +963,33 @@ module.exports = class UserController {
   // Download PDF
   static async downloadPDF(req, res) {
     const id = req.params.id;
-    const document = await Document.findOne({ where: { id: id } });
+
+    const document = await Document.findOne({
+      where: { id: id },
+      include: [
+        { model: SiteAttendance },
+        { model: Hazards },
+        { model: DMSandTMC },
+        { model: Emergencies },
+        { model: TrafficManagementComplianceChecksheet },
+        { model: TrafficManagementSlgChecklist },
+        { model: ApprovedForm },
+        { model: HotWorkPermit },
+        { model: DailyPlantInspection },
+        { model: NearMissReport },
+        { model: FutherHazarsAndControls },
+        { model: MethodStatementsJobInfo },
+        {
+          model: ReinstatementSheet,
+          include: [
+            {
+              model: ReinstatementSheetHoleSequence,
+              include: [{ model: ReinstatementImages }],
+            },
+          ],
+        },
+      ],
+    });
 
     if (!document) {
       res.status(404).json({
@@ -970,7 +999,34 @@ module.exports = class UserController {
     }
 
     try {
-      res.status(200).json({ message: "PDF downloaded successfully!" });
+      const data = document.toJSON();
+      const templatePath = path.join(
+        __dirname,
+        "../public/pdfTemplate/siteAttendance1.hbs"
+      );
+      const template = fs.readFileSync(templatePath, "utf8");
+      const compiledTemplate = hbs.compile(template);
+      const html = compiledTemplate(data);
+      const assetPath =
+        "file:///" + path.join(__dirname, "../public/").replace(/\\/g, "/");
+      const options = {
+        format: "A4",
+      };
+
+      pdf
+        .generatePdf({ content: html }, options)
+        .then((pdfBuffer) => {
+          res.setHeader("Content-Type", "application/pdf");
+          res.setHeader(
+            "Content-Disposition",
+            "attachment; filename=document.pdf"
+          );
+          res.send(pdfBuffer);
+        })
+        .catch((error) => {
+          console.error(error);
+          res.status(500).send("Error generating PDF");
+        });
     } catch (error) {
       res.status(500).json({ message: error });
     }
@@ -985,7 +1041,8 @@ module.exports = class UserController {
 
     if (!reinstatementSheet) {
       res.status(404).json({
-        message: "Reinstatement sheet not found. It might not have been initialized yet!",
+        message:
+          "Reinstatement sheet not found. It might not have been initialized yet!",
       });
       return;
     }
