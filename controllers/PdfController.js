@@ -37,7 +37,7 @@ module.exports = class PdfController {
       return list < n;
     });
 
-    hbs.registerHelper('range', function(start, end) {
+    hbs.registerHelper("range", function (start, end) {
       var ret = [];
       for (var i = start; i < end; i++) {
         ret.push(i);
@@ -165,6 +165,15 @@ module.exports = class PdfController {
       const compiledPage7 = hbs.compile(templatePage7);
       const htmlPage7 = compiledPage7(data);
 
+      //8. Site Specific Requirements
+      const templatePage8Path = path.join(
+        __dirname,
+        "../public/pdfTemplate/siteSpecificRequirements.hbs"
+      );
+      const templatePage8 = fs.readFileSync(templatePage8Path, "utf8");
+      const compiledPage8 = hbs.compile(templatePage8);
+      const htmlPage8 = compiledPage8(data);
+
       // Concatenate all HTML pages
       const html =
         htmlPage1 +
@@ -173,7 +182,8 @@ module.exports = class PdfController {
         htmlPage4 +
         htmlPage5 +
         htmlPage6 +
-        htmlPage7;
+        htmlPage7 +
+        htmlPage8;
 
       pdf
         .generatePdf({ content: html }, options)
