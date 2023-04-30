@@ -90,7 +90,7 @@ module.exports = class PdfController {
       console.log(data);
       const options = { format: "A4" };
 
-      // Site Attendance 1
+      //1. Site Attendance 1
       const templatePage1Path = path.join(
         __dirname,
         "../public/pdfTemplate/siteAttendance1.hbs"
@@ -99,7 +99,7 @@ module.exports = class PdfController {
       const compiledPage1 = hbs.compile(templatePage1);
       const htmlPage1 = compiledPage1(data);
 
-      // Site Attendance 2
+      //2. Site Attendance 2
       const templatePage2Path = path.join(
         __dirname,
         "../public/pdfTemplate/siteAttendance2.hbs"
@@ -108,7 +108,7 @@ module.exports = class PdfController {
       const compiledPage2 = hbs.compile(templatePage2);
       const htmlPage2 = compiledPage2(data);
 
-      // Site Attendance 3
+      //3. Site Attendance 3
       const templatePage3Path = path.join(
         __dirname,
         "../public/pdfTemplate/siteAttendance3.hbs"
@@ -117,17 +117,36 @@ module.exports = class PdfController {
       const compiledPage3 = hbs.compile(templatePage3);
       const htmlPage3 = compiledPage3(data);
 
-      // Hazards
+      //4. Job Safety Plan
       const templatePage4Path = path.join(
         __dirname,
-        "../public/pdfTemplate/hazards.hbs"
+        "../public/pdfTemplate/jobSafetyPlan.hbs"
       );
       const templatePage4 = fs.readFileSync(templatePage4Path, "utf8");
       const compiledPage4 = hbs.compile(templatePage4);
       const htmlPage4 = compiledPage4(data);
 
+      //5. Method Statement 1
+      const templatePage5Path = path.join(
+        __dirname,
+        "../public/pdfTemplate/methodStatement1.hbs"
+      );
+      const templatePage5 = fs.readFileSync(templatePage5Path, "utf8");
+      const compiledPage5 = hbs.compile(templatePage5);
+      const htmlPage5 = compiledPage5(data);
+
+      //6. Method Statement 2
+      const templatePage6Path = path.join(
+        __dirname,
+        "../public/pdfTemplate/methodStatement2.hbs"
+      );
+      const templatePage6 = fs.readFileSync(templatePage6Path, "utf8");
+      const compiledPage6 = hbs.compile(templatePage6);
+      const htmlPage6 = compiledPage6(data);
+
       // Concatenate all HTML pages
-      const html = htmlPage1 + htmlPage2 + htmlPage3 + htmlPage4;
+      const html =
+        htmlPage1 + htmlPage2 + htmlPage3 + htmlPage4 + htmlPage5 + htmlPage6;
 
       pdf
         .generatePdf({ content: html }, options)

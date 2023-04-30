@@ -1,0 +1,186 @@
+<html lang="en">
+  <head>
+    <title>Document</title>
+  </head>
+  <body>
+    <section class="page-break" style="position: relative; margin: 5%">
+      <div class="method_statement1">
+        <img class="logo" src="http://localhost:5000/logo.png" alt="logo" />
+        <div>
+          <h4>Richard Nolan Civil Engineering Ltd</h4>
+          <h4>Method Statement and Risk Assessment</h4>
+          <h4>Cable Fault Generic</h4>
+        </div>
+        <div style="display: flex">
+          <div style="width: 40%">
+            <table>
+              <caption>
+                Job Information
+              </caption>
+              <tbody>
+                <tr>
+                  <th>MS ID:</th>
+                  <td>{{method_statements_job_information.ms_id}}</td>
+                </tr>
+                <tr>
+                  <th>Revision:</th>
+                  <td>{{method_statements_job_information.ms_revision}}</td>
+                </tr>
+                <tr>
+                  <th>Project:</th>
+                  <td>{{method_statements_job_information.ms_project}}</td>
+                </tr>
+                <tr>
+                  <th>Project Manager:</th>
+                  <td>Andrew Flanagan</td>
+                </tr>
+              </tbody>
+            </table>
+            <table>
+              <caption>
+                Site Information
+              </caption>
+              <tbody>
+                <tr>
+                  <th>Site:</th>
+                  <td>{{method_statements_job_information.ms_site}}</td>
+                </tr>
+                <tr style="height: 100px">
+                  <th>Client:</th>
+                  <td>{{method_statements_job_information.ms_client}}</td>
+                </tr>
+                <tr>
+                  <th>Location:</th>
+                  <td></td>
+                </tr>
+                <tr>
+                  <th>Key Plant Used</th>
+                  <th>ID</th>
+                </tr>
+                <tr style="height: 100px">
+                  <td>Excavator<br />Grap Lorry<br />Van<br />Handtools</td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <th>Authorisation</th>
+                  <th>Date</th>
+                </tr>
+              </tbody>
+            </table>
+            <table>
+              <tbody>
+                <tr>
+                  <td>Prepared by</td>
+                  <td>E Novoselic</td>
+                  <td>11/10/2018</td>
+                </tr>
+                <tr>
+                  <td>Approved by</td>
+                  <td>R Shelly</td>
+                  <td>11/10/2018</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div style="width: 60%">
+            <table>
+              <caption>
+                Scope
+              </caption>
+              <tbody>
+                <tr>
+                  <td>
+                    <p>
+                      This method statement will describe the steps to be taken
+                      to ensure works carried out safely and to specification.<br
+                      />
+                      Implement clean as you go policy, to ensure maximum
+                      satisfaction of the public and avoid any spills that may
+                      cause slipping or any other hazards. Pay attention to the
+                      location of spoil heaps, ensuring they are kept away from
+                      the trench and parked vehicles. Ensure that warning signs
+                      are clearly visible at all times for vehicles coming to
+                      and from site and move throughout the day if necessary.
+                    </p>
+                    <p style="text-align: center">
+                      <b> !!!IDENTIFY OVERHEAD CABLES!!!</b>
+                    </p>
+                    <p>
+                      Excavation inspections (AF3) to be completed once
+                      excavations works are complete and before anyone enters
+                      the excavation. A permit to dig must be in place before
+                      breaking ground.
+                    </p>
+                    <p style="text-align: center">
+                      <b>ALL RAMPSMUST BE FIXED / REMOVE ALL TRIP HAZARDS</b>
+                    </p>
+                    <p>
+                      The approved traffic management plans must be implemented.
+                      Site staff must erect barriers around their work zone and
+                      ensure that no unauthorized person enters the site. All
+                      people on site must have a safety pass, corresponding CSCS
+                      CARDs, and ESB INDUCTION. All persons permitted to site
+                      must be ESB inducted. Remain vigilant of members of the
+                      public at all times.
+                    </p>
+                  </td>
+                </tr>
+                <tr>
+                  <th>Location Photograph</th>
+                </tr>
+                <tr>
+                  <td style="text-align: center">
+                    <img
+                      class="photo"
+                      src="http://localhost:5000/images/documents/{{method_statements_job_information.loc_photograph_image}}"
+                      alt="photo"
+                    />
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div>
+          <table>
+            <caption>
+              Method Statment Colour Legend
+            </caption>
+            <tbody>
+              <tr>
+                <th>Traffic Management</th>
+                <td>Site Setup, Erecting & Dismantling Signs and Barries</td>
+              </tr>
+              <tr>
+                <th>Warning!!!!!</th>
+                <td>Study utlility drawings, mark out services</td>
+              </tr>
+              <tr>
+                <th>Earthworks</th>
+                <td>Excavating and Backfilling</td>
+              </tr>
+              <tr>
+                <th>Reinstatement</th>
+                <td>Reinstatement of concrete and tarmacadam surfaces</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+    <style>
+      .method_statement1 body { font-size: 12px; padding: 0; margin: 0; }
+      .method_statement1 .logo { position: absolute; top: -5%; right: 0; width:
+      100px; height: 50px; } .method_statement1 p { font-size: 11px; }
+      .method_statement1 table { border-collapse: collapse; width: 100%;
+      margin-top: 0px; } .method_statement1 th, .method_statement1 td { border:
+      1px solid #ddd; padding: 8px; text-align: left; } .method_statement1 th {
+      background-color: #f2f2f2; } .method_statement1 tr { height: 36px; }
+      .method_statement1 td { word-wrap: break-word; } .method_statement1 img {
+      height: 20px; width: auto; margin: 0; padding: 0; } .method_statement1
+      .photo { height: 246px; width: auto; } .method_statement1 caption {
+      font-weight: bold; background-color: #333; color: #fff; padding: 6px; }
+      .method_statement1 .page-break { page-break-after: always; }
+    </style>
+  </body>
+</html>

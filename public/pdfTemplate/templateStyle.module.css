@@ -1,6 +1,7 @@
 body {
   padding: 0;
   margin: 0;
+  font-size: 12px;
 }
 
 .logo {
@@ -12,12 +13,13 @@ body {
 table {
   border-collapse: collapse;
   width: 100%;
-  margin-top: 20px;
+  margin-top: 10px;
 }
 
-th, td {
+th,
+td {
   border: 1px solid #ddd;
-  padding: 8px;
+  padding: 6px;
   text-align: left;
 }
 
@@ -27,4 +29,22 @@ th {
 
 tr {
   height: 36px;
+}
+
+img {
+  height: 20px;
+  width: auto;
+  margin: 0;
+  padding: 0;
+}
+
+caption {
+  font-weight: bold;
+  background-color: #333;
+  color: #fff;
+  padding: 6px;
+}
+
+.page-break {
+  page-break-after: always;
 }
