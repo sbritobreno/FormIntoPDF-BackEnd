@@ -6,8 +6,10 @@ body {
 
 .logo {
   position: absolute;
-  top: -5;
+  top: 0;
   right: 0;
+  width: 100px;
+  height: 50px;
 }
 
 table {

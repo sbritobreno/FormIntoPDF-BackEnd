@@ -4,45 +4,60 @@
   </head>
   <body>
     <section class="page-break" style="position: relative; margin: 5%">
-      <img class="logo" src="http://localhost:5000/logo.png" alt="logo" />
-      <div>
-        <h1>SITE ATTENDANCE REGISTER</h1>
-      </div>
-      <table>
-        <thead>
-          <tr>
-            <th>PRINT NAME:</th>
-            <th>SIGNATURE:</th>
-            <th>LOCATION:</th>
-            <th>TIME IN:</th>
-            <th>TIME OUT:</th>
-          </tr>
-        </thead>
-        <tbody>
-          {{#each site_attendances}}
+      <div class="siteAttendance2">
+        <img class="logo" src="http://localhost:5000/logo.png" alt="logo" />
+        <div>
+          <h1>SITE ATTENDANCE REGISTER</h1>
+        </div>
+        <table>
+          <thead>
             <tr>
-              <td>{{this.name}}</td>
-              <td>
-                <img
-                  src="http://localhost:5000/images/documents/{{this.signature}}"
-                  alt="signature"
-                />
-              </td>
-              <td>{{reinstatement_sheets.location}}</td>
-              <td>{{this.time_in}}</td>
-              <td>{{this.time_out}}</td>
+              <th>PRINT NAME:</th>
+              <th>SIGNATURE:</th>
+              <th>LOCATION:</th>
+              <th>TIME IN:</th>
+              <th>TIME OUT:</th>
             </tr>
-          {{/each}}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {{#each site_attendances}}
+              <tr>
+                <td>{{this.name}}</td>
+                <td>
+                  <img
+                    src="http://localhost:5000/images/documents/{{this.signature}}"
+                    alt="signature"
+                  />
+                </td>
+                <td>{{reinstatement_sheets.location}}</td>
+                <td>{{this.time_in}}</td>
+                <td>{{this.time_out}}</td>
+              </tr>
+            {{/each}}
+            {{#if (lessthen site_attendances.length 23)}}
+              {{#each (range site_attendances.length 23)}}
+                <tr>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                </tr>
+              {{/each}}
+            {{/if}}
+          </tbody>
+        </table>
+      </div>
     </section>
     <style>
-      body { padding: 0; margin: 0; } .logo { position: absolute; top: -5%;
-      right: 0; width: 100px; height: 50px; } table { border-collapse:
-      collapse; width: 100%; margin-top: 20px; } th, td { border: 1px solid
-      #ddd; padding: 8px; text-align: left; } th { background-color: #f2f2f2; }
-      tr { height: 36px; } img {height: 20px; width: auto; margin: 0; padding:
-      0;} .page-break { page-break-after: always; }
+      .siteAttendance2 body { padding: 0; margin: 0; } .siteAttendance2 .logo {
+      position: absolute; top: -5%; right: 0; width: 100px; height: 50px; }
+      .siteAttendance2 table { border-collapse: collapse; width: 100%;
+      margin-top: 20px; } .siteAttendance2 th, .siteAttendance2 td { border: 1px
+      solid #ddd; padding: 8px; text-align: left; } .siteAttendance2 th {
+      background-color: #f2f2f2; } .siteAttendance2 tr { height: 36px; }
+      .siteAttendance2 img {height: 20px; width: auto; margin: 0; padding: 0;}
+      .page-break { page-break-after: always; }
     </style>
   </body>
 </html>

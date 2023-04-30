@@ -33,6 +33,18 @@ module.exports = class PdfController {
       }
     });
 
+    hbs.registerHelper("lessthen", function (list, n) {
+      return list < n;
+    });
+
+    hbs.registerHelper('range', function(start, end) {
+      var ret = [];
+      for (var i = start; i < end; i++) {
+        ret.push(i);
+      }
+      return ret;
+    });
+
     hbs.registerHelper("checkHazard", function (name, hazards) {
       var hazard = hazards.find((hazard) => hazard.name === name);
       if (hazard && hazard.value === true) {
@@ -144,9 +156,24 @@ module.exports = class PdfController {
       const compiledPage6 = hbs.compile(templatePage6);
       const htmlPage6 = compiledPage6(data);
 
+      //7. Further Hazards
+      const templatePage7Path = path.join(
+        __dirname,
+        "../public/pdfTemplate/furtherHazards.hbs"
+      );
+      const templatePage7 = fs.readFileSync(templatePage7Path, "utf8");
+      const compiledPage7 = hbs.compile(templatePage7);
+      const htmlPage7 = compiledPage7(data);
+
       // Concatenate all HTML pages
       const html =
-        htmlPage1 + htmlPage2 + htmlPage3 + htmlPage4 + htmlPage5 + htmlPage6;
+        htmlPage1 +
+        htmlPage2 +
+        htmlPage3 +
+        htmlPage4 +
+        htmlPage5 +
+        htmlPage6 +
+        htmlPage7;
 
       pdf
         .generatePdf({ content: html }, options)

@@ -4,59 +4,72 @@
   </head>
   <body>
     <section class="page-break" style="position: relative; margin: 5%">
-      <img class="logo" src="http://localhost:5000/logo.png" alt="logo" />
-      <div>
-        <h4>Richard Nolan Civil Engineering Ltd</h4>
-        <h4>Method Statement and Risk Assessment</h4>
-        <h4>Cable Fault Generic</h4>
-        <h4>Richard Nolan Civil Engineering Ltd</h4>
-        <p>
-          <span>Garda / Ambulance / Fire</span>
-          <span style="margin-left: 50px">999</span>
-        </p>
-        <p>RNCE Site Manager</p>
-        <p>
-          <span>RNCE Project Manager:</span>
-          <span style="margin-left: 50px">Andrew Flanagan</span>
-          <span style="margin-left: 50px">M: 086 0144 767</span>
-        </p>
-        <p>
-          <span>RNCE HSEQ Manager:</span>
-          <span style="margin-left: 50px">Raymond Shelly</span>
-          <span style="margin-left: 50px">M: 087 7474 419</span>
-        </p>
-      </div>
-      <table>
-        <thead>
-          <tr>
-            <th>PRINT NAME:</th>
-            <th>SIGNATURE:</th>
-            <th>DATE:</th>
-          </tr>
-        </thead>
-        <tbody>
-          {{#each site_attendances}}
+      <div class="siteAttendance1">
+        <img class="logo" src="http://localhost:5000/logo.png" alt="logo" />
+        <div>
+          <h4>Richard Nolan Civil Engineering Ltd</h4>
+          <h4>Method Statement and Risk Assessment</h4>
+          <h4>Cable Fault Generic</h4>
+          <h4>Richard Nolan Civil Engineering Ltd</h4>
+          <p>
+            <span>Garda / Ambulance / Fire</span>
+            <span style="margin-left: 50px">999</span>
+          </p>
+          <p>RNCE Site Manager</p>
+          <p>
+            <span>RNCE Project Manager:</span>
+            <span style="margin-left: 50px">Andrew Flanagan</span>
+            <span style="margin-left: 50px">M: 086 0144 767</span>
+          </p>
+          <p>
+            <span>RNCE HSEQ Manager:</span>
+            <span style="margin-left: 50px">Raymond Shelly</span>
+            <span style="margin-left: 50px">M: 087 7474 419</span>
+          </p>
+        </div>
+        <table>
+          <thead>
             <tr>
-              <td>{{this.name}}</td>
-              <td>
-                <img
-                  src="http://localhost:5000/images/documents/{{this.signature}}"
-                  alt="signature"
-                />
-              </td>
-              <td>{{this.date}}</td>
+              <th>PRINT NAME:</th>
+              <th>SIGNATURE:</th>
+              <th>DATE:</th>
             </tr>
-          {{/each}}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {{#each site_attendances}}
+              <tr>
+                <td>{{this.name}}</td>
+                <td>
+                  <img
+                    src="http://localhost:5000/images/documents/{{this.signature}}"
+                    alt="signature"
+                  />
+                </td>
+                <td>{{this.date}}</td>
+              </tr>
+            {{/each}}
+            {{#if (lessthen site_attendances.length 18)}}
+              {{#each (range site_attendances.length 18)}}
+                <tr>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                </tr>
+              {{/each}}
+            {{/if}}
+          </tbody>
+        </table>
+      </div>
     </section>
     <style>
-      body { padding: 0; margin: 0; } .logo { position: absolute; top: -5%;
-      right: 0; width: 100px; height: 50px; } table { border-collapse:
-      collapse; width: 100%; margin-top: 20px; } th, td { border: 1px solid
-      #ddd; padding: 8px; text-align: left; } th { background-color: #f2f2f2; }
-      tr { height: 36px; } img {height: 20px; width: auto; margin: 0; padding:
-      0;} .page-break { page-break-after: always; }
+      .siteAttendance1 body { padding: 0; margin: 0; } .siteAttendance1 .logo {
+      position: absolute; top: -5%; right: 0; width: 100px; height: 50px; }
+      .siteAttendance1 table { border-collapse: collapse; width: 100%;
+      margin-top: 20px; } .siteAttendance1 th, .siteAttendance1 td { border: 1px
+      solid #ddd; padding: 8px; text-align: left; } th { background-color:
+      #f2f2f2; } .siteAttendance1 tr { height: 36px; } .siteAttendance1 img
+      {height: 20px; width: auto; margin: 0; padding: 0;} .page-break {
+      page-break-after: always; }
     </style>
   </body>
 </html>
