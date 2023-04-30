@@ -1,0 +1,311 @@
+<html lang="en">
+  <head>
+    <title>Document</title>
+  </head>
+  <body>
+    <section class="page-break" style="position: relative; margin: 5%">
+      <img class="logo" src="http://localhost:5000/logo.png" alt="logo" />
+      <div>
+        <h1>JOB SPECIFIC SAFETY PLAN</h1>
+      </div>
+      <div>
+        <div>
+          <p>
+            <b>
+              This formmust be completed before any work commences on site and
+              must be updated as required.</b>
+          </p>
+        </div>
+        <div>
+          <p>
+            <b>
+              This document must be used in conjuction with the project risk
+              assessments, method statements and SOPs.</b>
+          </p>
+        </div>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Date</th>
+            <td></td>
+            <th>Location</th>
+            <td>{{reinstatement_sheet.location}}</td>
+          </tr>
+          <tr>
+            <th>Crew Leader</th>
+            <td></td>
+            <th>Project Number</th>
+            <td></td>
+          </tr>
+        </thead>
+      </table>
+      <table>
+        <thead>
+          <tr>
+            <th>Hazard</th>
+            <th>✔</th>
+            <th>Control</th>
+            <th>Hazard</th>
+            <th>✔</th>
+            <th>Control</th>
+          </tr>
+          <tr>
+            <td>Pedestrians/Cyclist</td>
+            <td>{{checkHazard "hazard_pedestrians_cyclists" Hazards}}
+            <td>{{controlHazard "hazard_pedestrians_cyclists" Hazards}}
+            <td>Work Near Water</td>
+            <td>{{checkHazard "work_near_water" Hazards}}
+            <td>{{controlHazard "work_near_water" Hazards}}
+          </tr>
+          <tr>
+            <td>Road Traffic</td>
+            <td>{{checkHazard "road_traffic" Hazards}}
+            <td>{{controlHazard "road_traffic" Hazards}}
+            <td>Excavation</td>
+            <td>{{checkHazard "excavation" Hazards}}
+            <td>{{controlHazard "excavation" Hazards}}
+          </tr>
+          <tr>
+            <td>Work at height</td>
+            <td>{{checkHazard "work_at_height" Hazards}}
+            <td>{{controlHazard "work_at_height" Hazards}}
+            <td>Falling Objects</td>
+            <td>{{checkHazard "falling_objects" Hazards}}
+            <td>{{controlHazard "falling_objects" Hazards}}
+          </tr>
+          <tr>
+            <td>U/G services</td>
+            <td>{{checkHazard "ug_services" Hazards}}</td>
+            <td>{{controlHazard "ug_services" Hazards}}
+            <td>Haz substances</td>
+            <td>{{checkHazard "haz_substances" Hazards}}</td>
+            <td>{{controlHazard "haz_substances" Hazards}}
+          </tr>
+          <tr>
+            <td>Overhead Cables</td>
+            <td>{{checkHazard "overhead_cables" Hazards}}</td>
+            <td>{{controlHazard "overhead_cables" Hazards}}
+            <td>Bitumen Boiler</td>
+            <td>{{checkHazard "bitumen_boiler" Hazards}}</td>
+            <td>{{controlHazard "bitumen_boiler" Hazards}}
+          </tr>
+          <tr>
+            <td>Lifting Operations</td>
+            <td>{{checkHazard "lifting_operations" Hazards}}</td>
+            <td>{{controlHazard "lifting_operations" Hazards}}
+            <td>Noise</td>
+            <td>{{checkHazard "noise" Hazards}}</td>
+            <td>{{controlHazard "noise" Hazards}}
+          </tr>
+          <tr>
+            <td>Abrasive Wheels</td>
+            <td>{{checkHazard "abrasive_wheels" Hazards}}</td>
+            <td>{{controlHazard "abrasive_wheels" Hazards}}
+            <td>Concrete/Formwork</td>
+            <td>{{checkHazard "concrete_formwork" Hazards}}</td>
+            <td>{{controlHazard "concrete_formwork" Hazards}}
+          </tr>
+          <tr>
+            <td>Hand Tools</td>
+            <td>{{checkHazard "hand_tools" Hazards}}</td>
+            <td>{{controlHazard "hand_tools" Hazards}}
+            <td>Slips, trips, falls</td>
+            <td>{{checkHazard "slips_trips_falls" Hazards}}</td>
+            <td>{{controlHazard "slips_trips_falls" Hazards}}
+          </tr>
+          <tr>
+            <td>Dust</td>
+            <td>{{checkHazard "dust" Hazards}}</td>
+            <td>{{controlHazard "dust" Hazards}}
+            <td>Hot Works</td>
+            <td>{{checkHazard "hot_works" Hazards}}</td>
+            <td>{{controlHazard "hot_works" Hazards}}
+          </tr>
+          <tr>
+            <td>Plant & Equipment</td>
+            <td>{{checkHazard "plant_and_equipment" Hazards}}</td>
+            <td>{{controlHazard "plant_and_equipment" Hazards}}
+            <td>Manual Handling</td>
+            <td>{{checkHazard "manual_handling" Hazards}}</td>
+            <td>{{controlHazard "manual_handling" Hazards}}
+          </tr>
+          <tr>
+            <td>Ladders</td>
+            <td>{{checkHazard "ladders" Hazards}}</td>
+            <td>{{controlHazard "ladders" Hazards}}
+            <td>Other:</td>
+            <td>{{checkHazard "other" Hazards}}</td>
+            <td>{{controlHazard "other" Hazards}}
+          </tr>
+        </thead>
+      </table>
+      <div>
+        <span style="font-size: 14px;">
+          <b>Has the LUGS holder consulted the service maps, scanned the area and
+            marked all identified services?</b>
+          <input type="checkbox" />
+        </span>
+      </div>
+      <table>
+        <caption>
+          Please indicate which services have been identified on site after CAT
+          scanning and complete a permit
+        </caption>
+        <thead>
+          <tr>
+            <th>⚠ Eletricity</th>
+            <td></td>
+            <th>⚠ Traffic Lights</th>
+            <td></td>
+            <th>⚠ Public Light</th>
+            <td></td>
+            <th>No services found (Tick below)</th>
+          </tr>
+          <tr>
+            <th>⚠ Gas</th>
+            <td></td>
+            <th>⚠ Telecom</th>
+            <td></td>
+            <th>⚠ Water</th>
+            <td></td>
+            <td></td>
+          </tr>
+        </thead>
+      </table>
+      <table>
+        <caption>
+          Daily Method Statement & Traffic Management Checks
+        </caption>
+        <thead>
+          <tr>
+            <th>Which Method statement are being used for today's works?</th>
+            <td>{{daily_method_statement_and_traffic_management_check.method_statement_for_the_day}}</td>
+          </tr>
+          <tr>
+            <th>
+              1. Will completion of the task involve any discharges to
+              drains/water course? if so, have the necessary notifications been
+              made?
+            </th>
+            <td>{{check daily_method_statement_and_traffic_management_check.daily_method_statement_question_one}}</td>
+          </tr>
+          <tr>
+            <th>
+              2. Are spill containment measures available? (spill kit, drip tray
+              etc.)
+            </th>
+            <td>{{check daily_method_statement_and_traffic_management_check.daily_method_statement_question_two}}</td>
+          </tr>
+          <tr>
+            <th>
+              3. Are all fuel containers labelled (diesel, petrol etc)? and
+              safety data sheets on site?
+            </th>
+            <td>{{check daily_method_statement_and_traffic_management_check.daily_method_statement_question_three}}</td>
+          </tr>
+        </thead>
+      </table>
+    </section>
+    <section class="page-break" style="position: relative; margin: 5%">
+      <table>
+        <caption>
+          Emergencies
+        </caption>
+        <thead>
+          <tr>
+            <th>
+              Is there an emergency procedure in place and are staff aware of
+              its contents?
+            </th>
+            <td>{{check Emergency.emergencies_question_one}}</td>
+          </tr>
+          <tr>
+            <th>Location of assembly point in the event of an emergency:</th>
+            <td>{{Emergency.emergency_location_of_assembly_point}}</td>
+          </tr>
+          <tr>
+            <th>Name of First Aider</th>
+            <td>{{Emergency.emergency_name_of_first_aider}}</td>
+          </tr>
+          <tr>
+            <th>Name of SLG Operative</th>
+            <td>{{Emergency.emergency_slg_operative}}</td>
+          </tr>
+        </thead>
+      </table>
+      <table>
+        <caption>
+          Traffic Management Compliance Checksheet
+        </caption>
+        <thead>
+          <tr>
+            <th>
+              Is traffic management set up as per TMP in use? is TM amendment
+              sheet required?
+            </th>
+            <td>{{traffic_management_compliance_checksheet.traffic_management_compliance_checksheet_tmp_number}}</td>
+          </tr>
+          <tr>
+            <th>TMP Number set up on site</th>
+            <td>{{check traffic_management_compliance_checksheet.traffic_management_compliance_checksheet_question_one}}</td>
+          </tr>
+          <tr>
+            <th>Are parked vehicles preventing proper TMP set up?</th>
+            <td>{{check traffic_management_compliance_checksheet.traffic_management_compliance_checksheet_question_two}}</td>
+          </tr>
+          <tr>
+            <th>
+              Are other local conditions preventing set up of traffic management
+              as per TMP?
+            </th>
+            <td>{{check traffic_management_compliance_checksheet.traffic_management_compliance_checksheet_question_three}}</td>
+          </tr>
+        </thead>
+      </table>
+      <table>
+        <thead>
+          <tr>
+            <th>
+              1. Are all excavations adequately fenced off and or covered?
+            </th>
+            <td>{{check traffic_management_compliance_checksheet.traffic_management_compliance_checksheet_question_sub_one}}</td>
+          </tr>
+          <tr>
+            <th>
+              2. Are footways/pedestrianswalkways free from trip hazards and
+              obstructions?
+            </th>
+            <td>{{check traffic_management_compliance_checksheet.traffic_management_compliance_checksheet_question_sub_two}}</td>
+          </tr>
+          <tr>
+            <th>
+              3. Are all footpath plates properly pinned to the ground surface?
+            </th>
+            <td>{{check traffic_management_compliance_checksheet.traffic_management_compliance_checksheet_question_sub_three}}</td>
+          </tr>
+          <tr>
+            <th>4. Are all required traffic management measures in place?</th>
+            <td>{{check traffic_management_compliance_checksheet.traffic_management_compliance_checksheet_question_sub_four}}</td>
+          </tr>
+        </thead>
+      </table>
+      <div>
+        <p>
+          The PICW answers the questions above and signs here to indicate that
+          the site has been left in a safe condition.
+        </p>
+        <span><b>Signature:</b> </span>
+      </div>
+    </section>
+    <style>
+      body { padding: 0; margin: 0; } div { margin-top: 5px; } .logo { position:
+      absolute; top: -2.5%; right: 0; width: 100px; height: 50px; } table {
+      border-collapse: collapse; width: 100%; margin-top: 10px; } th, td {
+      border: 1px solid #ddd; padding: 5px; text-align: left; } th {
+      background-color: #f2f2f2; } tr { height: 10px; } caption { font-weight:
+      bold; background-color: #333; color: #fff; padding: 6px; } .page-break {
+      page-break-after: always; }
+    </style>
+  </body>
+</html>

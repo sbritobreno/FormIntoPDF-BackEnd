@@ -25,6 +25,32 @@ module.exports = class PdfController {
   static async downloadPDF(req, res) {
     const id = req.params.id;
 
+    hbs.registerHelper("check", function (value) {
+      if (value === true) {
+        return new hbs.SafeString("✔");
+      } else {
+        return "";
+      }
+    });
+
+    hbs.registerHelper("checkHazard", function (name, hazards) {
+      var hazard = hazards.find((hazard) => hazard.name === name);
+      if (hazard && hazard.value === true) {
+        return new hbs.SafeString("✔");
+      } else {
+        return "";
+      }
+    });
+
+    hbs.registerHelper("controlHazard", function (name, hazards) {
+      var hazard = hazards.find((hazard) => hazard.name === name);
+      if (hazard && hazard.control) {
+        return new hbs.SafeString(hazard.control);
+      } else {
+        return "";
+      }
+    });
+
     const document = await Document.findOne({
       where: { id: id },
       include: [
@@ -61,6 +87,7 @@ module.exports = class PdfController {
 
     try {
       const data = document.toJSON();
+      console.log(data);
       const options = { format: "A4" };
 
       // Site Attendance 1
@@ -90,8 +117,17 @@ module.exports = class PdfController {
       const compiledPage3 = hbs.compile(templatePage3);
       const htmlPage3 = compiledPage3(data);
 
+      // Hazards
+      const templatePage4Path = path.join(
+        __dirname,
+        "../public/pdfTemplate/hazards.hbs"
+      );
+      const templatePage4 = fs.readFileSync(templatePage4Path, "utf8");
+      const compiledPage4 = hbs.compile(templatePage4);
+      const htmlPage4 = compiledPage4(data);
+
       // Concatenate all HTML pages
-      const html = htmlPage1 + htmlPage2 + htmlPage3;
+      const html = htmlPage1 + htmlPage2 + htmlPage3 + htmlPage4;
 
       pdf
         .generatePdf({ content: html }, options)
