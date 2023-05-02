@@ -264,6 +264,15 @@ module.exports = class PdfController {
       const compiledPage18 = hbs.compile(templatePage18);
       const htmlPage18 = compiledPage18(data);
 
+      //19. Method Statement 13
+      const templatePage19Path = path.join(
+        __dirname,
+        "../public/pdfTemplate/permitToDigChecklist.hbs"
+      );
+      const templatePage19 = fs.readFileSync(templatePage19Path, "utf8");
+      const compiledPage19 = hbs.compile(templatePage19);
+      const htmlPage19 = compiledPage19(data);
+
       // Concatenate all HTML pages
       const html =
         htmlPage1 +
@@ -283,7 +292,8 @@ module.exports = class PdfController {
         htmlPage15 +
         htmlPage16 +
         htmlPage17 +
-        htmlPage18;
+        htmlPage18 +
+        htmlPage19;
 
       pdf
         .generatePdf({ content: html }, options)
