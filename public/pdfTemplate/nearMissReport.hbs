@@ -1,0 +1,98 @@
+<html lang="en">
+  <head>
+    <title>Document</title>
+  </head>
+  <body>
+    <section class="page-break" style="position: relative; margin: 5%">
+      <div class="nearMissReport">
+        <img class="logo" src="http://localhost:5000/logo.png" alt="logo" />
+        <div>
+          <h1>NEAR MISS REPORT</h1>
+        </div>
+        <table style="margin-top: 40px">
+          <tbody>
+            <tr>
+              <th>NAME OF THE PERSON COMPLETING FORM</th>
+              <th>DATE</th>
+              <th>LOCATION</th>
+            </tr>
+            <tr>
+              <td>{{value}}</td>
+              <td>{{value}}</td>
+              <td>{{value}}</td>
+            </tr>
+          </tbody>
+        </table>
+        <table>
+          <tbody>
+            <tr>
+              <th>DETAILS OF NEAR MISS</th>
+            </tr>
+            <tr>
+              <td style="height: 180px; word-break: break-all">
+                {{near_miss_report.details_comments}}
+              </td>
+            </tr>
+            <tr>
+              <th>ACTIONS TAKEN (IF ANY)</th>
+            </tr>
+            <tr>
+              <td style="height: 180px; word-break: break-all">
+                {{near_miss_report.actions_taken_comments}}
+              </td>
+            </tr>
+            <tr>
+              <th>SUGGESTIONS TO PREVENT REOCCURANCE</th>
+            </tr>
+            <tr>
+              <td style="height: 180px; word-break: break-all">
+                {{near_miss_report.suggestion_to_prevent_reoccurance_comments}}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <p>
+          Please complete the form above with as much details as possible.
+          Return to RNCE HSEQManager or Crew Leader.
+        </p>
+        <table style="width: 50%">
+          <tbody>
+            <tr>
+              <th style="width: 100px">SIGNED</th>
+              <td>
+                <img
+                  class="signature"
+                  src="http://localhost:5000/images/documents/{{near_miss_report.report_signature}}"
+                  alt="signature"
+                />
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <table style="width: 50%">
+          <caption>
+            For Office Use Only
+          </caption>
+          <tr>
+            <th style="width: 100px">Received by</th>
+            <td>{{value}}</td>
+          </tr>
+          <tr>
+            <th style="width: 100px">Action Taken</th>
+            <td>{{value}}</td>
+          </tr>
+        </table>
+      </div>
+    </section>
+    <style>
+      .nearMissReport .logo { position: absolute; top: 0; right: 0; width:
+      100px; height: 50px; } .nearMissReport table { border-collapse: collapse;
+      width: 100%; margin-top: 10px; } .nearMissReport th, .nearMissReport td {
+      border: 1px solid #ddd; padding: 6px; text-align: left; } .nearMissReport
+      th { background-color: #f2f2f2; } .nearMissReport tr { height: 36px; }
+      .nearMissReport img { height: 20px; width: auto; margin: 0; padding: 0; }
+      .nearMissReport caption { font-weight: bold; background-color: #333;
+      color: #fff; padding: 6px; } .page-break { page-break-after: always; }
+    </style>
+  </body>
+</html>

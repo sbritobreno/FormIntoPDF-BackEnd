@@ -300,6 +300,15 @@ module.exports = class PdfController {
       const compiledPage21 = hbs.compile(templatePage21);
       const htmlPage21 = compiledPage21(data);
 
+      //22. Daily Plant Inspection
+      const templatePage22Path = path.join(
+        __dirname,
+        "../public/pdfTemplate/nearMissReport.hbs"
+      );
+      const templatePage22 = fs.readFileSync(templatePage22Path, "utf8");
+      const compiledPage22 = hbs.compile(templatePage22);
+      const htmlPage22 = compiledPage22(data);
+
       // Concatenate all HTML pages
       const html =
         htmlPage1 +
@@ -322,7 +331,8 @@ module.exports = class PdfController {
         htmlPage18 +
         htmlPage19 +
         htmlPage20 +
-        htmlPage21;
+        htmlPage21 +
+        htmlPage22;
 
       pdf
         .generatePdf({ content: html }, options)
