@@ -33,6 +33,14 @@ module.exports = class PdfController {
       }
     });
 
+    hbs.registerHelper("checkHWP", function (value) {
+      if (value === true) {
+        return new hbs.SafeString("✅");
+      } else {
+        return new hbs.SafeString("❎");
+      }
+    });
+
     hbs.registerHelper("lessthen", function (list, n) {
       return list < n;
     });
@@ -326,6 +334,15 @@ module.exports = class PdfController {
       const templatePage24 = fs.readFileSync(templatePage24Path, "utf8");
       const compiledPage24 = hbs.compile(templatePage24);
       const htmlPage24 = compiledPage24(data);
+      
+      //25. Hot Work Permit
+      const templatePage25Path = path.join(
+        __dirname,
+        "../public/pdfTemplate/hotWorkPermit.hbs"
+      );
+      const templatePage25 = fs.readFileSync(templatePage25Path, "utf8");
+      const compiledPage25 = hbs.compile(templatePage25);
+      const htmlPage25 = compiledPage25(data);
 
       // Concatenate all HTML pages
       const html =
@@ -352,7 +369,8 @@ module.exports = class PdfController {
         htmlPage21 +
         htmlPage22 +
         htmlPage23 +
-        htmlPage24;
+        htmlPage24 + 
+        htmlPage25;
 
       pdf
         .generatePdf({ content: html }, options)
