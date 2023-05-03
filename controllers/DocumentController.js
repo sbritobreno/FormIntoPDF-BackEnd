@@ -553,7 +553,6 @@ module.exports = class DocumentController {
       await hwp.save();
 
       // Update Daily Plant Inspection
-      console.log(dailyPlantInspections);
       dailyPlantInspections.forEach(async (element) => {
         const dpi = await DailyPlantInspection.findOne({
           where: { tool_name: element.tool_name, DocumentId: id },
@@ -563,7 +562,7 @@ module.exports = class DocumentController {
           dpi.monday = element.monday;
           dpi.tuesday = element.tuesday;
           dpi.wednesday = element.wednesday;
-          dpi.thrusday = element.thrusday;
+          dpi.thursday = element.thursday;
           dpi.friday = element.friday;
           dpi.saturday = element.saturday;
           dpi.sunday = element.sunday;
@@ -574,7 +573,7 @@ module.exports = class DocumentController {
             monday: element.monday,
             tuesday: element.tuesday,
             wednesday: element.wednesday,
-            thrusday: element.thrusday,
+            thursday: element.thursday,
             friday: element.friday,
             saturday: element.saturday,
             sunday: element.sunday,

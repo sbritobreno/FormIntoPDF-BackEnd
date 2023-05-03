@@ -1,0 +1,983 @@
+<html lang="en">
+  <head>
+    <title>Document</title>
+  </head>
+  <body style="font-size: 11px">
+    <section class="page-break" style="position: relative; margin: 5%">
+      <div class="dailyPlantInspection1">
+        <div>
+          <img class="logo" src="http://localhost:5000/logo.png" alt="logo" />
+          <div>
+            <h1>DAILY PLANT INSPECTION</h1>
+          </div>
+        </div>
+        <div>
+          <h4>
+            EXCAVATORS, JCBS, DUMPERS, EARTH-MOVERS, GENERATORS, COMPRESSORS,
+            SKIDTEERS...
+          </h4>
+          <p><b>Supercisors name:</b></p>
+          <p><b>Job Number:</b></p>
+          <p><b>Date of week ending:</b></p>
+          <p><b>Plant number / Serial No.:</b></p>
+          <p><b>Machine make/model:</b></p>
+        </div>
+        <div>
+          <table>
+            <tbody>
+              <tr>
+                <th></th>
+                <th>Yes = ✔</th>
+                <th>MON</th>
+                <th>TUES</th>
+                <th>WED</th>
+                <th>THURS</th>
+                <th>FRI</th>
+                <th>SAT</th>
+                <th>SUN</th>
+              </tr>
+              <tr>
+                <td>1</td>
+                <td>Flashing Beacon</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Flashing Beacon"
+                    "monday"
+                  }}</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Flashing Beacon"
+                    "tuesday"
+                  }}</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Flashing Beacon"
+                    "wednesday"
+                  }}</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Flashing Beacon"
+                    "thursday"
+                  }}</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Flashing Beacon"
+                    "friday"
+                  }}</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Flashing Beacon"
+                    "saturday"
+                  }}</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Flashing Beacon"
+                    "sunday"
+                  }}</td>
+              </tr>
+              <tr>
+                <td>2</td>
+                <td>Mirrors</td>
+                <td>{{checkDPI daily_plant_inspections "Mirrors" "monday"}}</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Mirrors"
+                    "tuesday"
+                  }}</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Mirrors"
+                    "wednesday"
+                  }}</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Mirrors"
+                    "thursday"
+                  }}</td>
+                <td>{{checkDPI daily_plant_inspections "Mirrors" "friday"}}</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Mirrors"
+                    "saturday"
+                  }}</td>
+                <td>{{checkDPI daily_plant_inspections "Mirrors" "sunday"}}</td>
+              </tr>
+              <tr>
+                <td>3</td>
+                <td>Reverse Camera</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Reverse Camera"
+                    "monday"
+                  }}</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Reverse Camera"
+                    "tuesday"
+                  }}</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Reverse Camera"
+                    "wednesday"
+                  }}</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Reverse Camera"
+                    "thursday"
+                  }}</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Reverse Camera"
+                    "friday"
+                  }}</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Reverse Camera"
+                    "saturday"
+                  }}</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Reverse Camera"
+                    "sunday"
+                  }}</td>
+              </tr>
+              <tr>
+                <td>4</td>
+                <td>Wipers</td>
+                <td>{{checkDPI daily_plant_inspections "Wipers" "monday"}}</td>
+                <td>{{checkDPI daily_plant_inspections "Wipers" "tuesday"}}</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Wipers"
+                    "wednesday"
+                  }}</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Wipers"
+                    "thursday"
+                  }}</td>
+                <td>{{checkDPI daily_plant_inspections "Wipers" "friday"}}</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Wipers"
+                    "saturday"
+                  }}</td>
+                <td>{{checkDPI daily_plant_inspections "Wipers" "sunday"}}</td>
+              </tr>
+              <tr>
+                <td>5</td>
+                <td>Lights</td>
+                <td>{{checkDPI daily_plant_inspections "Lights" "monday"}}</td>
+                <td>{{checkDPI daily_plant_inspections "Lights" "tuesday"}}</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Lights"
+                    "wednesday"
+                  }}</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Lights"
+                    "thursday"
+                  }}</td>
+                <td>{{checkDPI daily_plant_inspections "Lights" "friday"}}</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Lights"
+                    "saturday"
+                  }}</td>
+                <td>{{checkDPI daily_plant_inspections "Lights" "sunday"}}</td>
+              </tr>
+              <tr>
+                <td>6</td>
+                <td>Horn</td>
+                <td>{{checkDPI daily_plant_inspections "Horn" "monday"}}</td>
+                <td>{{checkDPI daily_plant_inspections "Horn" "tuesday"}}</td>
+                <td>{{checkDPI daily_plant_inspections "Horn" "wednesday"}}</td>
+                <td>{{checkDPI daily_plant_inspections "Horn" "thursday"}}</td>
+                <td>{{checkDPI daily_plant_inspections "Horn" "friday"}}</td>
+                <td>{{checkDPI daily_plant_inspections "Horn" "saturday"}}</td>
+                <td>{{checkDPI daily_plant_inspections "Horn" "sunday"}}</td>
+              </tr>
+              <tr>
+                <td>7</td>
+                <td>Lap belt</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Lap belt"
+                    "monday"
+                  }}</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Lap belt"
+                    "tuesday"
+                  }}</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Lap belt"
+                    "wednesday"
+                  }}</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Lap belt"
+                    "thursday"
+                  }}</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Lap belt"
+                    "friday"
+                  }}</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Lap belt"
+                    "saturday"
+                  }}</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Lap belt"
+                    "sunday"
+                  }}</td>
+              </tr>
+              <tr>
+                <td>8</td>
+                <td>Steps</td>
+                <td>{{checkDPI daily_plant_inspections "Steps" "monday"}}</td>
+                <td>{{checkDPI daily_plant_inspections "Steps" "tuesday"}}</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Steps"
+                    "wednesday"
+                  }}</td>
+                <td>{{checkDPI daily_plant_inspections "Steps" "thursday"}}</td>
+                <td>{{checkDPI daily_plant_inspections "Steps" "friday"}}</td>
+                <td>{{checkDPI daily_plant_inspections "Steps" "saturday"}}</td>
+                <td>{{checkDPI daily_plant_inspections "Steps" "sunday"}}</td>
+              </tr>
+              <tr>
+                <td>9</td>
+                <td>Hand Rails</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Hand Rails"
+                    "monday"
+                  }}</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Hand Rails"
+                    "tuesday"
+                  }}</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Hand Rails"
+                    "wednesday"
+                  }}</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Hand Rails"
+                    "thursday"
+                  }}</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Hand Rails"
+                    "friday"
+                  }}</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Hand Rails"
+                    "saturday"
+                  }}</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Hand Rails"
+                    "sunday"
+                  }}</td>
+              </tr>
+              <tr>
+                <td>10</td>
+                <td>Emergency Stop</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Emergency Stop"
+                    "monday"
+                  }}</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Emergency Stop"
+                    "tuesday"
+                  }}</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Emergency Stop"
+                    "wednesday"
+                  }}</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Emergency Stop"
+                    "thursday"
+                  }}</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Emergency Stop"
+                    "friday"
+                  }}</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Emergency Stop"
+                    "saturday"
+                  }}</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Emergency Stop"
+                    "sunday"
+                  }}</td>
+              </tr>
+              <tr>
+                <td>11</td>
+                <td>Hand Brake</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Hand Brake"
+                    "monday"
+                  }}</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Hand Brake"
+                    "tuesday"
+                  }}</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Hand Brake"
+                    "wednesday"
+                  }}</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Hand Brake"
+                    "thursday"
+                  }}</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Hand Brake"
+                    "friday"
+                  }}</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Hand Brake"
+                    "saturday"
+                  }}</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Hand Brake"
+                    "sunday"
+                  }}</td>
+              </tr>
+              <tr>
+                <td>12</td>
+                <td>Brakes</td>
+                <td>{{checkDPI daily_plant_inspections "Brakes" "monday"}}</td>
+                <td>{{checkDPI daily_plant_inspections "Brakes" "tuesday"}}</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Brakes"
+                    "wednesday"
+                  }}</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Brakes"
+                    "thursday"
+                  }}</td>
+                <td>{{checkDPI daily_plant_inspections "Brakes" "friday"}}</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Brakes"
+                    "saturday"
+                  }}</td>
+                <td>{{checkDPI daily_plant_inspections "Brakes" "sunday"}}</td>
+              </tr>
+              <tr>
+                <td>13</td>
+                <td>Drivers Seat</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Drivers Seat"
+                    "monday"
+                  }}</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Drivers Seat"
+                    "tuesday"
+                  }}</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Drivers Seat"
+                    "wednesday"
+                  }}</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Drivers Seat"
+                    "thursday"
+                  }}</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Drivers Seat"
+                    "friday"
+                  }}</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Drivers Seat"
+                    "saturday"
+                  }}</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Drivers Seat"
+                    "sunday"
+                  }}</td>
+              </tr>
+              <tr>
+                <td>14</td>
+                <td>Windows</td>
+                <td>{{checkDPI daily_plant_inspections "Windows" "monday"}}</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Windows"
+                    "tuesday"
+                  }}</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Windows"
+                    "wednesday"
+                  }}</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Windows"
+                    "thursday"
+                  }}</td>
+                <td>{{checkDPI daily_plant_inspections "Windows" "friday"}}</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Windows"
+                    "saturday"
+                  }}</td>
+                <td>{{checkDPI daily_plant_inspections "Windows" "sunday"}}</td>
+              </tr>
+              <tr>
+                <td>15</td>
+                <td>Fire Extinguisher</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Fire Extinguisher"
+                    "monday"
+                  }}</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Fire Extinguisher"
+                    "tuesday"
+                  }}</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Fire Extinguisher"
+                    "wednesday"
+                  }}</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Fire Extinguisher"
+                    "thursday"
+                  }}</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Fire Extinguisher"
+                    "friday"
+                  }}</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Fire Extinguisher"
+                    "saturday"
+                  }}</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Fire Extinguisher"
+                    "sunday"
+                  }}</td>
+              </tr>
+              <tr>
+                <td>16</td>
+                <td>Guards in Place</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Guards in Place"
+                    "monday"
+                  }}</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Guards in Place"
+                    "tuesday"
+                  }}</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Guards in Place"
+                    "wednesday"
+                  }}</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Guards in Place"
+                    "thursday"
+                  }}</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Guards in Place"
+                    "friday"
+                  }}</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Guards in Place"
+                    "saturday"
+                  }}</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Guards in Place"
+                    "sunday"
+                  }}</td>
+              </tr>
+              <tr>
+                <td>17</td>
+                <td>Gas Bottles Secure</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Gas Bottles Secure"
+                    "monday"
+                  }}</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Gas Bottles Secure"
+                    "tuesday"
+                  }}</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Gas Bottles Secure"
+                    "wednesday"
+                  }}</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Gas Bottles Secure"
+                    "thursday"
+                  }}</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Gas Bottles Secure"
+                    "friday"
+                  }}</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Gas Bottles Secure"
+                    "saturday"
+                  }}</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Gas Bottles Secure"
+                    "sunday"
+                  }}</td>
+              </tr>
+              <tr>
+                <td>18</td>
+                <td>Battery Condition</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Battery Condition"
+                    "monday"
+                  }}</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Battery Condition"
+                    "tuesday"
+                  }}</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Battery Condition"
+                    "wednesday"
+                  }}</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Battery Condition"
+                    "thursday"
+                  }}</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Battery Condition"
+                    "friday"
+                  }}</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Battery Condition"
+                    "saturday"
+                  }}</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Battery Condition"
+                    "sunday"
+                  }}</td>
+              </tr>
+              <tr>
+                <td>19</td>
+                <td>Tyres</td>
+                <td>{{checkDPI daily_plant_inspections "Tyres" "monday"}}</td>
+                <td>{{checkDPI daily_plant_inspections "Tyres" "tuesday"}}</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Tyres"
+                    "wednesday"
+                  }}</td>
+                <td>{{checkDPI daily_plant_inspections "Tyres" "thursday"}}</td>
+                <td>{{checkDPI daily_plant_inspections "Tyres" "friday"}}</td>
+                <td>{{checkDPI daily_plant_inspections "Tyres" "saturday"}}</td>
+                <td>{{checkDPI daily_plant_inspections "Tyres" "sunday"}}</td>
+              </tr>
+              <tr>
+                <td>20</td>
+                <td>Steering</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Steering"
+                    "monday"
+                  }}</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Steering"
+                    "tuesday"
+                  }}</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Steering"
+                    "wednesday"
+                  }}</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Steering"
+                    "thursday"
+                  }}</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Steering"
+                    "friday"
+                  }}</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Steering"
+                    "saturday"
+                  }}</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Steering"
+                    "sunday"
+                  }}</td>
+              </tr>
+              <tr>
+                <td>21</td>
+                <td>Quick Hitch Pin</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Quick Hitch Pin"
+                    "monday"
+                  }}</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Quick Hitch Pin"
+                    "tuesday"
+                  }}</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Quick Hitch Pin"
+                    "wednesday"
+                  }}</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Quick Hitch Pin"
+                    "thursday"
+                  }}</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Quick Hitch Pin"
+                    "friday"
+                  }}</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Quick Hitch Pin"
+                    "saturday"
+                  }}</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Quick Hitch Pin"
+                    "sunday"
+                  }}</td>
+              </tr>
+              <tr>
+                <td>22</td>
+                <td>FOPS</td>
+                <td>{{checkDPI daily_plant_inspections "FOPS" "monday"}}</td>
+                <td>{{checkDPI daily_plant_inspections "FOPS" "tuesday"}}</td>
+                <td>{{checkDPI daily_plant_inspections "FOPS" "wednesday"}}</td>
+                <td>{{checkDPI daily_plant_inspections "FOPS" "thursday"}}</td>
+                <td>{{checkDPI daily_plant_inspections "FOPS" "friday"}}</td>
+                <td>{{checkDPI daily_plant_inspections "FOPS" "saturday"}}</td>
+                <td>{{checkDPI daily_plant_inspections "FOPS" "sunday"}}</td>
+              </tr>
+              <tr>
+                <td>23</td>
+                <td>ROPS</td>
+                <td>{{checkDPI daily_plant_inspections "ROPS" "monday"}}</td>
+                <td>{{checkDPI daily_plant_inspections "ROPS" "tuesday"}}</td>
+                <td>{{checkDPI daily_plant_inspections "ROPS" "wednesday"}}</td>
+                <td>{{checkDPI daily_plant_inspections "ROPS" "thursday"}}</td>
+                <td>{{checkDPI daily_plant_inspections "ROPS" "friday"}}</td>
+                <td>{{checkDPI daily_plant_inspections "ROPS" "saturday"}}</td>
+                <td>{{checkDPI daily_plant_inspections "ROPS" "sunday"}}</td>
+              </tr>
+              <tr>
+                <td>24</td>
+                <td>Straps in good condition</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Straps in good condition"
+                    "monday"
+                  }}</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Straps in good condition"
+                    "tuesday"
+                  }}</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Straps in good condition"
+                    "wednesday"
+                  }}</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Straps in good condition"
+                    "thursday"
+                  }}</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Straps in good condition"
+                    "friday"
+                  }}</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Straps in good condition"
+                    "saturday"
+                  }}</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Straps in good condition"
+                    "sunday"
+                  }}</td>
+              </tr>
+              <tr>
+                <td>25</td>
+                <td>Transmission Oil</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Transmission Oil"
+                    "monday"
+                  }}</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Transmission Oil"
+                    "tuesday"
+                  }}</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Transmission Oil"
+                    "wednesday"
+                  }}</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Transmission Oil"
+                    "thursday"
+                  }}</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Transmission Oil"
+                    "friday"
+                  }}</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Transmission Oil"
+                    "saturday"
+                  }}</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Transmission Oil"
+                    "sunday"
+                  }}</td>
+              </tr>
+              <tr>
+                <td>26</td>
+                <td>Engine Oil</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Engine Oil"
+                    "monday"
+                  }}</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Engine Oil"
+                    "tuesday"
+                  }}</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Engine Oil"
+                    "wednesday"
+                  }}</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Engine Oil"
+                    "thursday"
+                  }}</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Engine Oil"
+                    "friday"
+                  }}</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Engine Oil"
+                    "saturday"
+                  }}</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Engine Oil"
+                    "sunday"
+                  }}</td>
+              </tr>
+              <tr>
+                <td>27</td>
+                <td>Hydraulic Oil</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Hydraulic Oil"
+                    "monday"
+                  }}</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Hydraulic Oil"
+                    "tuesday"
+                  }}</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Hydraulic Oil"
+                    "wednesday"
+                  }}</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Hydraulic Oil"
+                    "thursday"
+                  }}</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Hydraulic Oil"
+                    "friday"
+                  }}</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Hydraulic Oil"
+                    "saturday"
+                  }}</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Hydraulic Oil"
+                    "sunday"
+                  }}</td>
+              </tr>
+              <tr>
+                <td>28</td>
+                <td>Water</td>
+                <td>{{checkDPI daily_plant_inspections "Water" "monday"}}</td>
+                <td>{{checkDPI daily_plant_inspections "Water" "tuesday"}}</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Water"
+                    "wednesday"
+                  }}</td>
+                <td>{{checkDPI daily_plant_inspections "Water" "thursday"}}</td>
+                <td>{{checkDPI daily_plant_inspections "Water" "friday"}}</td>
+                <td>{{checkDPI daily_plant_inspections "Water" "saturday"}}</td>
+                <td>{{checkDPI daily_plant_inspections "Water" "sunday"}}</td>
+              </tr>
+              <tr>
+                <td>29</td>
+                <td>Fuel</td>
+                <td>{{checkDPI daily_plant_inspections "Fuel" "monday"}}</td>
+                <td>{{checkDPI daily_plant_inspections "Fuel" "tuesday"}}</td>
+                <td>{{checkDPI daily_plant_inspections "Fuel" "wednesday"}}</td>
+                <td>{{checkDPI daily_plant_inspections "Fuel" "thursday"}}</td>
+                <td>{{checkDPI daily_plant_inspections "Fuel" "friday"}}</td>
+                <td>{{checkDPI daily_plant_inspections "Fuel" "saturday"}}</td>
+                <td>{{checkDPI daily_plant_inspections "Fuel" "sunday"}}</td>
+              </tr>
+              <tr>
+                <td>30</td>
+                <td>Brake Fluid</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Brake Fluid"
+                    "monday"
+                  }}</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Brake Fluid"
+                    "tuesday"
+                  }}</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Brake Fluid"
+                    "wednesday"
+                  }}</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Brake Fluid"
+                    "thursday"
+                  }}</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Brake Fluid"
+                    "friday"
+                  }}</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Brake Fluid"
+                    "saturday"
+                  }}</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Brake Fluid"
+                    "sunday"
+                  }}</td>
+              </tr>
+              <tr>
+                <td>31</td>
+                <td>Other</td>
+                <td>{{checkDPI daily_plant_inspections "Other" "monday"}}</td>
+                <td>{{checkDPI daily_plant_inspections "Other" "tuesday"}}</td>
+                <td>{{checkDPI
+                    daily_plant_inspections
+                    "Other"
+                    "wednesday"
+                  }}</td>
+                <td>{{checkDPI daily_plant_inspections "Other" "thursday"}}</td>
+                <td>{{checkDPI daily_plant_inspections "Other" "friday"}}</td>
+                <td>{{checkDPI daily_plant_inspections "Other" "saturday"}}</td>
+                <td>{{checkDPI daily_plant_inspections "Other" "sunday"}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+    <style>
+      .dailyPlantInspection1 .logo { position: absolute; top: 0; right: 0; width:
+      100px; height: 50px; } .dailyPlantInspection1 table { border-collapse:
+      collapse; width: 100%; margin-top: 10px; } .dailyPlantInspection1 th,
+      .dailyPlantInspection1 td { border: 1px solid #ddd; padding: 6px;
+      text-align: left; } .dailyPlantInspection1 th { background-color: #f2f2f2;
+      } .dailyPlantInspection1 tr { height: 24px; font-size: 10px;} .dailyPlantInspection1
+      .page-break { page-break-after: always; }
+    </style>
+  </body>
+</html>

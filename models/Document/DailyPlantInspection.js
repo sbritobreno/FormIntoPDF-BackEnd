@@ -23,7 +23,7 @@ const DailyPlantInspection = db.define("daily_plant_inspection", {
     type: DataTypes.BOOLEAN,
     required: true,
   },
-  thrusday: {
+  thursday: {
     type: DataTypes.BOOLEAN,
     required: true,
   },

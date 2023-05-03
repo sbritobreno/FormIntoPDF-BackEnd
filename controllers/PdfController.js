@@ -63,6 +63,15 @@ module.exports = class PdfController {
       }
     });
 
+    hbs.registerHelper("checkDPI", function (list, toolName, day) {
+      var tool = list.find((tool) => tool.tool_name === toolName);
+      if (tool && tool[day]) {
+        return new hbs.SafeString("✔");
+      } else {
+        return "";
+      }
+    });
+
     const document = await Document.findOne({
       where: { id: id },
       include: [
@@ -273,6 +282,24 @@ module.exports = class PdfController {
       const compiledPage19 = hbs.compile(templatePage19);
       const htmlPage19 = compiledPage19(data);
 
+      //20. Daily Plant Inspection
+      const templatePage20Path = path.join(
+        __dirname,
+        "../public/pdfTemplate/dailyPlantInspection1.hbs"
+      );
+      const templatePage20 = fs.readFileSync(templatePage20Path, "utf8");
+      const compiledPage20 = hbs.compile(templatePage20);
+      const htmlPage20 = compiledPage20(data);
+
+      //21. Daily Plant Inspection
+      const templatePage21Path = path.join(
+        __dirname,
+        "../public/pdfTemplate/dailyPlantInspection2.hbs"
+      );
+      const templatePage21 = fs.readFileSync(templatePage21Path, "utf8");
+      const compiledPage21 = hbs.compile(templatePage21);
+      const htmlPage21 = compiledPage21(data);
+
       // Concatenate all HTML pages
       const html =
         htmlPage1 +
@@ -293,7 +320,9 @@ module.exports = class PdfController {
         htmlPage16 +
         htmlPage17 +
         htmlPage18 +
-        htmlPage19;
+        htmlPage19 +
+        htmlPage20 +
+        htmlPage21;
 
       pdf
         .generatePdf({ content: html }, options)
