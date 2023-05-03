@@ -1,0 +1,110 @@
+<html lang="en">
+  <head>
+    <title>Document</title>
+  </head>
+  <body>
+    <section class="page-break" style="margin: 5%">
+      <div class="approvedForm1">
+        <div style="display: flex">
+          <div>
+            <img
+              class="logo2"
+              src="http://localhost:5000/logo_health&safety.png"
+              alt="logo"
+            />
+          </div>
+          <div style="text-align: center; margin-left: 50px">
+            <h3 style="font-size: 16px; margin: 0">
+              Safety, Health and Welfare at Work (Construction) Regulations 2013
+            </h3>
+            <div style="display: flex; margin: 5px">
+              <h1 style="font-size: 20px; margin: 0 30px">
+                Approved Form (AF3)
+              </h1>
+              <div style="margin: 0">
+                Regulation 52(3)<br />Regulation 60(2)
+              </div>
+            </div>
+            <div style="text-align: left">
+              <h3 style="font-size: 16px;">
+                Thorough Examination of:<br />(a)Excavations, Shafts,
+                Earthworks, Underground Works or Tunnels;<br />(b) Cofferdams or
+                Caissons;
+              </h3>
+            </div>
+          </div>
+        </div>
+        <div>
+          <p style="font-size: 11px;">
+            <b>Note:</b><br />This form is to be used to record the thorough
+            examination of Excavations, Shafts, Earthworks, Underground Works,
+            Tunnels Cofferdams or Caissons. The thorough examination needs to be
+            undertaken at least every 7 days or after an event that may have
+            affected the stability. The thorough examination is in addition to
+            the requirement of a daily inspection of the works.
+          </p>
+          <p style="font-size: 11px;">
+            Indicate the name of the person for whom the report has been
+            prepared.
+          </p>
+          <p style="font-size: 11px;">
+            The approved form may be stored in a computer and duly authenticated
+            as soon as is practicable afterwards.
+          </p>
+        </div>
+        <div>
+          <p style="font-size: 12px;"><b>Name of Employer or Contractor:</b></p>
+          <p style="font-size: 12px;"><b>Address of Site:</b></p>
+        </div>
+        <div>
+          <table>
+            <tbody>
+              <tr>
+                <th>Description or Location</th>
+                <th>Date of Examination</th>
+                <th>
+                  Results of thorough examination.State whether in good order.
+                </th>
+                <th>Signature of person who made inspection.</th>
+              </tr>
+              {{#each approved_forms}}
+                <tr>
+                  <td>{{this.description_location}}</td>
+                  <td>{{this.date_examination}}</td>
+                  <td>{{this.examination_result_state}}</td>
+                  <td>
+                    <img
+                      class="signature"
+                      src="http://localhost:5000/images/documents/{{this.inspector_signature}}"
+                      alt="signature"
+                    />
+                  </td>
+                </tr>
+              {{/each}}
+              {{#if (lessthen approved_forms.length 16)}}
+                {{#each (range approved_forms.length 16)}}
+                  <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                  </tr>
+                {{/each}}
+              {{/if}}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+    <style>
+      .approvedForm1 body { padding: 0; margin: 0; font-size: 11px; }
+      .approvedForm1 .logo2 { width: 100px; height: 50px; margin: 10px; }
+      .approvedForm1 table { border-collapse: collapse; width: 100%; margin-top:
+      10px; } .approvedForm1 th, .approvedForm1 td { border: 1px solid #ddd;
+      padding: 6px; text-align: left; } .approvedForm1 th { background-color:
+      #f2f2f2; } .approvedForm1 tr { height: 36px; } .approvedForm1 img {height:
+      20px; width: auto; margin: 0; padding: 0;} .page-break { page-break-after:
+      always; }
+    </style>
+  </body>
+</html>

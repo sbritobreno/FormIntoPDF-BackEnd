@@ -309,6 +309,24 @@ module.exports = class PdfController {
       const compiledPage22 = hbs.compile(templatePage22);
       const htmlPage22 = compiledPage22(data);
 
+      //23. Approved Form 1
+      const templatePage23Path = path.join(
+        __dirname,
+        "../public/pdfTemplate/approvedForm1.hbs"
+      );
+      const templatePage23 = fs.readFileSync(templatePage23Path, "utf8");
+      const compiledPage23 = hbs.compile(templatePage23);
+      const htmlPage23 = compiledPage23(data);
+
+      //24. Approved Form 2
+      const templatePage24Path = path.join(
+        __dirname,
+        "../public/pdfTemplate/approvedForm2.hbs"
+      );
+      const templatePage24 = fs.readFileSync(templatePage24Path, "utf8");
+      const compiledPage24 = hbs.compile(templatePage24);
+      const htmlPage24 = compiledPage24(data);
+
       // Concatenate all HTML pages
       const html =
         htmlPage1 +
@@ -332,7 +350,9 @@ module.exports = class PdfController {
         htmlPage19 +
         htmlPage20 +
         htmlPage21 +
-        htmlPage22;
+        htmlPage22 +
+        htmlPage23 +
+        htmlPage24;
 
       pdf
         .generatePdf({ content: html }, options)
