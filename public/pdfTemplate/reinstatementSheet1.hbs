@@ -91,7 +91,11 @@
           <tbody>
             <tr>
               <th style="width: 75px">Comments</th>
-              <td></td>
+              <td>
+                {{#each reinstatement_sheet.hole_sequences}}
+                  {{inc @index}}) {{this.comments}}; 
+                {{/each}}
+              </td>
             </tr>
           </tbody>
         </table>

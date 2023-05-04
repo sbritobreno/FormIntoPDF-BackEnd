@@ -1,0 +1,30 @@
+<html lang="en">
+  <head>
+    <title>Document</title>
+  </head>
+  <body>
+    <section class="page-break" style="position: relative; margin: 5%">
+      <div class="reinstatementSheet2">
+        {{#each reinstatement_sheet.hole_sequences}}
+          {{#each reinstatement_images}}
+            <div style="position: relative; margin: 0px">
+              <div class="job_number">{{inc @../index}}</div>
+              <img
+                src="http://localhost:5000/images/documents/{{image}}"
+                alt="job_image"
+              />
+            </div>
+          {{/each}}
+        {{/each}}
+      </div>
+    </section>
+    <style>
+      body { padding: 0; margin: 0; font-size: 12px; } .reinstatementSheet2
+      {display: flex; flex-wrap: wrap;} .reinstatementSheet2 .job_number {
+      position: absolute; top: 20px; left: 20px; background-color: white;
+      height: 15px; width: 15px; border-radius: 10px; text-align: center;
+      z-index: 10;} .reinstatementSheet2 img { height: 150px; width: auto;
+      margin: 15px; padding: 0;} .page-break { page-break-after: always;}
+    </style>
+  </body>
+</html>

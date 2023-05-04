@@ -375,6 +375,15 @@ module.exports = class PdfController {
       const compiledPage28 = hbs.compile(templatePage28);
       const htmlPage28 = compiledPage28(data);
 
+      //29. Reinstatement Sheet 1
+      const templatePage29Path = path.join(
+        __dirname,
+        "../public/pdfTemplate/reinstatementSheet2.hbs"
+      );
+      const templatePage29 = fs.readFileSync(templatePage29Path, "utf8");
+      const compiledPage29 = hbs.compile(templatePage29);
+      const htmlPage29 = compiledPage29(data);
+
       // Concatenate all HTML pages
       const html =
         htmlPage1 +
@@ -403,10 +412,12 @@ module.exports = class PdfController {
         htmlPage24 +
         htmlPage25 +
         htmlPage26 +
-        htmlPage27;
+        htmlPage27 +
+        htmlPage28 +
+        htmlPage29;
 
       pdf
-        .generatePdf({ content: htmlPage28 }, options)
+        .generatePdf({ content: html }, options)
         .then((pdfBuffer) => {
           res.setHeader("Content-Type", "application/pdf");
           res.setHeader(
