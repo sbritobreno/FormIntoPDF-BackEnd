@@ -25,6 +25,10 @@ module.exports = class PdfController {
   static async downloadPDF(req, res) {
     const id = req.params.id;
 
+    hbs.registerHelper("inc", function (value) {
+      return parseInt(value) + 1;
+    });
+
     hbs.registerHelper("check", function (value) {
       if (value === true) {
         return new hbs.SafeString("✔");
@@ -334,7 +338,7 @@ module.exports = class PdfController {
       const templatePage24 = fs.readFileSync(templatePage24Path, "utf8");
       const compiledPage24 = hbs.compile(templatePage24);
       const htmlPage24 = compiledPage24(data);
-      
+
       //25. Hot Work Permit
       const templatePage25Path = path.join(
         __dirname,
@@ -343,6 +347,33 @@ module.exports = class PdfController {
       const templatePage25 = fs.readFileSync(templatePage25Path, "utf8");
       const compiledPage25 = hbs.compile(templatePage25);
       const htmlPage25 = compiledPage25(data);
+
+      //26. Hot Work Permit
+      const templatePage26Path = path.join(
+        __dirname,
+        "../public/pdfTemplate/trafficManagementSLGChecklist1.hbs"
+      );
+      const templatePage26 = fs.readFileSync(templatePage26Path, "utf8");
+      const compiledPage26 = hbs.compile(templatePage26);
+      const htmlPage26 = compiledPage26(data);
+
+      //27. Hot Work Permit
+      const templatePage27Path = path.join(
+        __dirname,
+        "../public/pdfTemplate/trafficManagementSLGChecklist2.hbs"
+      );
+      const templatePage27 = fs.readFileSync(templatePage27Path, "utf8");
+      const compiledPage27 = hbs.compile(templatePage27);
+      const htmlPage27 = compiledPage27(data);
+
+      //28. Reinstatement Sheet 1
+      const templatePage28Path = path.join(
+        __dirname,
+        "../public/pdfTemplate/reinstatementSheet1.hbs"
+      );
+      const templatePage28 = fs.readFileSync(templatePage28Path, "utf8");
+      const compiledPage28 = hbs.compile(templatePage28);
+      const htmlPage28 = compiledPage28(data);
 
       // Concatenate all HTML pages
       const html =
@@ -369,11 +400,13 @@ module.exports = class PdfController {
         htmlPage21 +
         htmlPage22 +
         htmlPage23 +
-        htmlPage24 + 
-        htmlPage25;
+        htmlPage24 +
+        htmlPage25 +
+        htmlPage26 +
+        htmlPage27;
 
       pdf
-        .generatePdf({ content: html }, options)
+        .generatePdf({ content: htmlPage28 }, options)
         .then((pdfBuffer) => {
           res.setHeader("Content-Type", "application/pdf");
           res.setHeader(

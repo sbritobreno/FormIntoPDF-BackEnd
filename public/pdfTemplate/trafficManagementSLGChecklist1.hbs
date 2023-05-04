@@ -1,0 +1,331 @@
+<html lang="en">
+  <head>
+    <title>Document</title>
+  </head>
+  <body>
+    <section class="page-break" style="position: relative; margin: 5%">
+      <div class="trafficManagementSLGChecklist1">
+        <div>
+          <img class="logo" src="http://localhost:5000/logo.png" alt="logo" />
+          <div>
+            <h1>TRAFFIC MANAGEMENT/SLG CHECKLIST</h1>
+          </div>
+        </div>
+        <div>
+          <p><b>Date:</b>{{value}}</p>
+          <p><b>Project:</b>{{value}}</p>
+          <p><b>Location:</b>{{value}}</p>
+          <p><b>Job No.:</b>{{value}}</p>
+          <p><b>Check (1) Time @:</b>{{value}}</p>
+          <p><b>Check (2) Time @:</b>{{value}}</p>
+        </div>
+        <div>
+          <table>
+            <tbody>
+              <tr>
+                <th>1)</th>
+                <th>
+                  TRAFFIC MANAGEMENT SET UP INSPECTIONS<br />
+                  1-1 INSTALLATION CHECKS
+                </th>
+                <th>check</th>
+              </tr>
+              <tr>
+                <td>1-1-1:</td>
+                <td>Does TM conform to the Design Layout and Parameters?</td>
+                <td>{{check
+                    traffic_management_slg_checklist.installation_checks_one
+                  }}</td>
+              </tr>
+              <tr>
+                <td>1-1-2:</td>
+                <td>Have all the hazards been addressed in the TM plan?</td>
+                <td>{{check
+                    traffic_management_slg_checklist.installation_checks_two
+                  }}</td>
+              </tr>
+              <tr>
+                <td>1-1-3:</td>
+                <td>
+                  Has allowance been made for the delivery and removal of
+                  materials?
+                </td>
+                <td>{{check
+                    traffic_management_slg_checklist.installation_checks_three
+                  }}</td>
+              </tr>
+              <tr>
+                <td>1-1-4:</td>
+                <td>
+                  Is the traffic management for any detour routes in place?
+                </td>
+                <td>{{check
+                    traffic_management_slg_checklist.installation_checks_four
+                  }}</td>
+              </tr>
+              <tr>
+                <td>1-1-5:</td>
+                <td>
+                  Have the Garda been informed of any Traffic Lights / Stop&Go
+                  Boards in use?
+                </td>
+                <td>{{check
+                    traffic_management_slg_checklist.installation_checks_five
+                  }}</td>
+              </tr>
+              <tr>
+                <td>1-1-6:</td>
+                <td>
+                  Have the Garda been informed of Roadworks Speed Limits being
+                  introduced?
+                </td>
+                <td>{{check
+                    traffic_management_slg_checklist.installation_checks_six
+                  }}</td>
+              </tr>
+              <tr>
+                <th>2)</th>
+                <th>
+                  TRAFFIC MANAGEMENT OPERATIONS INSPECTIONS<br />
+                  2-1 OPERATION CHECKS
+                </th>
+                <th>check</th>
+              </tr>
+              <tr>
+                <td>2-1-1:</td>
+                <td>
+                  Are safety zones being kept clear of operatives, plant and
+                  materials?
+                </td>
+                <td>{{check
+                    traffic_management_slg_checklist.operation_checks_one
+                  }}</td>
+              </tr>
+              <tr>
+                <td>2-1-2:</td>
+                <td>
+                  Are all the signs and cones in good condition/ do all the
+                  cones have sleeves?
+                </td>
+                <td>{{check
+                    traffic_management_slg_checklist.operation_checks_two
+                  }}</td>
+              </tr>
+              <tr>
+                <td>2-1-3:</td>
+                <td>
+                  Are vision lines to signs clear and free from bends, hills,
+                  dips, parked vehicles and hedges etc?
+                </td>
+                <td>{{check
+                    traffic_management_slg_checklist.operation_checks_three
+                  }}</td>
+              </tr>
+              <tr>
+                <td>2-1-4:</td>
+                <td>
+                  Will the site be safe at night in wind, fog, snow or rain
+                  (delete as appropriate)?
+                </td>
+                <td>{{check
+                    traffic_management_slg_checklist.operation_checks_four
+                  }}</td>
+              </tr>
+              <tr>
+                <td>2-1-5:</td>
+                <td>
+                  Are all misleading permanent signs and road markings covered?
+                </td>
+                <td>{{check
+                    traffic_management_slg_checklist.operation_checks_five
+                  }}</td>
+              </tr>
+              <tr>
+                <td>2-1-6:</td>
+                <td>
+                  Is the carriageway/footway being kept clear of mud and surplus
+                  equipment?
+                </td>
+                <td>{{check
+                    traffic_management_slg_checklist.operation_checks_six
+                  }}</td>
+              </tr>
+              <tr>
+                <td>2-1-7:</td>
+                <td>
+                  Are materials/plant that are left on verges or in layby's
+                  being properly guarded and lit?
+                </td>
+                <td>{{check
+                    traffic_management_slg_checklist.operation_checks_seven
+                  }}</td>
+              </tr>
+              <tr>
+                <th></th>
+                <th>2-2 TRAFFIC CHECKS</th>
+                <th>check</th>
+              </tr>
+              <tr>
+                <td>2-2-1:</td>
+                <td>Is thre safe access adjacent to premises?</td>
+                <td>{{check
+                    traffic_management_slg_checklist.traffic_checks_one
+                  }}</td>
+              </tr>
+              <tr>
+                <td>2-2-2:</td>
+                <td>Does Signing & Guarding meet the (changing) conditions?</td>
+                <td>{{check
+                    traffic_management_slg_checklist.traffic_checks_two
+                  }}</td>
+              </tr>
+              <tr>
+                <td>2-2-3:</td>
+                <td>
+                  Are traffic control arrangements working at the optimum level
+                  to reduce traffic delays?
+                </td>
+                <td>{{check
+                    traffic_management_slg_checklist.traffic_checks_three
+                  }}</td>
+              </tr>
+              <tr>
+                <td>2-2-4:</td>
+                <td>
+                  If present, are the needs of cyclists or horse riders
+                  incorporated into the layout?
+                </td>
+                <td>{{check
+                    traffic_management_slg_checklist.traffic_checks_four
+                  }}</td>
+              </tr>
+              <tr>
+                <th></th>
+                <th>2-3 PEDESTRIANS & VULNERABLE USER CHECKS</th>
+                <th>check</th>
+              </tr>
+              <tr>
+                <td>2-3-1:</td>
+                <td>Have the needs of pedestrians and vulnerable users been
+                  addressed in the layout?</td>
+                <td>{{check
+                    traffic_management_slg_checklist.vulnerable_user_checks_one
+                  }}</td>
+              </tr>
+              <tr>
+                <td>2-3-2:</td>
+                <td>If pedestrians route blocked, has a suitable alternative
+                  route been provided?</td>
+                <td>{{check
+                    traffic_management_slg_checklist.vulnerable_user_checks_two
+                  }}</td>
+              </tr>
+              <tr>
+                <td>2-3-3:</td>
+                <td>
+                  Are pedestrians routes clearly evident/indicated?
+                </td>
+                <td>{{check
+                    traffic_management_slg_checklist.vulnerable_user_checks_three
+                  }}</td>
+              </tr>
+              <tr>
+                <td>2-3-4:</td>
+                <td>
+                  If a footway in the road is to be used, are ramps to the kerb
+                  provided?
+                </td>
+                <td>{{check
+                    traffic_management_slg_checklist.vulnerable_user_checks_four
+                  }}</td>
+              </tr>
+              <tr>
+                <td>2-3-5:</td>
+                <td>
+                  Are pedestrians hazards sufficiently guarded at night?
+                </td>
+                <td>{{check
+                    traffic_management_slg_checklist.vulnerable_user_checks_five
+                  }}</td>
+              </tr>
+              <tr>
+                <th>3)</th>
+                <th>
+                  TRAFFIC MANAGEMENT CESSATION INSPECTIONS<br />
+                  3-1 WORK COMPLETE CHECKS
+                </th>
+                <th>check</th>
+              </tr>
+              <tr>
+                <td>3-1-1:</td>
+                <td>
+                  Have all the signs, cones, barriers and lamps been removed?
+                </td>
+                <td>{{check
+                    traffic_management_slg_checklist.work_complete_checks_one
+                  }}</td>
+              </tr>
+              <tr>
+                <td>3-1-2:</td>
+                <td>Have any covered permanent signs been removed?</td>
+                <td>{{check
+                    traffic_management_slg_checklist.work_complete_checks_two
+                  }}</td>
+              </tr>
+              <tr>
+                <td>3-1-3:</td>
+                <td>
+                  Have the Garda been informed of any Traffic Lights / Stop&Go
+                  removed?
+                </td>
+                <td>{{check
+                    traffic_management_slg_checklist.work_complete_checks_three
+                  }}</td>
+              </tr>
+              <tr>
+                <th>4)</th>
+                <th>
+                  EXCEPTIONS REPORT<br />
+                  (Append attachements as necessary)
+                </th>
+                <th>check</th>
+              </tr>
+              <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <th>5)</th>
+                <th>Checks Completed By:</th>
+                <th>{{value}}</th>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+    <style>
+      body { padding: 0; margin: 0; font-size: 11px; }
+      .trafficManagementSLGChecklist1 .logo { position: absolute; top: 0; right:
+      0; width: 100px; height: 50px; } .trafficManagementSLGChecklist1 table {
+      border-collapse: collapse; width: 100%; margin-top: 10px; }
+      .trafficManagementSLGChecklist1 th, .trafficManagementSLGChecklist1 td {
+      border: 1px solid #ddd; padding: 6px; text-align: left; }
+      .trafficManagementSLGChecklist1 th { background-color: #f2f2f2; }
+      .trafficManagementSLGChecklist1 tr { height: 22px; font-size: 9px; }
+      .trafficManagementSLGChecklist1 img { height: 20px; width: auto; margin:
+      0; padding: 0; } .page-break { page-break-after: always; }
+    </style>
+  </body>
+</html>

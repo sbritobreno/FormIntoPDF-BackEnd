@@ -1,0 +1,114 @@
+<html lang="en">
+  <head>
+    <title>Document</title>
+  </head>
+  <body>
+    <section
+      class="page-break"
+      style="
+        position: relative;
+        margin: 35% -5%;
+        transform: rotate(90deg);
+        width: 742pt;
+        justify-content: center;
+      "
+    >
+      <div class="reinstatementSheet1">
+        <table>
+          <tbody>
+            <tr>
+              <th style="width: 95px">ESBN Hole No.</th>
+              <th style="width: 465px">Street</th>
+              <th style="width: 175px">Local Authority Licence No. T4/T2</th>
+              <th style="width: 165px">Traffic Impact No.</th>
+              <th style="width: 167px"></th>
+              <th style="width: 93px"></th>
+            </tr>
+            <tr>
+              <td>{{reinstatement_sheet.esbn_hole_number}}</td>
+              <td>{{reinstatement_sheet.location}}</td>
+              <td>{{reinstatement_sheet.local_authority_licence_number}}</td>
+              <td>{{reinstatement_sheet.traffic_impact_number}}</td>
+              <td></td>
+              <td></td>
+            </tr>
+          </tbody>
+        </table>
+        <table>
+          <tbody>
+            <tr>
+              <th style="width: 103px">Hole Sequence</th>
+              <th style="width: 300px">Location include XY coordinates</th>
+              <th style="width: 180px">
+                Surface Category (e.g. Granite slabs, Concrete footpath etc.)
+              </th>
+              <th style="width: 50px">Length</th>
+              <th style="width: 50px">Width</th>
+              <th style="width: 50px">Area</th>
+              <th style="width: 180px">
+                Reinstatement:<br />
+                Permanent<br />
+                Temporary
+              </th>
+              <th style="width: 180px">
+                Status:<br />
+                Complete<br />
+                In progress
+              </th>
+              <th style="width: 100px">Date Complete</th>
+            </tr>
+            {{#each reinstatement_sheet.hole_sequences}}
+              <tr>
+                <td>{{inc @index}}</td>
+                <td>{{this.coordinates}}</td>
+                <td>{{this.surface_category}}</td>
+                <td>{{this.length}}</td>
+                <td>{{this.width}}</td>
+                <td>{{this.area}}</td>
+                <td>{{this.reinstatement}}</td>
+                <td>{{this.status}}</td>
+                <td>{{date}}</td>
+              </tr>
+            {{/each}}
+            {{#if (lessthen reinstatement_sheet.hole_sequences.length 10)}}
+              {{#each (range reinstatement_sheet.hole_sequences.length 10)}}
+                <tr>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                </tr>
+              {{/each}}
+            {{/if}}
+          </tbody>
+        </table>
+        <table>
+          <tbody>
+            <tr>
+              <th style="width: 75px">Comments</th>
+              <td></td>
+            </tr>
+          </tbody>
+        </table>
+        <p>
+          <b>Please include XY coordinates, and any other relevant additional
+            information and photographs when returning this form to ESB
+            Networks.</b>
+        </p>
+      </div>
+    </section>
+    <style>
+      body { padding: 0; margin: 0; font-size: 12px; } .reinstatementSheet1
+      table { border-collapse: collapse; width: 100%;} .reinstatementSheet1 th,
+      .reinstatementSheet1 td { border: 1px solid #ddd; padding: 6px;
+      text-align: center; word-break: break-all } .reinstatementSheet1 th {
+      background-color: #f2f2f2; } tr { height: 36px; font-size: 11px; }
+      .page-break { page-break-after: always; }
+    </style>
+  </body>
+</html>
