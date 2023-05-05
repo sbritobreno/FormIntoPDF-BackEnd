@@ -281,15 +281,40 @@ module.exports = class PdfController {
         htmlPage28 +
         htmlPage29;
 
+      function getFilePath(fileName) {
+        return path.join(__dirname, `../public/files/${fileName}`);
+      }
+
+      // generate PDF from HTML content
       pdf
         .generatePdf({ content: html }, options)
-        .then((pdfBuffer) => {
+        .then(async (pdfBuffer1) => {
+          // load existing PDF from public folder
+          const pdfPath = path.join(
+            __dirname,
+            `../public/files/${data.file_attached}`
+          );
+          const pdfBuffer2 = fs.readFileSync(pdfPath);
+
+          // merge PDFs
+          const merger = new PDFMerger();
+
+          // add first PDF generated from HTML
+          await merger.add(pdfBuffer1);
+
+          // add second PDF
+          await merger.add(pdfBuffer2);
+
+          // merge PDFs
+          const mergedPdf = await merger.saveAsBuffer();
+
+          // send merged PDF to frontend
           res.setHeader("Content-Type", "application/pdf");
           res.setHeader(
             "Content-Disposition",
             "attachment; filename=document.pdf"
           );
-          res.send(pdfBuffer);
+          res.send(mergedPdf);
         })
         .catch((error) => {
           console.error(error);
