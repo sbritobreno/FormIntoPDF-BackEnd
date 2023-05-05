@@ -2,7 +2,7 @@
   <head>
     <title>Document</title>
   </head>
-  <body>
+  <body style="padding: 0; margin: 0; font-size: 12px">
     <section
       class="page-break"
       style="
@@ -93,7 +93,8 @@
               <th style="width: 75px">Comments</th>
               <td>
                 {{#each reinstatement_sheet.hole_sequences}}
-                  {{inc @index}}) {{this.comments}}; 
+                  {{inc @index}})
+                  {{this.comments}};
                 {{/each}}
               </td>
             </tr>
@@ -107,12 +108,11 @@
       </div>
     </section>
     <style>
-      body { padding: 0; margin: 0; font-size: 12px; } .reinstatementSheet1
-      table { border-collapse: collapse; width: 100%;} .reinstatementSheet1 th,
-      .reinstatementSheet1 td { border: 1px solid #ddd; padding: 6px;
-      text-align: center; word-break: break-all } .reinstatementSheet1 th {
-      background-color: #f2f2f2; } tr { height: 36px; font-size: 11px; }
-      .page-break { page-break-after: always; }
+      .reinstatementSheet1 table { border-collapse: collapse; width: 100%;}
+      .reinstatementSheet1 th, .reinstatementSheet1 td { border: 1px solid #ddd;
+      padding: 6px; text-align: center; word-break: break-all }
+      .reinstatementSheet1 th { background-color: #f2f2f2; } tr { height: 36px;
+      font-size: 11px; } .page-break { page-break-after: always; }
     </style>
   </body>
 </html>

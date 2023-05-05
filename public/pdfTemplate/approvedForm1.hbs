@@ -2,14 +2,14 @@
   <head>
     <title>Document</title>
   </head>
-  <body>
+  <body style="padding: 0; margin: 0;">
     <section class="page-break" style="margin: 5%">
       <div class="approvedForm1">
         <div style="display: flex">
           <div>
             <img
               class="logo2"
-              src="http://localhost:5000/logo_health&safety.png"
+              src="http://localhost:5000/images/templateImages/logo_health&safety.png"
               alt="logo"
             />
           </div>
@@ -81,8 +81,8 @@
                   </td>
                 </tr>
               {{/each}}
-              {{#if (lessthen approved_forms.length 16)}}
-                {{#each (range approved_forms.length 16)}}
+              {{#if (lessthen approved_forms.length 15)}}
+                {{#each (range approved_forms.length 15)}}
                   <tr>
                     <td></td>
                     <td></td>
@@ -97,7 +97,6 @@
       </div>
     </section>
     <style>
-      .approvedForm1 body { padding: 0; margin: 0; font-size: 11px; }
       .approvedForm1 .logo2 { width: 100px; height: 50px; margin: 10px; }
       .approvedForm1 table { border-collapse: collapse; width: 100%; margin-top:
       10px; } .approvedForm1 th, .approvedForm1 td { border: 1px solid #ddd;

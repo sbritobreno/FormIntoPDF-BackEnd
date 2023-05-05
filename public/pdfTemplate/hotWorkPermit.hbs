@@ -2,10 +2,10 @@
   <head>
     <title>Document</title>
   </head>
-  <body>
+  <body style="padding: 0; margin: 0;">
     <section class="page-break" style="position: relative; margin: 5%">
       <div class="hotWorkPermit">
-        <img class="logo" src="http://localhost:5000/logo.png" alt="logo" />
+        <img class="logo" src="http://localhost:5000/images/templateImages/logo.png" alt="logo" />
         <div>
           <h1>HOT WORK PERMIT</h1>
         </div>
@@ -14,7 +14,7 @@
           <p><b>Job No.: </b> {{value}}</p>
         </div>
         <div>
-          <h3>PART 1 - Details of Hot Work</h3>
+          <h4>PART 1 - Details of Hot Work</h4>
           <p><b>Site: </b> {{hot_work_permit.site}}</p>
           <p><b>Floor/Level: </b> {{hot_work_permit.floor_level}}</p>
           <p>
@@ -28,7 +28,7 @@
           have been taken
         </h4>
         <div>
-          <h3>PART 2 - Hot Work Permit Precautions</h3>
+          <h4>PART 2 - Hot Work Permit Precautions</h4>
           <p>
             The person carrying out this check should tick as appropriate those
             precautions which have been taken. Those which are not relevant
@@ -67,7 +67,7 @@
           </p>
         </div>
         <div>
-          <h3>PART 3 - Details of Persons and Times of Permit</h3>
+          <h4>PART 3 - Details of Persons and Times of Permit</h4>
           <p>
             Permit issued by: Name:
             {{hot_work_permit.permit_issued_by_person}}
@@ -98,7 +98,7 @@
           </p>
         </div>
         <div>
-          <h3>PART 4 - Final check up</h3>
+          <h4>PART 4 - Final check up</h4>
           <p>
             Work areas and all adjacent to which sparks and heat might have
             spread (such as floors above and below and on opposite sides of
@@ -124,9 +124,8 @@
       </div>
     </section>
     <style>
-      .hotWorkPermit body { padding: 0; margin: 0; font-size: 12px; }
-      .hotWorkPermit p { font-size: 14px; } .hotWorkPermit .logo { position:
-      absolute; top: 0; right: 0; width: 100px; height: 50px; } .hotWorkPermit
+      .hotWorkPermit p { font-size: 13px; } .hotWorkPermit .logo { position:
+      absolute; top: 0; right: 0; width: 100px; height: 50px; } .hotWorkPermit h4{ margin: 10px 0px 0px 0px} .hotWorkPermit
       img { height: 20px; width: auto; margin: 0; padding: 0; } .page-break {
       page-break-after: always; }
     </style>

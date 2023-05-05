@@ -2,10 +2,10 @@
   <head>
     <title>Document</title>
   </head>
-  <body>
+  <body style="padding: 0; margin: 0;">
     <section class="page-break" style="position: relative; margin: 5%">
       <div class="futherHazard">
-        <img class="logo" src="http://localhost:5000/logo.png" alt="logo" />
+        <img class="logo" src="http://localhost:5000/images/templateImages/logo.png" alt="logo" />
         <div>
           <h4>Richard Nolan Civil Engineering Ltd</h4>
           <h4>Method Statement and Risk Assessment</h4>
@@ -28,9 +28,9 @@
                   <td>{{this.control_required}}</td>
                 </tr>
               {{/each}}
-              {{#if (lessthen futher_hazards_and_controls_requireds.length 22)}}
+              {{#if (lessthen futher_hazards_and_controls_requireds.length 21)}}
                 {{#each
-                  (range futher_hazards_and_controls_requireds.length 22)
+                  (range futher_hazards_and_controls_requireds.length 21)
                 }}
                   <tr>
                     <td></td>
@@ -44,7 +44,6 @@
       </div>
     </section>
     <style>
-      .futherHazard body { padding: 0; margin: 0; font-size: 12px; }
       .futherHazard .logo { position: absolute; top: 0; right: 0; width: 100px;
       height: 50px; } .futherHazard table { border-collapse: collapse; width:
       100%; margin-top: 10px; } .futherHazard th, .futherHazard td { border: 1px
