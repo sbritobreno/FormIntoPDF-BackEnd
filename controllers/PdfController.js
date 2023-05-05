@@ -29,6 +29,14 @@ module.exports = class PdfController {
       return parseInt(value) + 1;
     });
 
+    hbs.registerHelper("formatDate", function(dateStr) {
+      const date = new Date(dateStr);
+      const day = date.getDate().toString().padStart(2, "0");
+      const month = (date.getMonth() + 1).toString().padStart(2, "0");
+      const year = date.getFullYear().toString();
+      return `${day}/${month}/${year}`;
+    });
+
     hbs.registerHelper("check", function (value) {
       if (value === true) {
         return new hbs.SafeString("✔");
@@ -131,6 +139,7 @@ module.exports = class PdfController {
 
     try {
       const data = document.toJSON();
+      console.log(data)
       const options = { format: "A4" };
 
       //1. Site Attendance 1

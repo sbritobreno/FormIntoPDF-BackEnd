@@ -67,7 +67,7 @@
                 <td>{{this.area}}</td>
                 <td>{{this.reinstatement}}</td>
                 <td>{{this.status}}</td>
-                <td>{{date}}</td>
+                <td>{{formatDate this.date_complete}}</td>
               </tr>
             {{/each}}
             {{#if (lessthen reinstatement_sheet.hole_sequences.length 10)}}

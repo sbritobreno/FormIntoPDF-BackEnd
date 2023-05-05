@@ -1,6 +1,8 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const User = require("../models/User/User");
+const fs = require("fs");
+const path = require("path");
 const default_user_img = "profile_img_default.png";
 
 // helpers
@@ -196,19 +198,6 @@ module.exports = class UserController {
     res.status(200).send(currentUser);
   }
 
-  // // Get user by id
-  // static async getUserById(req, res) {
-  //   const id = req.params.id;
-  //   const user = await User.findByPk(id);
-
-  //   if (!user) {
-  //     res.status(422).json({ message: "User not found!" });
-  //     return;
-  //   }
-
-  //   res.status(200).json({ user });
-  // }
-
   // Edit user
   static async editUser(req, res) {
     const token = getToken(req);
@@ -223,6 +212,17 @@ module.exports = class UserController {
     const confirmpassword = req.body.confirmpassword;
 
     if (req.file) {
+      if (user.image && !user.image.startsWith("profile")) {
+        const filePath = path.join(
+          __dirname,
+          "../public/images/users",
+          user.image
+        );
+        fs.unlinkSync(filePath, (err) => {
+          if (err) console.log("Error while deleting previous file: ", err);
+        });
+      }
+
       user.image = req.file.filename;
     }
 
@@ -300,6 +300,17 @@ module.exports = class UserController {
 
     try {
       // Delete the user
+      if (user.image && !user.image.startsWith("profile")) {
+        const filePath = path.join(
+          __dirname,
+          "../public/images/users",
+          user.image
+        );
+        fs.unlinkSync(filePath, (err) => {
+          if (err) console.log("Error while deleting previous file: ", err);
+        });
+      }
+
       await User.destroy({ where: { id: user.id } });
 
       res.json({
@@ -332,6 +343,16 @@ module.exports = class UserController {
 
     try {
       // Delete user's account
+      if (userToBeDeleted.image && !userToBeDeleted.image.startsWith("profile")) {
+        const filePath = path.join(
+          __dirname,
+          "../public/images/users",
+          userToBeDeleted.image
+        );
+        fs.unlinkSync(filePath, (err) => {
+          if (err) console.log("Error while deleting previous file: ", err);
+        });
+      }
       await User.destroy({ where: { id: userToBeDeleted.id } });
 
       res.json({

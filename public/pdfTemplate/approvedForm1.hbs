@@ -70,7 +70,7 @@
               {{#each approved_forms}}
                 <tr>
                   <td>{{this.description_location}}</td>
-                  <td>{{this.date_examination}}</td>
+                  <td>{{formatDate this.date_examination}}</td>
                   <td>{{this.examination_result_state}}</td>
                   <td>
                     <img

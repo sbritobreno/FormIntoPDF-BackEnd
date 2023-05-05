@@ -1,4 +1,5 @@
 const fs = require("fs");
+const path = require("path");
 
 const Document = require("../models/Document/Document");
 const SiteAttendance = require("../models/Document/SiteAttendance");
@@ -133,7 +134,46 @@ module.exports = class DocumentController {
       return;
     }
 
+    if (document.file_attached) {
+      const filePath = path.join(
+        __dirname,
+        "../public/files",
+        document.file_attached
+      );
+      fs.unlinkSync(filePath, (err) => {
+        if (err) console.log("Error while deleting previous file: ", err);
+      });
+    }
+
     await Document.destroy({ where: { id: id } });
+
+    // Get the directory where the images are stored
+    const imagesDir = path.join(__dirname, "../public/images/documents");
+
+    // Get a list of all the files in the directory
+    fs.readdir(imagesDir, (err, files) => {
+      if (err) {
+        console.error(`Error reading directory ${imagesDir}: ${err}`);
+        return;
+      }
+
+      // Filter the list of images to only those that start with the document ID
+      const filesToDelete = files.filter((file) => {
+        const fileName = path.parse(file).name;
+        return fileName.startsWith(`${id}_`);
+      });
+
+      // Delete each file that matches the filter
+      filesToDelete.forEach((file) => {
+        const filePath = path.join(imagesDir, file);
+        try {
+          fs.unlinkSync(filePath);
+          console.log(`Deleted file: ${filePath}`);
+        } catch (error) {
+          console.error(`Error deleting file ${filePath}: ${error}`);
+        }
+      });
+    });
 
     res.status(200).json({
       message: "Document removed successfully!",
@@ -188,7 +228,9 @@ module.exports = class DocumentController {
     const base64Image = base64String.replace(/^data:image\/\w+;base64,/, "");
     const binaryData = Buffer.from(base64Image, "base64");
     const path = `public/images/documents`;
-    const fileName = `${Date.now()}.png`;
+    const fileName = `${
+      id + "_" + Date.now() + "-" + Math.round(Math.random() * 1e9)
+    }.png`;
 
     fs.writeFileSync(`${path}/${fileName}`, binaryData, (err) => {
       if (err) throw err;
@@ -417,7 +459,9 @@ module.exports = class DocumentController {
       const base64Image = base64String.replace(/^data:image\/\w+;base64,/, "");
       const binaryData = Buffer.from(base64Image, "base64");
       const path = `public/images/documents`;
-      const fileName = `${Date.now()}.png`;
+      const fileName = `${
+        id + "_" + Date.now() + "-" + Math.round(Math.random() * 1e9)
+      }.png`;
 
       fs.writeFileSync(`${path}/${fileName}`, binaryData, (err) => {
         if (err) throw err;
@@ -502,7 +546,9 @@ module.exports = class DocumentController {
       const base64Image = base64String.replace(/^data:image\/\w+;base64,/, "");
       const binaryData = Buffer.from(base64Image, "base64");
       const path = `public/images/documents`;
-      const fileName = `${Date.now()}.png`;
+      const fileName = `${
+        id + "_" + Date.now() + "-" + Math.round(Math.random() * 1e9)
+      }.png`;
 
       fs.writeFileSync(`${path}/${fileName}`, binaryData, (err) => {
         if (err) throw err;
@@ -818,7 +864,7 @@ module.exports = class DocumentController {
 
   // Get hole sequence
   static async getHoleSequence(req, res) {
-    const id = req.params.id;
+    const id = req.params.holeSequenceId;
     const holeSequence = await ReinstatementSheetHoleSequence.findOne({
       where: { id: id },
       include: ReinstatementImages,
@@ -838,7 +884,7 @@ module.exports = class DocumentController {
 
   // Update hole sequence
   static async updateHoleSequence(req, res) {
-    const id = req.params.id;
+    const id = req.params.holeSequenceId;
     const data = req.body;
     const images = req.files;
 
@@ -936,18 +982,18 @@ module.exports = class DocumentController {
     }
 
     try {
-      if (file) {
-        if (document.file_attached) {
-          // file path and name of the file to be deleted from the file system
-          const filePath = `./public/files/${document.file_attached}`;
-          // delete the file from the file system
-          fs.unlink(filePath, (err) => {
-            if (err) console.log("Error while deleting previous file: ", err);
-          });
-        }
-        document.file_attached = file.filename;
-        await document.save();
+      if (document.file_attached) {
+        const filePath = path.join(
+          __dirname,
+          "../public/files",
+          document.file_attached
+        );
+        fs.unlinkSync(filePath, (err) => {
+          if (err) console.log("Error while deleting previous file: ", err);
+        });
       }
+      document.file_attached = file.filename;
+      await document.save();
 
       res.status(200).json({ message: "File attached successfully!" });
     } catch (error) {

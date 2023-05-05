@@ -7,18 +7,30 @@ const fileStorage = multer.diskStorage({
     cb(null, "public/files/");
   },
   filename: (req, file, cb) => {
-    cb(null, Date.now() + path.extname(file.originalname));
+    cb(
+      null,
+      req.params.id +
+        "_" +
+        Date.now() +
+        "-" +
+        Math.round(Math.random() * 1e9) +
+        path.extname(file.originalname)
+    );
   },
 });
 
 // Destination to store image
+let id = 0;
 const imageStorage = multer.diskStorage({
   destination: function (req, file, cb) {
+    console.log(req.body.id);
     let folder = "";
 
     if (req.baseUrl.includes("user")) {
+      id = req.body.id;
       folder = "users";
     } else if (req.baseUrl.includes("document")) {
+      id = req.params.id;
       folder = "documents";
     }
     cb(null, `public/images/${folder}/`);
@@ -26,7 +38,9 @@ const imageStorage = multer.diskStorage({
   filename: (req, file, cb) => {
     cb(
       null,
-      Date.now() +
+      id +
+        "_" +
+        Date.now() +
         "-" +
         Math.round(Math.random() * 1e9) +
         path.extname(file.originalname)

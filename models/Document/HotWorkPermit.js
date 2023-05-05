@@ -63,10 +63,6 @@ const HotWorkPermit = db.define("hot_work_permit", {
     type: DataTypes.BOOLEAN,
     required: true,
   },
-  permit_precautions_eleven: {
-    type: DataTypes.BOOLEAN,
-    required: true,
-  },
   permit_issued_by_company: {
     type: DataTypes.STRING,
     required: true,

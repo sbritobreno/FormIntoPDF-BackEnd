@@ -21,7 +21,7 @@
             <b>Nature of work (include exact location):
             </b> {{hot_work_permit.nature_of_work}}
           </p>
-          <p><b>Date: </b> {{hot_work_permit.date}}</p>
+          <p><b>Date: </b> {{formatDate hot_work_permit.date}}</p>
         </div>
         <h4>
           The Above location has been examined and the precautions listed below
@@ -106,14 +106,14 @@
             found fire safe.
           </p>
           <p>
-            Final check by: Name:
+            <b>Final check by: Name:</b> 
             {{hot_work_permit.final_check_name}}
             Signature:
             <img
               src="http://localhost:5000/images/documents/{{hot_work_permit.final_check_signature}}"
               alt="signature"
             />
-            Time:
+            <b>Time:</b> 
             {{hot_work_permit.final_check_time}}
           </p>
         </div>

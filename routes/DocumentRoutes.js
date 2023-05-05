@@ -4,8 +4,7 @@ const multer  = require('multer');
 
 // middleware
 const verifyToken = require("../helpers/verify-token");
-const { imageUpload } = require("../helpers/upload");
-const { fileUpload } = require("../helpers/upload");
+const { imageUpload, fileUpload } = require("../helpers/upload");
 const upload = multer()
 
 router.get("/all_documents", verifyToken, DocumentController.getAllDocuments);
@@ -22,8 +21,8 @@ router.patch("/:id/update/methodstatements", verifyToken, imageUpload.single("lo
 router.get("/:id/reinstatementsheet", verifyToken, DocumentController.getReinstatementSheetByDocumentId);
 router.patch("/:id/update/reinstatementsheetinfo", verifyToken, DocumentController.editReinstatementSheetInfo);
 router.post("/:id/new_holesequence", verifyToken, imageUpload.array("images"), DocumentController.newHoleSequence);
-router.get("/holesequence/:id", verifyToken, DocumentController.getHoleSequence);
-router.patch("/update_holesequence/:id", verifyToken, imageUpload.array("images"), DocumentController.updateHoleSequence);
+router.get("/holesequence/:holeSequenceId", verifyToken, DocumentController.getHoleSequence);
+router.patch("/:id/update_holesequence/:holeSequenceId", verifyToken, imageUpload.array("images"), DocumentController.updateHoleSequence);
 router.delete("/holesequence/remove_image/:id", verifyToken, DocumentController.removeHoleSequenceImage);
 router.delete("/remove_holesequence/:id", verifyToken, DocumentController.removeHoleSequenceById);
 router.patch("/attach_file/:id", verifyToken, fileUpload.single("file"), DocumentController.attachFileToDocument);
