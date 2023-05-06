@@ -5,7 +5,11 @@
   <body style="padding: 0; margin: 0;">
     <section class="page-break" style="position: relative; margin: 5%">
       <div class="hotWorkPermit">
-        <img class="logo" src="http://localhost:5000/images/templateImages/logo.png" alt="logo" />
+        <img
+          class="logo"
+          src="http://localhost:5000/images/templateImages/logo.png"
+          alt="logo"
+        />
         <div>
           <h1>HOT WORK PERMIT</h1>
         </div>
@@ -19,7 +23,8 @@
           <p><b>Floor/Level: </b> {{hot_work_permit.floor_level}}</p>
           <p>
             <b>Nature of work (include exact location):
-            </b> {{hot_work_permit.nature_of_work}}
+            </b>
+            {{hot_work_permit.nature_of_work}}
           </p>
           <p><b>Date: </b> {{formatDate hot_work_permit.date}}</p>
         </div>
@@ -68,31 +73,31 @@
         </div>
         <div>
           <h4>PART 3 - Details of Persons and Times of Permit</h4>
-          <p>
-            Permit issued by: Name:
+          <p><b>
+            Permit issued by: Name:</b>
             {{hot_work_permit.permit_issued_by_person}}
-            Signature:
+            <b>Signature:</b> 
             <img
               src="http://localhost:5000/images/documents/{{hot_work_permit.permit_issued_by_person_signature}}"
               alt="signature"
             />
-            Company:
+            <b>Company:</b> 
             {{hot_work_permit.permit_issued_by_company}}
           </p>
           <p>
             Permit received by: Name:
             {{hot_work_permit.permit_received_by_person}}
-            Signature:
+            <b>Signature:</b> 
             <img
               src="http://localhost:5000/images/documents/{{hot_work_permit.permit_received_by_person_signature}}"
               alt="signature"
             />
-            Company:
+            <b>Company:</b> 
             {{hot_work_permit.permit_received_by_company}}
           </p>
-          <p>Time work started: {{value}}</p>
-          <p>
-            Time work finished and cleared up:
+          <p><b>Time work started: </b> {{value}}</p>
+          <p><b>
+              Time work finished and cleared up:</b>
             {{value}}<br />
             (MUST be at least 1 hour before leaving the site)
           </p>
@@ -106,14 +111,14 @@
             found fire safe.
           </p>
           <p>
-            <b>Final check by: Name:</b> 
+            <b>Final check by: Name:</b>
             {{hot_work_permit.final_check_name}}
-            Signature:
+            <b>Signature:</b> 
             <img
               src="http://localhost:5000/images/documents/{{hot_work_permit.final_check_signature}}"
               alt="signature"
             />
-            <b>Time:</b> 
+            <b>Time:</b>
             {{hot_work_permit.final_check_time}}
           </p>
         </div>
@@ -125,8 +130,9 @@
     </section>
     <style>
       .hotWorkPermit p { font-size: 13px; } .hotWorkPermit .logo { position:
-      absolute; top: 0; right: 0; width: 100px; height: 50px; } .hotWorkPermit h4{ margin: 10px 0px 0px 0px} .hotWorkPermit
-      img { height: 20px; width: auto; margin: 0; padding: 0; } .page-break {
+      absolute; top: 0; right: 0; width: 100px; height: 50px; } .hotWorkPermit
+      h4{ margin: 10px 0px 0px 0px} .hotWorkPermit img { height: 20px; width:
+      auto; max-width: 180px; margin: 0; padding: 0; } .page-break {
       page-break-after: always; }
     </style>
   </body>

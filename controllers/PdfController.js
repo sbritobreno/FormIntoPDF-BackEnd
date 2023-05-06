@@ -295,40 +295,36 @@ module.exports = class PdfController {
       }
 
       // generate PDF from HTML content
-      pdf
-        .generatePdf({ content: html }, options)
-        .then(async (pdfBuffer1) => {
-          // load existing PDF from public folder
-          const pdfPath = path.join(
-            __dirname,
-            `../public/files/${data.file_attached}`
-          );
+      pdf.generatePdf({ content: html }, options)
+      .then(async (pdfBuffer1) => {
+        const pdfPath = path.join(__dirname, `../public/files/${data.file_attached}`);
+    
+        // Check if the file exists
+        if (fs.existsSync(pdfPath)) {
+          // Load existing PDF from public folder
           const pdfBuffer2 = fs.readFileSync(pdfPath);
-
-          // merge PDFs
+    
+          // Merge PDFs
           const merger = new PDFMerger();
-
-          // add first PDF generated from HTML
           await merger.add(pdfBuffer1);
-
-          // add second PDF
           await merger.add(pdfBuffer2);
-
-          // merge PDFs
           const mergedPdf = await merger.saveAsBuffer();
-
-          // send merged PDF to frontend
+    
+          // Send merged PDF to frontend
           res.setHeader("Content-Type", "application/pdf");
-          res.setHeader(
-            "Content-Disposition",
-            "attachment; filename=document.pdf"
-          );
+          res.setHeader("Content-Disposition", "attachment; filename=document.pdf");
           res.send(mergedPdf);
-        })
-        .catch((error) => {
-          console.error(error);
-          res.status(500).send("Error generating PDF");
-        });
+        } else {
+          // Send PDF generated from HTML to frontend
+          res.setHeader("Content-Type", "application/pdf");
+          res.setHeader("Content-Disposition", "attachment; filename=document.pdf");
+          res.send(pdfBuffer1);
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+        res.status(500).send("Error generating PDF");
+      });
     } catch (error) {
       res.status(500).json({ message: error });
     }

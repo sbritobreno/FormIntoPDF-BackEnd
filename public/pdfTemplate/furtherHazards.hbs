@@ -5,7 +5,11 @@
   <body style="padding: 0; margin: 0;">
     <section class="page-break" style="position: relative; margin: 5%">
       <div class="futherHazard">
-        <img class="logo" src="http://localhost:5000/images/templateImages/logo.png" alt="logo" />
+        <img
+          class="logo"
+          src="http://localhost:5000/images/templateImages/logo.png"
+          alt="logo"
+        />
         <div>
           <h4>Richard Nolan Civil Engineering Ltd</h4>
           <h4>Method Statement and Risk Assessment</h4>
@@ -24,13 +28,13 @@
               </tr>
               {{#each futher_hazards_and_controls_requireds}}
                 <tr>
-                  <td>{{this.name}}</td>
-                  <td>{{this.control_required}}</td>
+                  <td style="max-width: 150px;">{{this.name}}</td>
+                  <td style="max-width: 450px;">{{this.control_required}}</td>
                 </tr>
               {{/each}}
-              {{#if (lessthen futher_hazards_and_controls_requireds.length 21)}}
+              {{#if (lessthen futher_hazards_and_controls_requireds.length 15)}}
                 {{#each
-                  (range futher_hazards_and_controls_requireds.length 21)
+                  (range futher_hazards_and_controls_requireds.length 15)
                 }}
                   <tr>
                     <td></td>
@@ -47,7 +51,8 @@
       .futherHazard .logo { position: absolute; top: 0; right: 0; width: 100px;
       height: 50px; } .futherHazard table { border-collapse: collapse; width:
       100%; margin-top: 10px; } .futherHazard th, .futherHazard td { border: 1px
-      solid #ddd; padding: 6px; text-align: left; } .futherHazard th {
+      solid #ddd; padding: 6px; text-align: left; word-wrap: break-word;
+      overflow-wrap: break-word;} .futherHazard th {
       background-color: #f2f2f2; } .futherHazard tr { height: 36px; }
       .futherHazard caption { font-weight: bold; background-color: #333; color:
       #fff; padding: 6px; } .page-break { page-break-after: always; }

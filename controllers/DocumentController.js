@@ -454,20 +454,34 @@ module.exports = class DocumentController {
       return;
     }
 
-    function getImage(imageString) {
-      const base64String = imageString;
-      const base64Image = base64String.replace(/^data:image\/\w+;base64,/, "");
-      const binaryData = Buffer.from(base64Image, "base64");
-      const path = `public/images/documents`;
-      const fileName = `${
-        id + "_" + Date.now() + "-" + Math.round(Math.random() * 1e9)
-      }.png`;
+    async function getImage(imageString = undefined) {
+      if (
+        imageString === undefined ||
+        imageString === null ||
+        imageString === ""
+      )
+        return null;
 
-      fs.writeFileSync(`${path}/${fileName}`, binaryData, (err) => {
-        if (err) throw err;
-      });
+      if (imageString.length > 200) {
+        const base64String = imageString;
+        const base64Image = base64String.replace(
+          /^data:image\/\w+;base64,/,
+          ""
+        );
+        const binaryData = Buffer.from(base64Image, "base64");
+        const path = `public/images/documents`;
+        const fileName = `${
+          id + "_" + Date.now() + "-" + Math.round(Math.random() * 1e9)
+        }.png`;
 
-      return fileName;
+        fs.writeFileSync(`${path}/${fileName}`, binaryData, (err) => {
+          if (err) throw err;
+        });
+        
+        return fileName;
+      } else {
+        return imageString;
+      }
     }
 
     try {
@@ -485,7 +499,7 @@ module.exports = class DocumentController {
           approvedForm.examination_result_state =
             element.examination_result_state;
           approvedForm.inspector_signature !== element.inspector_signature
-            ? getImage(element.inspector_signature)
+            ? await getImage(element.inspector_signature)
             : approvedForm.inspector_signature;
           await approvedForm.save();
         } else {
@@ -493,7 +507,7 @@ module.exports = class DocumentController {
             description_location: element.description_location,
             date_examination: element.date_examination,
             examination_result_state: element.examination_result_state,
-            inspector_signature: getImage(element.inspector_signature),
+            inspector_signature: await getImage(element.inspector_signature),
             DocumentId: id,
           });
         }
@@ -541,20 +555,34 @@ module.exports = class DocumentController {
       return;
     }
 
-    function getImage(imageString) {
-      const base64String = imageString;
-      const base64Image = base64String.replace(/^data:image\/\w+;base64,/, "");
-      const binaryData = Buffer.from(base64Image, "base64");
-      const path = `public/images/documents`;
-      const fileName = `${
-        id + "_" + Date.now() + "-" + Math.round(Math.random() * 1e9)
-      }.png`;
+    async function getImage(imageString = undefined) {
+      if (
+        imageString === undefined ||
+        imageString === null ||
+        imageString === ""
+      )
+        return "";
 
-      fs.writeFileSync(`${path}/${fileName}`, binaryData, (err) => {
-        if (err) throw err;
-      });
+      if (imageString.length > 200) {
+        const base64String = imageString;
+        const base64Image = base64String.replace(
+          /^data:image\/\w+;base64,/,
+          ""
+        );
+        const binaryData = Buffer.from(base64Image, "base64");
+        const path = `public/images/documents`;
+        const fileName = `${
+          id + "_" + Date.now() + "-" + Math.round(Math.random() * 1e9)
+        }.png`;
 
-      return fileName;
+        fs.writeFileSync(`${path}/${fileName}`, binaryData, (err) => {
+          if (err) throw err;
+        });
+        
+        return fileName;
+      } else {
+        return imageString;
+      }
     }
 
     try {
@@ -580,22 +608,19 @@ module.exports = class DocumentController {
       hwp.permit_precautions_ten = hotWorkPermit?.permit_precautions_ten;
       hwp.permit_issued_by_company = hotWorkPermit?.permit_issued_by_company;
       hwp.permit_issued_by_person = hotWorkPermit?.permit_issued_by_person;
-      hwp.permit_issued_by_person_signature =
-        hotWorkPermit?.permit_issued_by_person_signature.length > 100
-          ? getImage(hotWorkPermit?.permit_issued_by_person_signature)
-          : hwp.permit_issued_by_person_signature;
+      hwp.permit_issued_by_person_signature = await getImage(
+        hotWorkPermit?.permit_issued_by_person_signature
+      );
       hwp.permit_received_by_company = hotWorkPermit.permit_received_by_company;
       hwp.permit_received_by_person = hotWorkPermit.permit_received_by_person;
-      hwp.permit_received_by_person_signature =
-        hotWorkPermit?.permit_received_by_person_signature.length > 100
-          ? getImage(hotWorkPermit?.permit_received_by_person_signature)
-          : hwp.permit_received_by_person_signature;
+      hwp.permit_received_by_person_signature = await getImage(
+        hotWorkPermit?.permit_received_by_person_signature
+      );
       hwp.final_check_time = hotWorkPermit.final_check_time;
       hwp.final_check_name = hotWorkPermit.final_check_name;
-      hwp.final_check_signature =
-        hotWorkPermit?.final_check_signature.length > 100
-          ? getImage(hotWorkPermit?.final_check_signature)
-          : hwp.final_check_signature;
+      hwp.final_check_signature = await getImage(
+        hotWorkPermit?.final_check_signature
+      );
       await hwp.save();
 
       // Update Daily Plant Inspection
@@ -638,10 +663,7 @@ module.exports = class DocumentController {
       nmr.actions_taken_comments = nearMissReport?.actions_taken_comments;
       nmr.suggestion_to_prevent_reoccurance_comments =
         nearMissReport?.suggestion_to_prevent_reoccurance_comments;
-      nmr.report_signature =
-        nearMissReport?.report_signature.length > 100
-          ? getImage(nearMissReport?.report_signature)
-          : nmr.report_signature;
+      nmr.report_signature = await getImage(nearMissReport?.report_signature);
       nmr.save();
 
       // Update Futher Hazards
@@ -988,9 +1010,11 @@ module.exports = class DocumentController {
           "../public/files",
           document.file_attached
         );
-        fs.unlinkSync(filePath, (err) => {
-          if (err) console.log("Error while deleting previous file: ", err);
-        });
+        if (fs.existsSync(filePath)) {
+          fs.unlinkSync(filePath, (err) => {
+            if (err) console.log("Error while deleting previous file: ", err);
+          });
+        }
       }
       document.file_attached = file.filename;
       await document.save();
