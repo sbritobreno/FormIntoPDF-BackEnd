@@ -477,7 +477,7 @@ module.exports = class DocumentController {
         fs.writeFileSync(`${path}/${fileName}`, binaryData, (err) => {
           if (err) throw err;
         });
-        
+
         return fileName;
       } else {
         return imageString;
@@ -578,7 +578,7 @@ module.exports = class DocumentController {
         fs.writeFileSync(`${path}/${fileName}`, binaryData, (err) => {
           if (err) throw err;
         });
-        
+
         return fileName;
       } else {
         return imageString;
@@ -773,6 +773,10 @@ module.exports = class DocumentController {
     const id = req.params.id;
     const reinstatementSheetInfoUpdated = req.body;
 
+    // get user
+    const token = getToken(req);
+    const user = await getUserByToken(token);
+
     const document = await Document.findOne({
       where: { id: id },
     });
@@ -803,6 +807,10 @@ module.exports = class DocumentController {
 
       await reinstatementSheet.save();
 
+      if (document.sections_completed < 6) document.sections_completed = 6; //ReinstatementSheet section saved
+      document.last_updated_by = user.name;
+      await document.save();
+
       res.status(200).json({
         message: "Reinstatement Sheet updated successfully!",
       });
@@ -819,6 +827,10 @@ module.exports = class DocumentController {
     const data = req.body;
     const images = req.files;
 
+    // get user
+    const token = getToken(req);
+    const user = await getUserByToken(token);
+
     const document = await Document.findOne({
       where: { id: id },
     });
@@ -828,6 +840,9 @@ module.exports = class DocumentController {
       });
       return;
     }
+
+    document.last_updated_by = user.name;
+    await document.save();
 
     let reinstatementSheet = await ReinstatementSheet.findOne({
       where: { DocumentId: id },
@@ -996,6 +1011,10 @@ module.exports = class DocumentController {
     const file = req.file;
     const document = await Document.findOne({ where: { id: id } });
 
+    // get user
+    const token = getToken(req);
+    const user = await getUserByToken(token);
+
     if (!document) {
       res.status(404).json({
         message: "Document not found!",
@@ -1017,6 +1036,7 @@ module.exports = class DocumentController {
         }
       }
       document.file_attached = file.filename;
+      document.last_updated_by = user.name;
       await document.save();
 
       res.status(200).json({ message: "File attached successfully!" });
