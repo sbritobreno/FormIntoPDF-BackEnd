@@ -4,6 +4,8 @@ const User = require("../models/User/User");
 const fs = require("fs");
 const path = require("path");
 const default_user_img = "profile_img_default.png";
+const sendEmail = require("../helpers/email-send");
+const templates = require("../helpers/email-templates");
 
 // helpers
 const getUserByToken = require("../helpers/get-user-by-token");
@@ -343,7 +345,10 @@ module.exports = class UserController {
 
     try {
       // Delete user's account
-      if (userToBeDeleted.image && !userToBeDeleted.image.startsWith("profile")) {
+      if (
+        userToBeDeleted.image &&
+        !userToBeDeleted.image.startsWith("profile")
+      ) {
         const filePath = path.join(
           __dirname,
           "../public/images/users",
@@ -428,12 +433,12 @@ module.exports = class UserController {
     const salt = await bcrypt.genSalt(12);
     const newPassword = getRandom().toString();
     const passwordHash = await bcrypt.hash(newPassword, salt);
-    //user.password = passwordHash;
+    user.password = passwordHash;
 
     try {
       // returns updated data
       user.save();
-      //sendEmail(email, templates.resetPassword(newPassword));
+      sendEmail(email, templates.resetPassword(newPassword));
       res.json({
         message: `A new passord was sent to ${email}!`,
       });
