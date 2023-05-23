@@ -7,6 +7,4 @@ const verifyToken = require("../helpers/verify-token");
 router.get("/download/:id", verifyToken, PdfController.downloadPDF);
 router.get("/download/:id/reinstatementsheet", verifyToken, PdfController.downloadReinstatementSheet);
 
-//https://www.ultimateakash.com/blog-details/IixTQGAKYAo=/How-to-Generate-PDF-in-Node.js-2022
-
 module.exports = router;

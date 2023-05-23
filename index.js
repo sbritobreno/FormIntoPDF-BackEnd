@@ -1,6 +1,7 @@
 require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
+const PORT = 5000;
 
 const app = express();
 
@@ -25,4 +26,6 @@ app.use("/user", UserRoutes);
 app.use("/document", DocumentRoutes);
 app.use("/pdf", PdfRoutes);
 
-app.listen(5000);
+app.listen(proccess.env.PORT || PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
