@@ -26,6 +26,6 @@ app.use("/user", UserRoutes);
 app.use("/document", DocumentRoutes);
 app.use("/pdf", PdfRoutes);
 
-app.listen(proccess.env.PORT || PORT, () => {
+app.listen(process.env.PORT || PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
