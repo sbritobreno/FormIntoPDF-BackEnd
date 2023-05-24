@@ -215,16 +215,14 @@ module.exports = class UserController {
 
     if (req.file) {
       if (user.image && !user.image.startsWith("profile")) {
-        const filePath = path.join(
-          __dirname,
-          "../public/images/users",
-          user.image
-        );
-        fs.unlinkSync(filePath, (err) => {
-          if (err) console.log("Error while deleting previous file: ", err);
-        });
+        const filePath = path.join(__dirname, "../public/images/users", user.image);
+        try {
+          fs.unlinkSync(filePath);
+        } catch (err) {
+          console.log("Error while deleting previous file: ", err);
+        }
       }
-
+    
       user.image = req.file.filename;
     }
 
