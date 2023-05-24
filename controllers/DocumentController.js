@@ -430,11 +430,15 @@ module.exports = class DocumentController {
     const id = req.params.id;
     const document = await Document.findOne({ where: { id: id } });
 
-    if (req.file) {
-      document.permit_to_dig_sketch_image = req.file.filename;
+    try {
+      if (req.file) {
+        document.permit_to_dig_sketch_image = req.file.filename;
+      }
+      await document.save();
+      res.status(200).json({ message: "Image uploaded!" });
+    } catch (err) {
+      res.status(500).json({ message: err });
     }
-    await document.save();
-    res.status(200).json({ message: "Image uploaded!" });
   }
 
   // Update Approved Form Section3 on document
