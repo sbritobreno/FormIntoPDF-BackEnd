@@ -726,7 +726,6 @@ module.exports = class DocumentController {
       });
       if (!ms) ms = await MethodStatementsJobInfo.create({ DocumentId: id });
 
-      console.log(image.filename + "ddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd")
       ms.ms_id = data.ms_id;
       ms.ms_revision = data.ms_revision;
       ms.ms_project = data.ms_project;
