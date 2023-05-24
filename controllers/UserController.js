@@ -47,12 +47,12 @@ module.exports = class UserController {
     const password = req.body.password;
     const confirmpassword = req.body.confirmpassword;
 
-    // if (!user.admin) {
-    //   res
-    //     .status(422)
-    //     .json({ message: "Only an Admin can register a new user!" });
-    //   return;
-    // }
+    if (!user.admin) {
+      res
+        .status(422)
+        .json({ message: "Only an Admin can register a new user!" });
+      return;
+    }
 
     // validations
     if (!name) {
