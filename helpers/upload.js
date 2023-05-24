@@ -23,7 +23,6 @@ const fileStorage = multer.diskStorage({
 let id = 0;
 const imageStorage = multer.diskStorage({
   destination: function (req, file, cb) {
-    console.log(req.body.id);
     let folder = "";
 
     if (req.baseUrl.includes("user")) {
