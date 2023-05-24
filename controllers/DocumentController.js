@@ -838,6 +838,7 @@ module.exports = class DocumentController {
     const document = await Document.findOne({
       where: { id: id },
     });
+    
     if (!document) {
       res.status(404).json({
         message: "Document not found!",
