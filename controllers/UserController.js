@@ -220,9 +220,9 @@ module.exports = class UserController {
           "../public/images/users",
           user.image
         );
-        // fs.unlinkSync(filePath, (err) => {
-        //   if (err) console.log("Error while deleting previous file: ", err);
-        // });
+        fs.unlinkSync(filePath, (err) => {
+          if (err) console.log("Error while deleting previous file: ", err);
+        });
       }
 
       user.image = req.file.filename;
