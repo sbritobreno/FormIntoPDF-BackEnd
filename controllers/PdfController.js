@@ -47,9 +47,9 @@ module.exports = class PdfController {
 
     hbs.registerHelper("checkHWP", function (value) {
       if (value === true) {
-        return new hbs.SafeString("✔ ");
+        return new hbs.SafeString("&#10004;"); // Checkmark symbol: ✔
       } else {
-        return new hbs.SafeString("❌ ");
+        return new hbs.SafeString("&#10060;"); // Cross mark symbol: ❌
       }
     });
 

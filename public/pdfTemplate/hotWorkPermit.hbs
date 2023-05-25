@@ -28,10 +28,10 @@
           </p>
           <p><b>Date: </b> {{formatDate hot_work_permit.date}}</p>
         </div>
-        <h4>
+        <h5>
           The Above location has been examined and the precautions listed below
           have been taken
-        </h4>
+        </h5>
         <div>
           <h4>PART 2 - Hot Work Permit Precautions</h4>
           <p>
@@ -74,7 +74,7 @@
         <div>
           <h4>PART 3 - Details of Persons and Times of Permit</h4>
           <p><b>
-              Permit issued by: Name:</b>
+              Permit issued by:</br> Name:</b>
             {{#if hot_work_permit.permit_issued_by_person}}
               {{hot_work_permit.permit_issued_by_person}}
             {{else}}
@@ -97,7 +97,7 @@
             {{/if}}
           </p>
           <p><b>
-              Permit received by: Name:</b>
+              Permit received by:</br> Name:</b>
             {{#if hot_work_permit.permit_received_by_person}}
               {{hot_work_permit.permit_received_by_person}}
             {{else}}
@@ -135,7 +135,7 @@
             found fire safe.
           </p>
           <p>
-            <b>Final check by: Name:</b>
+            <b>Final check by:</br> Name:</b>
             {{#if hot_work_permit.final_check_name}}
               {{hot_work_permit.final_check_name}}
             {{else}}
@@ -167,7 +167,7 @@
     <style>
       .hotWorkPermit p { font-size: 13px; } .hotWorkPermit .logo { position:
       absolute; top: 0; right: 0; width: 100px; height: 50px; } .hotWorkPermit
-      h4{ margin: 10px 0px 0px 0px} .hotWorkPermit img { height: 20px; width:
+      h5, .hotWorkPermit h4{ margin: 10px 0px 0px 0px} .hotWorkPermit img { height: 20px; width:
       auto; max-width: 180px; margin: 0; padding: 0; } .page-break {
       page-break-after: always; }
     </style>
