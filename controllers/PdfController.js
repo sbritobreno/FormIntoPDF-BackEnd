@@ -29,7 +29,7 @@ module.exports = class PdfController {
       return parseInt(value) + 1;
     });
 
-    hbs.registerHelper("formatDate", function(dateStr) {
+    hbs.registerHelper("formatDate", function (dateStr) {
       const date = new Date(dateStr);
       const day = date.getDate().toString().padStart(2, "0");
       const month = (date.getMonth() + 1).toString().padStart(2, "0");
@@ -47,9 +47,9 @@ module.exports = class PdfController {
 
     hbs.registerHelper("checkHWP", function (value) {
       if (value === true) {
-        return new hbs.SafeString("✅");
+        return new hbs.SafeString("✔ ");
       } else {
-        return new hbs.SafeString("❎");
+        return new hbs.SafeString("❌ ");
       }
     });
 
@@ -139,7 +139,7 @@ module.exports = class PdfController {
 
     try {
       const data = document.toJSON();
-      console.log(data)
+      console.log(data);
       const options = { format: "A4" };
 
       //1. Site Attendance 1
@@ -295,36 +295,46 @@ module.exports = class PdfController {
       }
 
       // generate PDF from HTML content
-      pdf.generatePdf({ content: html }, options)
-      .then(async (pdfBuffer1) => {
-        const pdfPath = path.join(__dirname, `../public/files/${data.file_attached}`);
-    
-        // Check if the file exists
-        if (fs.existsSync(pdfPath)) {
-          // Load existing PDF from public folder
-          const pdfBuffer2 = fs.readFileSync(pdfPath);
-    
-          // Merge PDFs
-          const merger = new PDFMerger();
-          await merger.add(pdfBuffer1);
-          await merger.add(pdfBuffer2);
-          const mergedPdf = await merger.saveAsBuffer();
-    
-          // Send merged PDF to frontend
-          res.setHeader("Content-Type", "application/pdf");
-          res.setHeader("Content-Disposition", "attachment; filename=document.pdf");
-          res.send(mergedPdf);
-        } else {
-          // Send PDF generated from HTML to frontend
-          res.setHeader("Content-Type", "application/pdf");
-          res.setHeader("Content-Disposition", "attachment; filename=document.pdf");
-          res.send(pdfBuffer1);
-        }
-      })
-      .catch((error) => {
-        console.error(error);
-        res.status(500).send("Error generating PDF");
-      });
+      pdf
+        .generatePdf({ content: html }, options)
+        .then(async (pdfBuffer1) => {
+          const pdfPath = path.join(
+            __dirname,
+            `../public/files/${data.file_attached}`
+          );
+
+          // Check if the file exists
+          if (fs.existsSync(pdfPath)) {
+            // Load existing PDF from public folder
+            const pdfBuffer2 = fs.readFileSync(pdfPath);
+
+            // Merge PDFs
+            const merger = new PDFMerger();
+            await merger.add(pdfBuffer1);
+            await merger.add(pdfBuffer2);
+            const mergedPdf = await merger.saveAsBuffer();
+
+            // Send merged PDF to frontend
+            res.setHeader("Content-Type", "application/pdf");
+            res.setHeader(
+              "Content-Disposition",
+              "attachment; filename=document.pdf"
+            );
+            res.send(mergedPdf);
+          } else {
+            // Send PDF generated from HTML to frontend
+            res.setHeader("Content-Type", "application/pdf");
+            res.setHeader(
+              "Content-Disposition",
+              "attachment; filename=document.pdf"
+            );
+            res.send(pdfBuffer1);
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+          res.status(500).send("Error generating PDF");
+        });
     } catch (error) {
       res.status(500).json({ message: error });
     }

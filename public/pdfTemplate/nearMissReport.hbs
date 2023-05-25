@@ -5,7 +5,11 @@
   <body style="padding: 0; margin: 0;">
     <section class="page-break" style="position: relative; margin: 5%">
       <div class="nearMissReport">
-        <img class="logo" src="https://form-2-pdf.herokuapp.com/images/templateImages/logo.png" alt="logo" />
+        <img
+          class="logo"
+          src="https://form-2-pdf.herokuapp.com/images/templateImages/logo.png"
+          alt="logo"
+        />
         <div>
           <h1>NEAR MISS REPORT</h1>
         </div>
@@ -60,11 +64,13 @@
             <tr>
               <th style="width: 100px">SIGNED</th>
               <td>
-                <img
-                  class="signature"
-                  src="https://form-2-pdf.herokuapp.com/images/documents/{{near_miss_report.report_signature}}"
-                  alt="signature"
-                />
+                {{#if near_miss_report.report_signature}}
+                  <img
+                    class="signature"
+                    src="https://form-2-pdf.herokuapp.com/images/documents/{{near_miss_report.report_signature}}"
+                    alt="signature"
+                  />
+                {{/if}}
               </td>
             </tr>
           </tbody>
@@ -90,9 +96,10 @@
       width: 100%; margin-top: 10px; } .nearMissReport th, .nearMissReport td {
       border: 1px solid #ddd; padding: 6px; text-align: left; } .nearMissReport
       th { background-color: #f2f2f2; } .nearMissReport tr { height: 36px; }
-      .nearMissReport img { height: 20px; width: auto; max-width: 180px; margin: 0; padding: 0; }
-      .nearMissReport caption { font-weight: bold; background-color: #333;
-      color: #fff; padding: 6px; } .page-break { page-break-after: always; }
+      .nearMissReport img { height: 20px; width: auto; max-width: 180px; margin:
+      0; padding: 0; } .nearMissReport caption { font-weight: bold;
+      background-color: #333; color: #fff; padding: 6px; } .page-break {
+      page-break-after: always; }
     </style>
   </body>
 </html>
