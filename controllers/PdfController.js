@@ -49,7 +49,7 @@ module.exports = class PdfController {
       if (value === true) {
         return new hbs.SafeString("&#10004;"); // Checkmark symbol: ✔
       } else {
-        return new hbs.SafeString("&#10060;"); // Cross mark symbol: ❌
+        return new hbs.SafeString("&#x2717;"); // Cross mark symbol: ✗
       }
     });
 
