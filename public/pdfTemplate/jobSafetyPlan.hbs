@@ -29,15 +29,15 @@
         <thead>
           <tr>
             <th>Date</th>
-            <td></td>
+            <td>{{formatDate job_specific_safety_plan.date}}</td>
             <th>Location</th>
             <td>{{reinstatement_sheet.location}}</td>
           </tr>
           <tr>
-            <th>Crew Leader</th>
-            <td></td>
             <th>Project Number</th>
-            <td></td>
+            <td>{{job_specific_safety_plan.project_number}}</td>
+            <th>Crew Leader</th>
+            <td>{{job_specific_safety_plan.crew_leader}}</td>
           </tr>
         </thead>
       </table>
@@ -156,21 +156,21 @@
         <thead>
           <tr>
             <th>⚠ Eletricity</th>
-            <td></td>
+            <td>{{check job_specific_safety_plan.services_eletricity}}</td>
             <th>⚠ Traffic Lights</th>
-            <td></td>
+            <td>{{check job_specific_safety_plan.services_traffic_lights}}</td>
             <th>⚠ Public Light</th>
-            <td></td>
+            <td>{{check job_specific_safety_plan.services_public_light}}</td>
             <th>No services found (Tick below)</th>
           </tr>
           <tr>
             <th>⚠ Gas</th>
-            <td></td>
+            <td>{{check job_specific_safety_plan.services_gas}}</td>
             <th>⚠ Telecom</th>
-            <td></td>
+            <td>{{check job_specific_safety_plan.services_telecom}}</td>
             <th>⚠ Water</th>
-            <td></td>
-            <td></td>
+            <td>{{check job_specific_safety_plan.services_water}}</td>
+            <td>{{check job_specific_safety_plan.services_no_services_found}}</td>
           </tr>
         </thead>
       </table>
@@ -307,7 +307,7 @@
       absolute; top: 0; right: 0; width: 100px; height: 50px; } .jobSafetyPlan table {
       border-collapse: collapse; width: 100%; margin-top: 10px; } .jobSafetyPlan th, .jobSafetyPlan td {
       border: 1px solid #ddd; padding: 5px; text-align: left;  word-wrap:
-      break-word; overflow-wrap: break-word; max-width: 220px;} .jobSafetyPlan th {
+      break-word; overflow-wrap: break-word; word-break: break-all; max-width: 220px;} .jobSafetyPlan th {
       background-color: #f2f2f2; } .jobSafetyPlan tr { height: 10px; } .jobSafetyPlan caption { font-weight:
       bold; background-color: #333; color: #fff; padding: 6px; } .page-break {
       page-break-after: always; }

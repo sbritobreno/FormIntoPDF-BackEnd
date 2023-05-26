@@ -21,6 +21,7 @@ const ReinstatementImages = require("../models/Document/ReinstatementImages");
 // helpers
 const getUserByToken = require("../helpers/get-user-by-token");
 const getToken = require("../helpers/get-token");
+const JobSpecificSafetyPlan = require("../models/Document/JobSpecificSafetyPlan");
 
 module.exports = class DocumentController {
   // Get all documents
@@ -28,6 +29,7 @@ module.exports = class DocumentController {
     const documents = await Document.findAll({
       include: [
         { model: SiteAttendance },
+        { model: JobSpecificSafetyPlan },
         { model: Hazards },
         { model: DMSandTMC },
         { model: Emergencies },
@@ -65,6 +67,7 @@ module.exports = class DocumentController {
       where: { id: id },
       include: [
         { model: SiteAttendance },
+        { model: JobSpecificSafetyPlan },
         { model: Hazards },
         { model: DMSandTMC },
         { model: Emergencies },
@@ -106,6 +109,7 @@ module.exports = class DocumentController {
       where: { id: id },
       include: [
         { model: SiteAttendance },
+        { model: JobSpecificSafetyPlan },
         { model: Hazards },
         { model: DMSandTMC },
         { model: Emergencies },
@@ -280,6 +284,7 @@ module.exports = class DocumentController {
     const id = req.params.id;
     const data = req.body;
 
+    const jobSSPlan = JSON.parse(data.job_specific_safety_plan);
     const hazards = JSON.parse(data.Hazards);
     const dailyMethodStatement = JSON.parse(
       data.daily_method_statement_and_traffic_management_check
@@ -300,6 +305,26 @@ module.exports = class DocumentController {
     }
 
     try {
+      // Update Job Specific Safety Plan
+      let jobPlan = await JobSpecificSafetyPlan.findOne({
+        where: { DocumentId: id },
+      });
+      if (!jobPlan)
+        jobPlan = await JobSpecificSafetyPlan.create({ DocumentId: id });
+
+      jobPlan.crew_leader = jobSSPlan?.crew_leader;
+      jobPlan.date = jobSSPlan?.date;
+      jobPlan.project_number = jobSSPlan?.project_number;
+      jobPlan.services_eletricity = jobSSPlan?.services_eletricity;
+      jobPlan.services_traffic_lights = jobSSPlan?.services_traffic_lights;
+      jobPlan.services_public_light = jobSSPlan?.services_public_light;
+      jobPlan.services_gas = jobSSPlan?.services_gas;
+      jobPlan.services_telecom = jobSSPlan?.services_telecom;
+      jobPlan.services_water = jobSSPlan?.services_water;
+      jobPlan.services_no_services_found =
+        jobSSPlan?.services_no_services_found;
+      await jobPlan.save();
+
       // Update Hazards
       hazards.forEach(async (element) => {
         const hz = await Hazards.findOne({
@@ -838,7 +863,7 @@ module.exports = class DocumentController {
     const document = await Document.findOne({
       where: { id: id },
     });
-    
+
     if (!document) {
       res.status(404).json({
         message: "Document not found!",

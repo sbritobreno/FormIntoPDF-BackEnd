@@ -6,6 +6,7 @@ const PDFMerger = require("pdf-merger-js");
 
 const Document = require("../models/Document/Document");
 const SiteAttendance = require("../models/Document/SiteAttendance");
+const JobSpecificSafetyPlan = require("../models/Document/JobSpecificSafetyPlan");
 const Hazards = require("../models/Document/Hazards");
 const DMSandTMC = require("../models/Document/DailyMethodStatementAndTrafficManagementChecks");
 const Emergencies = require("../models/Document/Emergencies");
@@ -96,6 +97,7 @@ module.exports = class PdfController {
       where: { id: id },
       include: [
         { model: SiteAttendance },
+        { model: JobSpecificSafetyPlan },
         { model: Hazards },
         { model: DMSandTMC },
         { model: Emergencies },

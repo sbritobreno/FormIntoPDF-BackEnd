@@ -3,6 +3,7 @@ const db = require("../../db/conn");
 const ApprovedForm = require("./ApprovedForm");
 const DMSAndTMC = require("./DailyMethodStatementAndTrafficManagementChecks");
 const DailyPlantInspection = require("./DailyPlantInspection");
+const JobSpecificSafetyPlan = require("./JobSpecificSafetyPlan");
 const Emergencies = require("./Emergencies");
 const FutherHazarsAndControls = require("./FutherHazarsAndControls");
 const Hazards = require("./Hazards");
@@ -59,6 +60,10 @@ Document.hasMany(FutherHazarsAndControls, {
   onDelete: "CASCADE",
   foreignKey: "DocumentId",
 });
+Document.hasOne(JobSpecificSafetyPlan, {
+  onDelete: "CASCADE",
+  foreignKey: "DocumentId",
+});
 Document.hasOne(DMSAndTMC, { onDelete: "CASCADE", foreignKey: "DocumentId" });
 Document.hasOne(Emergencies, { onDelete: "CASCADE", foreignKey: "DocumentId" });
 Document.hasOne(HotWorkPermit, {
@@ -88,6 +93,7 @@ Document.hasOne(TrafficManagementSlgChecklist, {
 
 ApprovedForm.belongsTo(Document);
 SiteAttendance.belongsTo(Document);
+JobSpecificSafetyPlan.belongsTo(Document);
 Hazards.belongsTo(Document);
 DailyPlantInspection.belongsTo(Document);
 FutherHazarsAndControls.belongsTo(Document);
